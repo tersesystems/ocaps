@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Awesome Presentation</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif', 'Helvetica'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz', 'Gill Sans';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+    </style>
+    <!-- https://github.com/gnab/remark/wiki/Adding-graphs-via-Mermaid -->
+    <!-- note https://github.com/knsv/mermaid/issues/360 -->
+    <link rel="stylesheet" href="mermaid.min.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+```tut:invisible
+
+```
+
+class: center, middle
+
+# Security In Scala
+Will Sargent • `@will_sargent`
+
+???
+- notes here
+- see https://remarkjs.com/#1
+
+---
+# Inline Scala examples
+
+```tut:silent
+case class Person(name: String, age: Int)
+```
+
+```tut:book
+val john = Person("John", 23)
+
+john.age
+
+john.copy(age = 30)
+```
+
+???
+- see https://github.com/wsargent/ocaps
+
+---
+# Scala examples from core module
+
+```tut:silent
+import ocaps._
+```
+
+```tut:book
+case class Food(name: String)
+
+case class Can(food: Brand.Box[Food])
+
+class CanOpener(unsealer: Brand.Unsealer[Food]) {
+  def open(can: Can): Food = {
+    unsealer(can.food).get
+  }
+}
+```
+
+---
+class: center, middle
+
+# Thanks!
+Code and slides at `john-doe/awesome` on GitHub
+
+## Questions?
+
+
+
+
+
+ </textarea>
+    <script src="mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

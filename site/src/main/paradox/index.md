@@ -1,4 +1,11 @@
-# ocaps
+@@@ index
+
+* [Running](running.md)
+* [Guide](guide/index.md)
+
+@@@
+
+# Introduction
 
 *ocaps* is a library for assembling capabilities in Scala.
 
@@ -8,6 +15,7 @@
 - Macros for *composition*, *attenuation*, *revocable* and *modulating* capabilities.
 - No libraries dependencies ()other than `scala-reflect`)
 
-Documentation can be found at https://wsargent.github.io/ocaps/
+Documentation can be found at [http://wsargent.github.io/ocaps/](http://wsargent.github.io/ocaps/)
 
-A guide to object capabilities in Scala can be found at https://wsargent.github.io/ocaps/guide.html
+A guide to object capabilities can be found at [http://wsargent.github.io/ocaps/guide.html](http://wsargent.github.io/ocaps/guide.html)
+

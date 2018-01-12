@@ -1,0 +1,5 @@
+package ocaps
+
+class RevokerSpec {
+
+}
