@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README</title>
+    <link rel="stylesheet" href="theme/css/foundation.min.css">
+    <link rel="stylesheet" href="theme/css/app.css">
+    
+     <link rel="stylesheet" href="theme/highlight.js/styles/github-gist.css">  <link rel="stylesheet" href="theme/css/foundation-icons.custom.css"> 
+    
+     <link rel="toc" href="site-contents.html"  title="Table of Contents"  /> 
+  </head>
+  <body>
+    <div class="expanded row">
+      <div class="small-12 medium-12 large-12 columns align-self-top">
+        <div class="row">
+          
+          <header class="large-12 columns align-self-top a_header">
+            <div class="row">
+              <div class="large-12 columns a_limited top-bar">
+                <div class="top-bar-left">
+                  <p>ocaps Manual</p>
+
+                </div>
+                <div class="top-bar-right align-right row">
+                  
+                  
+                    <form action="site-search.html" method="get" class="align-right a_search">
+                      <input name="q" type="search"  placeholder="Search
+" >
+                      <button><img alt="&#1F50D;" src="theme/images/search.svg" /></button>
+                    </form>
+                  
+                </div>
+              </div>
+            </div>
+          </header>
+          
+          <div class="small-12 medium-12 large-12 columns align-self-top a_limited a_main">
+            <div class="row">
+              
+              <main class="columns large-order-2 sections" id="_sections">
+                 
+  <ul class="menu align-right simple a_navbar a_navbar_top">
+    
+      
+        <li><a href="site-contents.html"  title="Table of Contents" ><span class="a_foundation_icon"></span>  Contents</a></li>
+      
+    
+  </ul>
+ 
+                
+                <h1 id="readme" class="a_section" data-magellan-target="readme">README<a class="a_hlink" href="#readme"></a></h1>
+<h1 id="capabilities" class="a_section" data-magellan-target="capabilities">Capabilities<a class="a_hlink" href="#capabilities"></a></h1>
+<p>A capability is a single thing that can access protected areas of a resource and authorizes some kind of access to it through reference.  Capabilities can be implemented in object oriented programming languages, at which point they are called “object capability” systems, or “ocap” for short.</p>
+<p>This doesn’t mean much by itself.  So, say you have a class <code class="hljs">Foo</code>, with a private method.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name: <span class="hljs-type">String</span></span>) </span>{
+  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">privateDoTheThing</span></span>(): <span class="hljs-type">Unit</span> = {
+    println(<span class="hljs-string">s"<span class="hljs-subst">$name</span>.doTheThing()"</span>)
+  }
+}
+</code></pre>
+</div></div>
+<p>You want to have other users of this class be able to call the private method, but only on a case by case basis.</p>
+<p>Instead of making the method public or protected, you can expose another class that does have access and a reference to that private method.  We’ll call this <code class="hljs">Foo.Doer</code>.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Foo</span> </span>{
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Doer</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span>
+  }
+}
+</code></pre>
+</div></div>
+<p>Now, because we can use Scala’s access qualifiers and the trait is inside the companion object, we can create an instance of <code class="hljs">Foo.Doer</code> by closing over Foo:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name: <span class="hljs-type">String</span></span>) </span>{
+  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">privateDoTheThing</span></span>(): <span class="hljs-type">Unit</span> = {
+    println(<span class="hljs-string">s"<span class="hljs-subst">$name</span>.doTheThing()"</span>)
+  }
+
+  <span class="hljs-keyword">private</span>[<span class="hljs-type">Foo</span>] <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">capabilities</span> </span>{
+    <span class="hljs-keyword">val</span> doer: <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> {
+      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span> = <span class="hljs-type">Foo</span>.<span class="hljs-keyword">this</span>.privateDoTheThing()
+    }
+  }
+}
+</code></pre>
+</div></div>
+<p>And now we have a capability.  We can expose the capabilities of Foo through a Powerbox that has access.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">import</span> scala.util.{<span class="hljs-type">Success</span>, <span class="hljs-type">Try</span>}
+
+<span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name: <span class="hljs-type">String</span></span>) </span>{
+  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">privateDoTheThing</span></span>(): <span class="hljs-type">Unit</span> = {
+    println(<span class="hljs-string">s"<span class="hljs-subst">$name</span>.doTheThing()"</span>)
+  }
+
+  <span class="hljs-keyword">private</span>[<span class="hljs-type">Foo</span>] <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">capabilities</span> </span>{
+    <span class="hljs-keyword">val</span> doer: <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> {
+      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span> = <span class="hljs-type">Foo</span>.<span class="hljs-keyword">this</span>.privateDoTheThing()
+    }
+  }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Foo</span> </span>{
+
+  <span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Doer</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span>
+  }
+
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Powerbox</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">askForDoer</span></span>(foo: <span class="hljs-type">Foo</span>): <span class="hljs-type">Try</span>[<span class="hljs-type">Doer</span>] = <span class="hljs-type">Success</span>(foo.capabilities.doer)
+  }
+}
+</code></pre>
+</div></div>
+<p>And then try it out:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Main</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>(args: <span class="hljs-type">Array</span>[<span class="hljs-type">String</span>]): <span class="hljs-type">Unit</span> = {
+    <span class="hljs-keyword">val</span> powerbox = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>.<span class="hljs-type">Powerbox</span>()
+
+    <span class="hljs-keyword">val</span> foo = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>(<span class="hljs-string">"foo"</span>)
+
+    powerbox.askForDoer(foo).map { doer =&gt;
+      doer.doTheThing()
+    }
+  }
+}
+</code></pre>
+</div></div>
+<p>And we have a capability.</p>
+<p>A capability is a security primitive.  It doesn’t look like much by itself.  Then again, object oriented programming starts with a single object.  Functional programming starts with a single function.  The power in these systems comes from being able to build and compose powerful structures out of these primitives.</p>
+<p>So, now that there‘s a <code class="hljs">Foo.Doer</code> capability, we can pass around references to that capability.  Access to the reference gives a caller the authority to call the private method on <code class="hljs">Foo</code>.  Also note capability is instance based, so access to one <code class="hljs">Foo</code> instance doesn’t mean you have access in general.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> foo1 = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>(<span class="hljs-string">"foo1"</span>)
+<span class="hljs-keyword">val</span> doer1 = foo1.capabilities.doer
+<span class="hljs-keyword">val</span> foo2 = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>(<span class="hljs-string">"foo2"</span>)
+<span class="hljs-keyword">val</span> doer2 = foo2.capabilities.doer
+
+<span class="hljs-keyword">val</span> classWithFoo1Authority = <span class="hljs-keyword">new</span> <span class="hljs-type">SomeClassThatWantsToDoThings</span>(doer1)
+classWithFoo1Authority.doThings() <span class="hljs-comment">// uses doer1 to access foo1 private method</span>
+
+<span class="hljs-keyword">val</span> classWithFoo2Authority = <span class="hljs-keyword">new</span> <span class="hljs-type">SomeClassThatWantsToDoThings</span>(doer2)
+classWithFoo2Authority.doThings() <span class="hljs-comment">// uses doer2 to access foo2 private method</span>
+
+<span class="hljs-keyword">val</span> classWithNoAuthority = <span class="hljs-keyword">new</span> <span class="hljs-type">SomeClassThatWantsToDoThings</span>()
+classWithNoAuthority.doThings() <span class="hljs-comment">// whoops</span>
+</code></pre>
+</div></div>
+<p>Note that although we‘ve made the capability a subtype of <code class="hljs">Foo</code> here, the capability can also enrich or define semantic control over a resource that wasn’t there before.  Take the example of an Akka actor, which can receive any method:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> actorRef = actorSystem.actorOf(<span class="hljs-type">Props</span>(<span class="hljs-type">FooActor</span>.<span class="hljs-keyword">class</span>))
+<span class="hljs-keyword">val</span> doer = <span class="hljs-keyword">new</span> <span class="hljs-type">Doer</span> {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span> = actorRef ! <span class="hljs-type">DoTheThing</span>
+}
+</code></pre>
+</div></div>
+<p>By exposing the <code class="hljs">Doer</code> capability instead of the <code class="hljs">ActorRef</code>, callers now have type-safe access to functionality of the Actor, without being directly exposed to Akka itself.</p>
+<p>Note that although capabilities may look like functions, and in fact could be replaced as a function, they are objects, consisting of traits and classes which may have several methods.  For example, a <code class="hljs">Writer</code> capability could consist of several means of writing:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Writer</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bufferedWriter</span></span>(): java.io.<span class="hljs-type">BufferedWriter</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">outputStream</span></span>(): java.io.<span class="hljs-type">OutputStream</span>
+}
+</code></pre>
+</div></div>
+<p>There is a conceptual difference as well.  Functions are not only anonymous, but are also public.  It’s a common pattern to switch between a function and a wrapper type, for instance:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">FooBarConverter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span> <span class="hljs-title">=&gt;</span> <span class="hljs-title">Bar</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">FooBarConverter</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">apply</span></span>(f: <span class="hljs-type">Foo</span> =&gt; <span class="hljs-type">Bar</span>): <span class="hljs-type">FooBarConverter</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">FooBarConverter</span> {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">apply</span></span>(foo: <span class="hljs-type">Foo</span>): <span class="hljs-type">Bar</span> = f(foo)
+  }
+}
+
+<span class="hljs-keyword">val</span> converter = <span class="hljs-type">FooBarConverter</span>(foo =&gt; bar)
+</code></pre>
+</div></div>
+<p>This does <strong>not</strong> qualify as a capability, because there is no privileged access to the function that can only be referenced through the converter.</p>
+<h2 id="why-this-works" class="a_section" data-magellan-target="why-this-works">Why this works<a class="a_hlink" href="#why-this-works"></a></h2>
+<p>Because Scala qualifiers are awesome.</p>
+<p>http://jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/</p>
+<h2 id="how-to-assign-capabilities" class="a_section" data-magellan-target="how-to-assign-capabilities">How to assign capabilities<a class="a_hlink" href="#how-to-assign-capabilities"></a></h2>
+<p>Generally, you want to do an authorization check as close as possible to the execution of the capability, use the capability in context, and then revoke it.</p>
+<ul>
+<li>Only ask for a capability when you know you’re going to use it.</li>
+<li>Keep it short.</li>
+<li>Keep it focused.</li>
+</ul>
+<p>There is a category of attack called Time of Check/Time of Use (TOCTOU), where the longer the period between a check made for the purposes of an operation and the actual operation itself the more opportunity there is for an attacker to “sneak in” under the hood.</p>
+<p>There’s another attack called the “Confused Deputy” problem, where the more expansive the context of the authority, the more likely the authority is likely to be misused or delegated.</p>
+<p><a href="http://srl.cs.jhu.edu/pubs/SRL2003-02.pdf">Capability Myths Demolished</a></p>
+<ul>
+<li>Designation inseperable from authority</li>
+<li>Deputies cannot be confused by authority-less designators</li>
+<li>There are no ambient authorities</li>
+<li>Authorities arrive in contexts of requests</li>
+<li>Subjects can locally identify authorities</li>
+</ul>
+<h2 id="the-downcast-attack" class="a_section" data-magellan-target="the-downcast-attack">The Downcast Attack<a class="a_hlink" href="#the-downcast-attack"></a></h2>
+<p>If you use structural types or AOP style mixins, then you may end up with downcasting to a specific type, which could expose your data.</p>
+<p>This is a bit abstract, so it’s worth giving an example.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Force</span> </span>{
+  <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">capabilities</span> </span>{}
+  
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Force</span> </span>{
+    <span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">JediCapability</span> </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cleanRoom</span></span>(): <span class="hljs-type">CleanRoomResults</span> = ???
+    }
+    
+    <span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SithCapability</span> </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forcePush</span></span>(): <span class="hljs-type">ForcePushResults</span> = ???
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">choke</span></span>(): <span class="hljs-type">ChokeResults</span> = ???
+    }
+    
+    <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ForceCapability</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">JediCapability</span> <span class="hljs-keyword">with</span> <span class="hljs-title">SithCapability</span></span>
+    
+    <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Jedi</span> </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">useTheForceWisely</span></span>(jediPowers: <span class="hljs-type">JediCapability</span>): <span class="hljs-type">Unit</span>
+    }
+}
+</code></pre>
+</div></div>
+<p>Okay, let’s try it out.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> theForce = <span class="hljs-keyword">new</span> <span class="hljs-type">Force</span>.<span class="hljs-type">ForceCapability</span>
+<span class="hljs-keyword">val</span> luke = <span class="hljs-keyword">new</span> <span class="hljs-type">Jedi</span> {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">useTheForceWisely</span></span>(jediPowers: <span class="hljs-type">JediCapability</span>) = {
+    jediPowers.cleanRoom()
+  }
+}
+luke.useTheForceWisely(theForce)
+</code></pre>
+</div></div>
+<p>Looks good!  What could go wrong?</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> kylo = <span class="hljs-keyword">new</span> <span class="hljs-type">Jedi</span> {
+  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">useTheForceWisely</span></span>(jediPowers: <span class="hljs-type">JediCapability</span>) {
+    <span class="hljs-keyword">val</span> sithPowers = jediPowers.asInstanceOf[<span class="hljs-type">SithCapability</span>]
+    sithPowers.forcePush() <span class="hljs-comment">// MUA HA HA</span>
+  }
+}
+</code></pre>
+</div></div>
+<p>Whoops.</p>
+<p>What you need to do instead is never to subtype a capability if you can help it.  Instead, close over capabilities to make them safe, and if you have fields make them all private.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Force</span> </span>{
+   <span class="hljs-keyword">val</span> jediPowers = <span class="hljs-keyword">new</span> <span class="hljs-type">JediCapability</span> {
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cleanRoom</span></span>() = <span class="hljs-type">Force</span>.<span class="hljs-keyword">this</span>.cleanRoom()
+   }
+
+  <span class="hljs-keyword">val</span> sithPowers = <span class="hljs-keyword">new</span> <span class="hljs-type">SithCapability</span> {
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forcePush</span></span>() = <span class="hljs-type">Force</span>.<span class="hljs-keyword">this</span>.forcePush()
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">choke</span></span>() = <span class="hljs-type">Force</span>.<span class="hljs-keyword">this</span>.choke()
+  }
+}
+</code></pre>
+</div></div>
+<h3 id="the-reflection-attack" class="a_section" data-magellan-target="the-reflection-attack">The Reflection Attack<a class="a_hlink" href="#the-reflection-attack"></a></h3>
+<p>There’s another means by which callers can get a reference from a class that they should not be allowed to have: through reflection.</p>
+<p>You can open up any field in the JVM using <code class="hljs">setAccessible</code>, and you can monkeypatch any field or method with your own implementation using <a href="http://mishadoff.com/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/"><code class="hljs">Unsafe.putObject</code></a>.  This can lead to truly horrifying results, i.e.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-java"><span class="hljs-keyword">import</span> java.lang.reflect.*;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EverythingIsTrue</span> </span>{
+   <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setFinalStatic</span><span class="hljs-params">(Field field, Object newValue)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+      field.setAccessible(<span class="hljs-keyword">true</span>);
+
+      Field modifiersField = Field.class.getDeclaredField(<span class="hljs-string">"modifiers"</span>);
+      modifiersField.setAccessible(<span class="hljs-keyword">true</span>);
+      modifiersField.setInt(field, field.getModifiers() &amp; ~Modifier.FINAL);
+
+      field.set(<span class="hljs-keyword">null</span>, newValue);
+   }
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> <span class="hljs-keyword">throws</span> Exception </span>{      
+      setFinalStatic(Boolean.class.getField(<span class="hljs-string">"FALSE"</span>), <span class="hljs-keyword">true</span>);
+
+      System.out.format(<span class="hljs-string">"Everything is %s"</span>, <span class="hljs-keyword">false</span>); <span class="hljs-comment">// "Everything is true"</span>
+   }
+}
+</code></pre>
+</div></div>
+<p>Needless to say, this disrupts the capability model, as any private reference can be made public, traversed through reflection, and monkeypatched.</p>
+<p>In theory, you can set a security manager on the JVM, but that also comes with caveats.  A full discussion is out of scope here, but Java 9 goes a long way to limiting <code class="hljs">setAccessible</code> in conjunction with the module system</p>
+<h2 id="stages-in-capabilities" class="a_section" data-magellan-target="stages-in-capabilities">Stages in Capabilities<a class="a_hlink" href="#stages-in-capabilities"></a></h2>
+<h2 id="custom-policies-on-capabilities" class="a_section" data-magellan-target="custom-policies-on-capabilities">Custom policies on capabilities<a class="a_hlink" href="#custom-policies-on-capabilities"></a></h2>
+<p>We can define custom policies on capabilities, like a OneTimeUse[A], or a GoodForFiveMinutes[A] thing.  We should be able to do this <em>regardless of the capability</em>.</p>
+<ul>
+<li>
+<p><a href="https://people.seas.harvard.edu/~chong/pubs/csf14_capflow.pdf">Declarative Policies for Capability Control</a></p>
+</li>
+<li>
+<p>The need for capability policies https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf</p>
+</li>
+<li>
+<p>How to break the bank: Semantics of Capability Policies http://www.doc.ic.ac.uk/~scd/iFM_Caps.pdf</p>
+</li>
+<li>
+<p>Towards Capability Policy Specification and Verification https://www.researchgate.net/profile/Sophia_Drossopoulou/publication/261214232_Towards_Capability_Policy_Specification_and_Verification/links/00b7d5339827125ac2000000.pdf</p>
+</li>
+<li>
+<p>Restricted delegation in Haskell can be used with refined types to limit to members of a type</p>
+</li>
+<li>
+<p>Dependent types to restrict delegation options to sprcific people / resources</p>
+</li>
+</ul>
+<p>Access control policies restrict which components may use a given capability.</p>
+<p>Integrity policies restrict which components may influence the use of a capability.</p>
+<p>We demonstrate that standard language-based techniques can soundly enforce these policies (contracts and a security type system respectively).</p>
+<p>TODO Is it possible to implement HORTON through monads and additional info on capabilities?</p>
+<h2 id="capabilities-and-effects" class="a_section" data-magellan-target="capabilities-and-effects">Capabilities and Effects<a class="a_hlink" href="#capabilities-and-effects"></a></h2>
+<p>In other words, it’s not just Membrane.</p>
+<p>“You get to flatmap this ONCE.”  Give a demo.  Love that side-effect.</p>
+<p><a href="https://www.youtube.com/watch?v=fi1FsDW1QeY">Designing with Capabilities</a></p>
+<p>Existing systems conflate authentication and access decision pieces (presenting authentication when making request)</p>
+<p><a href="https://youtu.be/po3wmq4S15A?t=26m8s">Rob Norris</a>: An effect is whatever distinguishes <code class="hljs">F[A]</code> from <code class="hljs">A</code>.</p>
+<h2 id="capabilities-as-gatekeepers-to-resources" class="a_section" data-magellan-target="capabilities-as-gatekeepers-to-resources">Capabilities as gatekeepers to resources<a class="a_hlink" href="#capabilities-as-gatekeepers-to-resources"></a></h2>
+<h2 id="capabilities-vs-circuitbreakers" class="a_section" data-magellan-target="capabilities-vs-circuitbreakers">Capabilities vs CircuitBreakers<a class="a_hlink" href="#capabilities-vs-circuitbreakers"></a></h2>
+<h3 id="revocation-and-caretakers" class="a_section" data-magellan-target="revocation-and-caretakers">Revocation and Caretakers<a class="a_hlink" href="#revocation-and-caretakers"></a></h3>
+<p>One common pattern to use with capabilities is to revoke access to the protected resource.  This is done through the <code class="hljs">revoker</code> trait.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">revoker</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">revoke</span></span>(): <span class="hljs-type">Unit</span>
+}
+</code></pre>
+</div></div>
+<p>Providing a capability with a <code class="hljs">revoker</code> is done through a <code class="hljs">Caretaker</code> pattern, which exposes the caretaker with the capability.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Caretaker</span>[<span class="hljs-type">C</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">capability</span></span>: <span class="hljs-type">C</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">revoker</span></span>: revoker
+}
+</code></pre>
+</div></div>
+<p>The caretaker provides a capability which closes over the previous one, but which can be revoked at any time, causing an exception to be thrown.  Using <code class="hljs">Try</code> is a good practice to incorporate, since capabilities are fungible:</p>
+<p>The <code class="hljs">Caretaker</code> has a <code class="hljs">provider</code> function which will call out to the underlying <code class="hljs">doer</code> on every method invocation.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> caretaker: <span class="hljs-type">CareTaker</span>[<span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span>] = <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span>.caretaker(doer)
+<span class="hljs-keyword">val</span> revokerDoer: <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> = caretaker.get
+<span class="hljs-keyword">val</span> revoker = caretaker.revoker
+
+<span class="hljs-keyword">val</span> success = revokerDoer.doTheThing() <span class="hljs-comment">// returns Success!</span>
+revoker.revoke() <span class="hljs-comment">// shut off access through the provider</span>
+<span class="hljs-keyword">val</span> failure = revokerDoer.doTheThing() <span class="hljs-comment">// returns Failure(RevokedException)</span>
+</code></pre>
+</div></div>
+<p>The caller has a reference to the revoked capability still, but it’s useless after revocation, because every call will return <code class="hljs">Failure</code> with <code class="hljs">RevokedException</code>. A caller who wants access will have to recover by asking for another capability.</p>
+<p>Revocation is extremely flexible.  It’s possible to revoke capabilities based on the number of times the capability is invoked.  Or after a fixed amount of time, or based on rule based suspicion.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JediMaster</span>(<span class="hljs-params">jediPowers: <span class="hljs-type">JediCapability</span></span>) </span>{
+  
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cleanYourRoom</span></span>(jedi: <span class="hljs-type">Jedi</span>): <span class="hljs-type">Unit</span> = {
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">val</span> <span class="hljs-type">Caretaker</span>(revokerJediPowers, revoker) = <span class="hljs-type">Jedi</span>.caretaker(jediPowers)
+      <span class="hljs-comment">// it shouldn't take more than 5 minutes to clean a room.</span>
+      after(<span class="hljs-number">5</span> minutes, () =&gt; revoker.revoke()) 
+      user.useTheForceWisely(revokerJediPowers) 
+    } <span class="hljs-keyword">finally</span> {
+      revoker.revoke()
+    }
+  }
+}
+
+<span class="hljs-keyword">val</span> yoda = <span class="hljs-keyword">new</span> <span class="hljs-type">JediMaster</span>(force.jediPowers)
+yoda.cleanYourRoom(luke)
+</code></pre>
+</div></div>
+<p>Now, the program is safer on several levels.  Yoda only has Jedi Powers, can delegate only the powers he has, and can revoke delegation both on completion or on suspicion.</p>
+<h3 id="loggers" class="a_section" data-magellan-target="loggers">Loggers<a class="a_hlink" href="#loggers"></a></h3>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Foo</span> </span>{
+  <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Doer</span> </span>{
+    <span class="hljs-comment">// Note there's no external reference to the external FooCapability here</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">logger</span></span>(provider: <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span>): <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span> {
+      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">doTheThing</span></span>(): <span class="hljs-type">Unit</span> = {
+        println(<span class="hljs-string">"about to do the thing"</span>)
+        provider.doTheThing()
+      }
+    }
+  }
+}
+
+<span class="hljs-keyword">val</span> foo = <span class="hljs-keyword">new</span> <span class="hljs-type">Foo</span>(<span class="hljs-string">"foo"</span>)
+<span class="hljs-keyword">val</span> doer = foo.capabilities.doer
+<span class="hljs-keyword">val</span> loggingDoer = <span class="hljs-type">Foo</span>.<span class="hljs-type">Doer</span>.logger(doer)
+</code></pre>
+</div></div>
+<h3 id="attenuation" class="a_section" data-magellan-target="attenuation">Attenuation<a class="a_hlink" href="#attenuation"></a></h3>
+<p>reducing a capability’s scope of authority</p>
+<p>Example: An OCap may have access to a computer’s file system.</p>
+<p>Using attenuation, we can return an intermediary capability of just a particular file or subdirectory.
+Read-only access
+useful for packaging access to existing, non-capablity oriented world into capabilities
+mediate access to network communications
+limit connections to particular domains
+allow applications to be securely distributed across datacenters without enabling them to talk to
+arbitrary hosts on the internet – the sort of thing that would normally be regulated by firewall
+configuration, but without the operational overhead or administrative inconvenience</p>
+<h3 id="abstraction" class="a_section" data-magellan-target="abstraction">Abstraction<a class="a_hlink" href="#abstraction"></a></h3>
+<p>Packing lower level capabilities into more convenient APIs
+example: package read-only file cap into an input steram object
+example: Unix <code class="hljs">passwd</code> command is an example of abstracting lower level details of file access and data formats</p>
+<h3 id="combination" class="a_section" data-magellan-target="combination">Combination<a class="a_hlink" href="#combination"></a></h3>
+<p>Uses two or more capabilities together to create a new capability to some
+specific joint functionality, or create something truly new
+Example: In a Cap OS for mobile smartphones, having a combined capability composed of
+the authority to capture images with camera,
+the authority to obtain position with GPS,
+the authority to read system clock.</p>
+<h3 id="sealerunsealer" class="a_section" data-magellan-target="sealerunsealer">Sealer/Unsealer<a class="a_hlink" href="#sealerunsealer"></a></h3>
+<h3 id="powerbox" class="a_section" data-magellan-target="powerbox">Powerbox<a class="a_hlink" href="#powerbox"></a></h3>
+<p>A powerbox is the opposite of a sandbox.  Rather than isolating the system, it selectively grants short-lived authority by providing capabilities.</p>
+<ul>
+<li>http://wiki.c2.com/?PowerBox</li>
+<li>http://www.combex.com/papers/darpa-report/html/ (from DarpaBrowser)</li>
+<li>http://www.skyhunter.com/marcs/ewalnut.html (Powerbox Capability Manager section)</li>
+<li>https://docs.sandstorm.io/en/latest/developing/powerbox/</li>
+<li>https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/powerbox.capnp</li>
+</ul>
+<p>So <code class="hljs">bob.foo(carol)</code> means that <code class="hljs">bob</code> has the reference to carol now.  In a membrane, we’re not only wrapping
+access to carol, but also to bob???</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code>bob.foo(carol) =&gt; membrane(bob).foo(membrane(carol))
+</code></pre>
+</div></div>
+<p>This doesn‘t make much sense, so let’s use the jedi analogy again:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code>kylo.usePowersWisely(jediPowers)
+</code></pre>
+</div></div>
+<p>Even if Kylo attempts to hand his Jedi powers off to everyone else, we can revoke them.</p>
+<p>Every single parameter has to be wrapped in in something that is revoker.
+So Int =&gt; Membrane[Int] etc.
+This may be not workable in Scala, and I don’t doubt you could bypass it.</p>
+<h2 id="affine-types" class="a_section" data-magellan-target="affine-types">Affine Types<a class="a_hlink" href="#affine-types"></a></h2>
+<p>Affine Types are “use-once” types that  You can simulate affine types in Scala through isolated actors, but revoking a capability after first use will also do.</p>
+<p>http://materials.dagstuhl.de/files/17/17051/17051.PhilippHaller.Slides1.pdf</p>
+<p>“object capability discipline” – we can restrict types to match what we expect (is this part of membrane?)</p>
+<h2 id="loader-isolation" class="a_section" data-magellan-target="loader-isolation">Loader Isolation<a class="a_hlink" href="#loader-isolation"></a></h2>
+<p>Loader isolation figures into the original <a href="http://www.erights.org/talks/thesis/markm-thesis.pdf">Object Capability thesis</a>, but is at the level of the JVM rather than Scala.  The Java ClassLoader is discussed extensively in section 10.  The <a href="https://en.wikipedia.org/wiki/Object-capability_model">Wikipedia article</a> says &quot;A loader obeys <em>loader isolation</em> if the new object’s only initial references are from the explicitly provided state, with no implicit grants by the loader itself. The Java ClassLoader violates loader isolation, making confinement of unexamined loaded code impossible.&quot; but does not provide citation.</p>
+<p>That’s technically true, but isolation in Java is still possible, even if it may not be complete.</p>
+<p>This is important in Java, because if everything uses the same classloader, a new instance can be brought up through reflection.  Additionally, if a security loader is not enabled on the system, then private variables can be made accessible on the system and swapped out.  For an example, see <a href="https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/">Monkeypatching Java Classes</a>.  You can enable the security manager, but it‘s very easy to disable unless you are <a href="https://tersesystems.com/blog/2015/12/29/sandbox-experiment/">very careful about the sandbox</a>.  And when you combine all of the above with the many gadgets available through <a href="https://tersesystems.com/blog/2015/11/08/closing-the-open-door-of-java-object-serialization/">Java Deserialization</a>, it’s pretty clear that a dedicated attacker can circumvent the JVM.</p>
+<p>Instantiating a new instance through reflection does not automatically put it in the chain of references, but it does allow a bypass of the Scala access modifier logic.  However, if the classloader doesn‘t have those classes at all, they can’t be instantiated.</p>
+<p>You break apart your public API classes and your data transfer objects from your implementation code.  Then you create another classloader, and register the SPI from there, enabling public access through the API without access to the underlying implementation.  In Java 9, you can use the module system, but that’s still incredibly new and untried.</p>
+<h3 id="custom-class-loader" class="a_section" data-magellan-target="custom-class-loader">Custom class loader<a class="a_hlink" href="#custom-class-loader"></a></h3>
+<p>You load in projects through URLClassLoader, and use SBT BuildInfo.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">lazy</span> <span class="hljs-keyword">val</span> core = project enablePlugins <span class="hljs-type">BuildInfoPlugin</span> settings (
+  buildInfoKeys := <span class="hljs-type">Seq</span>(<span class="hljs-type">BuildInfoKey</span>.map(exportedProducts in (`third-party`, <span class="hljs-type">Runtime</span>)) {
+    <span class="hljs-keyword">case</span> (_, classFiles) ⇒ (<span class="hljs-string">"thirdParty"</span>, classFiles.map(_.data.toURI.toURL)) 
+  })
+</code></pre>
+</div></div>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">createInstance</span></span>(): foo.bar.<span class="hljs-type">API</span> = {
+  <span class="hljs-keyword">val</span> loader = <span class="hljs-keyword">new</span> java.net.<span class="hljs-type">URLClassLoader</span>(buildinfo.<span class="hljs-type">BuildInfo</span>.thirdParty.toArray, parent)
+  loader.loadClass(<span class="hljs-string">"foo.bar.Impl"</span>).asSubclass(classOf[foo.bar.<span class="hljs-type">API</span>]).newInstance()
+}
+</code></pre>
+</div></div>
+<p>https://stackoverflow.com/questions/29578808/using-a-custom-class-loader-for-a-module-dependency-in-sbt</p>
+<h3 id="osgi" class="a_section" data-magellan-target="osgi">OSGI<a class="a_hlink" href="#osgi"></a></h3>
+<p>If you’re going down this route, you probably want an OSGI container like Apache Karaf, which can run bundles with strict container isolation.  OSGI lets you put the API into one bundle, and the implementation into another bundle.  Then use the OSGI service registry to construct the instance, by adding a ServiceFactory implementation and an instance of the API interface.</p>
+<p>It is really hard to find anything that uses both OSGI and sbt.  Phil Andrews has two projects which work, but almost everything else is set up to build an OSGI package externally and does not make use of the end product.</p>
+<ul>
+<li>https://github.com/PhilAndrew/JumpMicro</li>
+<li>https://github.com/PhilAndrew/sbt-osgi-felix-akka-blueprint-camel</li>
+</ul>
+<p>Realistically speaking, it’s probably OSGI in Java, or you set up a Manifest.MF file directly.  The simplest possible OSGI module is by <a href="https://michaelrice.com/2015/04/the-simplest-osgi-karaf-hello-world-demo-i-could-come-up-with/">Michael Rice</a> with https://github.com/mrice/osgi-demo which can be used as a model.</p>
+<p>// https://gist.github.com/mbedward/6e3dbb232bafec0792ba
+// https://github.com/adamw/quicklens/blob/master/quicklens/src/main/scala/com/softwaremill/quicklens/QuicklensMacros.scala
+// https://github.com/wix/accord/blob/master/core/src/main/scala/com/wix/accord/transform/ValidationTransform.scala
+// http://www.strongtyped.io/blog/2014/05/23/case-class-related-macros/
+// http://blog.scottlogic.com/2013/06/07/scala-macros-part-3.html
+// http://blog.echo.sh/2013/11/04/exploring-scala-macros-map-to-case-class-conversion.html
+// https://github.com/echojc/scala-macro-template
+// https://blog.scalac.io/2016/05/26/simple-types-in-play.html
+// https://stackoverflow.com/questions/25188440/applying-type-constructors-to-generated-type-parameters-with-scala-macros</p>
+
+                 
+  <ul class="menu align-right simple a_navbar a_navbar_bottom">
+    
+      
+        <li><a href="site-contents.html"  title="Table of Contents" ><span class="a_foundation_icon"></span>  Contents</a></li>
+      
+    
+  </ul>
+ 
+              </main>
+              
+              
+                <div data-sticky-container class="small-12 medium-12 large-2 large-order-1 columns a_sitenav_container">
+                  <nav class="a_sitenav" data-sticky data-sticky-on="large" data-anchor="_sections">
+                    
+                    <ul>
+                       
+  <li >
+    
+      
+        <a href="index.html">Introduction</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="running.html">Running</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="guide.html">A Guide To Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="introduction.html">Introducing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="creation.html">Creating Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="management.html">Managing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="authorization.html">Authorizing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="confinement.html">Confining Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="other_works.html">Other works</a>
+      
+    
+    
+  </li>
+ 
+                    </ul>
+                    
+                    
+                  </nav>
+                </div>
+              
+              
+              
+                <div class="small-12 medium-12 large-2 large-order-3 columns a_show-for-xlarge" data-sticky-container>
+                  <nav class="a_pagenav" data-sticky data-sticky-on="large" data-anchor="_sections">
+                     <header><p>On This Page</p>
+</header> 
+                    <ul class="vertical menu" data-magellan>
+                       
+  
+    <li>
+      
+         <a href="#readme">README</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#capabilities">Capabilities</a> 
+      
+      
+        <ul class="vertical menu">  
+  
+    <li>
+      
+         <a href="#why-this-works">Why this works</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#how-to-assign-capabilities">How to assign capabilities</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#the-downcast-attack">The Downcast Attack</a> 
+      
+      
+        <ul class="vertical menu">  
+  
+    <li>
+      
+         <a href="#the-reflection-attack">The Reflection Attack</a> 
+      
+      
+    </li>
+  
+  </ul>
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#stages-in-capabilities">Stages in Capabilities</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#custom-policies-on-capabilities">Custom policies on capabilities</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#capabilities-and-effects">Capabilities and Effects</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#capabilities-as-gatekeepers-to-resources">Capabilities as gatekeepers to resources</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#capabilities-vs-circuitbreakers">Capabilities vs CircuitBreakers</a> 
+      
+      
+        <ul class="vertical menu">  
+  
+    <li>
+      
+         <a href="#revocation-and-caretakers">Revocation and Caretakers</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#loggers">Loggers</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#attenuation">Attenuation</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#abstraction">Abstraction</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#combination">Combination</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#sealerunsealer">Sealer/Unsealer</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#powerbox">Powerbox</a> 
+      
+      
+    </li>
+  
+  </ul>
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#affine-types">Affine Types</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#loader-isolation">Loader Isolation</a> 
+      
+      
+        <ul class="vertical menu">  
+  
+    <li>
+      
+         <a href="#custom-class-loader">Custom class loader</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#osgi">OSGI</a> 
+      
+      
+    </li>
+  
+  </ul>
+      
+    </li>
+  
+  </ul>
+      
+    </li>
+  
+ 
+                    </ul>
+                  </nav>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer class="small-12 medium-12 large-12 columns align-self-bottom a_footer">
+        <div class="row">
+          <div class="small-12 medium-12 large-12 columns top-bar">
+            <div class="top-bar-left">
+              <p>© Copyright 2018 Will Sargent</p>
+
+            </div>
+            <div class="top-bar-right">
+              <p>Generated with <a href="https://github.com/szeiger/ornate">Ornate</a>.</p>
+
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script src="theme/js/jquery.min.js"></script>
+    <script src="theme/js/what-input.min.js"></script>
+    <script src="theme/js/foundation.min.js"></script>
+    
+    <script src="theme/js/app.js"></script>
+    
+  </body>
+</html>

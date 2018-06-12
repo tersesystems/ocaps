@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Capabilities</title>
+    <link rel="stylesheet" href="theme/css/foundation.min.css">
+    <link rel="stylesheet" href="theme/css/app.css">
+    
+     <link rel="stylesheet" href="theme/highlight.js/styles/github-gist.css">  <link rel="stylesheet" href="theme/css/foundation-icons.custom.css"> 
+    
+     <link rel="prev" href="introduction.html"  title="Introducing Capabilities"  />  <link rel="next" href="management.html"  title="Managing Capabilities"  />  <link rel="start" href="index.html"  title="Introduction"  />  <link rel="toc" href="site-contents.html"  title="Table of Contents"  /> 
+  </head>
+  <body>
+    <div class="expanded row">
+      <div class="small-12 medium-12 large-12 columns align-self-top">
+        <div class="row">
+          
+          <header class="large-12 columns align-self-top a_header">
+            <div class="row">
+              <div class="large-12 columns a_limited top-bar">
+                <div class="top-bar-left">
+                  <p>ocaps Manual</p>
+
+                </div>
+                <div class="top-bar-right align-right row">
+                  
+                  
+                    <form action="site-search.html" method="get" class="align-right a_search">
+                      <input name="q" type="search"  placeholder="Search
+" >
+                      <button><img alt="&#1F50D;" src="theme/images/search.svg" /></button>
+                    </form>
+                  
+                </div>
+              </div>
+            </div>
+          </header>
+          
+          <div class="small-12 medium-12 large-12 columns align-self-top a_limited a_main">
+            <div class="row">
+              
+              <main class="columns large-order-2 sections" id="_sections">
+                 
+  <ul class="menu align-right simple a_navbar a_navbar_top">
+    
+      
+        <li><a href="introduction.html"  title="Introducing Capabilities" ><span class="a_foundation_icon"></span>  Previous</a></li>
+      
+    
+      
+        <li><a href="management.html"  title="Managing Capabilities" ><span class="a_foundation_icon"></span>  Next</a></li>
+      
+    
+      
+        <li><a href="site-contents.html"  title="Table of Contents" ><span class="a_foundation_icon"></span>  Contents</a></li>
+      
+    
+  </ul>
+ 
+                
+                <h1 id="creating-capabilities" class="a_section" data-magellan-target="creating-capabilities">Creating Capabilities<a class="a_hlink" href="#creating-capabilities"></a></h1>
+<p>In Scala, a resource is <em>an object</em> and a capability is the <em>reference</em> to that object.  If you have a reference to an object, you can, at a minimum, access all of the public methods and fields on that object.  Depending on the access modifiers on the methods and fields and your relationship to the object, you may also be able to reference <em>private</em> and <em>protected</em> methods as well.  If you call a method, or access a field, or modify a field, then you are affecting the resource.  Your ability to affect the resource is justified by your ability to refer to the object.</p>
+<p>In short, a capability is a programming level expression of the saying “You can only eat your cake if you have it.”</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Cake</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span></span>(): <span class="hljs-type">Unit</span>
+}
+<span class="hljs-keyword">val</span> cake = <span class="hljs-keyword">new</span> <span class="hljs-type">Cake</span>() {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span></span>() = ()
+}
+cake.eat()
+</code></pre>
+</div></div>
+<p>You may know that a resource (an instance of <code class="hljs">Cake</code>) exists, but you still need an object reference <code class="hljs">cake</code> in order to affect the <code class="hljs">Cake</code> instance by calling the <code class="hljs">eat()</code> method on it.  This is a fairly trivial example, because if you can instantiate a cake yourself, you will have no problem referencing it.</p>
+<p>Things start getting more interesting when you add more objects, and you don’t control or instantiate resources directly.  For example, you may not be able to make cakes yourself, so you go to a bakery.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Bakery</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buy</span></span>(): <span class="hljs-type">Cake</span> 
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span>(<span class="hljs-params">val bakery: <span class="hljs-type">Bakery</span></span>) </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buyAndEatCake</span></span>() = eatCake(bakery.buy())
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eatCake</span></span>(cake: <span class="hljs-type">Cake</span>) = cake.eat()    
+}
+<span class="hljs-keyword">val</span> bakery = <span class="hljs-keyword">new</span> <span class="hljs-type">Bakery</span>() {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buy</span></span>(): <span class="hljs-type">Cake</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">Cake</span>() { 
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span></span>() = ()
+  }
+}
+<span class="hljs-keyword">val</span> you = <span class="hljs-keyword">new</span> <span class="hljs-type">Person</span>(bakery)
+you.buyAndEatCake()
+</code></pre>
+</div></div>
+<p>Here, you‘re still interested in affecting a resource <code class="hljs">Cake</code> by, well, eating it, but you don’t have direct access to the cake.  Instead, <code class="hljs">you</code>, an instance of a <code class="hljs">Person</code>, have a reference to a <code class="hljs">Bakery</code>, and that <code class="hljs">Bakery</code> may give you a cake.</p>
+<p>Note that because <code class="hljs">bakery</code> is an object reference, it is also a capability.  You can’t buy things from a bakery unless you know how to get to one.</p>
+<p>The bakery may give you a cake.  But it may throw an exception, because they don‘t have cakes or you don’t have enough money, or because they‘re closed.  In addition, you don’t control the behavior of the <code class="hljs">eat</code> method.  You have a reference, but that reference is a contract and it’s the object that chooses how to execute it – when you call <code class="hljs">cake.eat()</code>, that may also throw an exception or do something behind the scenes.</p>
+<p>And this is where the power of capabilities comes in.  As it stands, you can eat a cake as often as you like.  The bakery may want you to only eat a cake once.  Because the bakery controls access to the resource, it can enforce a capability policy around the eating of cake.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> enforcingBakery = <span class="hljs-keyword">new</span> <span class="hljs-type">Bakery</span>() {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buy</span></span>(): <span class="hljs-type">Cake</span> = {
+    <span class="hljs-keyword">val</span> latch = <span class="hljs-keyword">new</span> java.util.concurrent.atomic.<span class="hljs-type">AtomicInteger</span>(<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">val</span> realCake = <span class="hljs-keyword">new</span> <span class="hljs-type">Cake</span>() {
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span></span>() = ()
+    }
+    <span class="hljs-keyword">new</span> <span class="hljs-type">Cake</span>() {
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span></span>() = {
+        <span class="hljs-keyword">if</span> (latch.getAndDecrement == <span class="hljs-number">1</span>) {
+          realCake.eat()
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<span class="hljs-string">"You have already eaten this cake!"</span>)
+        }
+      }
+    }
+  }
+}
+
+<span class="hljs-keyword">val</span> sneakyYou = <span class="hljs-keyword">new</span> <span class="hljs-type">Person</span>(enforcingBakery)
+<span class="hljs-keyword">val</span> oneTimeCake = sneakyYou.bakery.buy()
+sneakyYou.eatCake(oneTimeCake)
+sneakyYou.eatCake(oneTimeCake)
+</code></pre>
+</div></div>
+<p>You may get an object reference – a capability – to a <code class="hljs">Cake</code>.  But here, the actual cake is only accessible through a delegate (also called a “forwarder”) which proxies the call.  You have no direct access to the resource (<code class="hljs">realCake</code>), and you can affect the resource (call <code class="hljs">realCake.eat()</code>)  only if the proxy allows it.  The proxy may refuse to proxy the call.  This is called <em>revocation</em>, and it is a key part of capability-based systems.</p>
+<p>So if the only way you can get a cake is through a bakery, then you have to play by the bakery’s rules.</p>
+<h2 id="creating-capabilities-through-facets" class="a_section" data-magellan-target="creating-capabilities-through-facets">Creating Capabilities Through Facets<a class="a_hlink" href="#creating-capabilities-through-facets"></a></h2>
+<p>Let’s dig a little deeper and discuss capabilities in the context of a <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> based repository, and show how resources and capabilities interact, and how to expose capabilities.</p>
+<blockquote>
+<p>It’s worth noticing that because a capability is an object reference, a resource which has an exposed capability is always referencable and so will not be eligible for garbage collection. In certain cases, we have many capabilities to resources which are no longer valid, such as cached items, or may have open filehandles.  You should use or <code class="hljs">ocaps.WeakResource</code> to wrap access to a resource in a <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html">weak reference</a>.</p>
+</blockquote>
+<p>When you think of a repository, you usually think of something like the following:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">import</span> scala.concurrent._
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Item</span>(<span class="hljs-params">id: <span class="hljs-type">UUID</span>, name: <span class="hljs-type">String</span></span>)</span>
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ItemRepository</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Unit</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]]
+}
+</code></pre>
+</div></div>
+<p>However, recall the first rule: if you have a cake, you can eat it.  If you have access to an <code class="hljs">ItemRepository</code>, you can call all of the methods available on <code class="hljs">ItemRepository</code>.  If a class just wants to query for an item, it doesn’t need the ability to create, update or delete that item.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Item</span>(<span class="hljs-params">id: <span class="hljs-type">UUID</span>, name: <span class="hljs-type">String</span></span>)</span>
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">ItemRepository</span> </span>{
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Finder</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]]
+  }
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Updater</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>]
+  }
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Deleter</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Unit</span>]
+  }
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Creator</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>]
+  }
+}
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ItemRepository</span> </span>
+  <span class="hljs-keyword">extends</span> <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Finder</span> 
+  <span class="hljs-keyword">with</span> <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Updater</span>
+  <span class="hljs-keyword">with</span> <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Creator</span>
+  <span class="hljs-keyword">with</span> <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Deleter</span>
+</code></pre>
+</div></div>
+<p>Here, we’ve broken down the individual methods of the <code class="hljs">ItemRepository</code> into a series of traits.  Rather than exposing the <code class="hljs">ItemRepository</code> itself, we can expose the traits individually, and build up the repository as a <em>composition</em> of capabilities.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> item = <span class="hljs-type">Item</span>(<span class="hljs-type">UUID</span>.randomUUID(), <span class="hljs-string">"item"</span>)
+<span class="hljs-keyword">val</span> repo = <span class="hljs-keyword">new</span> <span class="hljs-type">ItemRepository</span>() {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>] = <span class="hljs-type">Future</span>.successful(item)
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span></span>(item: <span class="hljs-type">Item</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Item</span>] = <span class="hljs-type">Future</span>.successful(item)
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Unit</span>] = <span class="hljs-type">Future</span>.successful(())
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]] = <span class="hljs-type">Future</span>.successful(item)
+}
+
+<span class="hljs-keyword">val</span> finder = <span class="hljs-keyword">new</span> <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Finder</span>() {
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]] = repo.finder(id)
+}
+</code></pre>
+</div></div>
+<p>When we have a pattern like this, where capabilities have a shared underlying resource, we say that they are facets of the resource.  In this case, we have a <code class="hljs">finder</code> facet of the <code class="hljs">ItemRepository</code> resource.  Note that we create a new <code class="hljs">Finder</code> instance, and proxy through to <code class="hljs">repo.finder</code>.  This is called <em>attenuation</em>.<br />
+Facets do not have to be created through attenuation, and in some cases it‘s undesirable because it fixes traits onto the resource.  We’ll show another way facets can be created later in this section.</p>
+<p>Now we have the facet, we can use it in other operations:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NameChanger</span>(<span class="hljs-params">finder: <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Finder</span></span>) </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findName</span></span>(id: <span class="hljs-type">String</span>): <span class="hljs-type">Future</span>[<span class="hljs-type">String</span>] = finder.find(id).map { maybeItem =&gt;
+    maybeItem.map(_.name)
+  }
+}
+</code></pre>
+</div></div>
+<p>You would think that since <code class="hljs">ItemRepository</code> implements the <code class="hljs">Finder</code> trait itself, that you could just pass it around directly.  The problem there is that an object reference is still an object reference <strong>no matter what type you give it</strong>.  As such, you can get access to the other facets by downcasting to <code class="hljs">ItemRepository</code>:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> onlyAFinder: <span class="hljs-type">ItemRepository</span>.<span class="hljs-type">Finder</span> = repo
+<span class="hljs-keyword">val</span> recoveredRepo: <span class="hljs-type">ItemRepository</span> = onlyAFinder.asInstanceOf[<span class="hljs-type">ItemRepository</span>]
+</code></pre>
+</div></div>
+<h2 id="deferring-effects-in-capabilities-with-tagless-final" class="a_section" data-magellan-target="deferring-effects-in-capabilities-with-tagless-final">Deferring Effects in Capabilities with Tagless Final<a class="a_hlink" href="#deferring-effects-in-capabilities-with-tagless-final"></a></h2>
+<p>Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques for cleaner effect handling.  For example, rather than commit to a <code class="hljs">Task[_]</code> or a <code class="hljs">Try[_]</code>, a capability may be expressed in <a href="https://www.beyondthelines.net/programming/introduction-to-tagless-final/">tagless final</a> style with a type parameter <code class="hljs">F</code> that is a standin for the kind of effect you want:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">ItemRepository</span> </span>{
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Finder</span>[<span class="hljs-type">F</span>[_]] </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">F</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]]
+  }
+}
+</code></pre>
+</div></div>
+<p>The <code class="hljs">capabilities</code> companion is defined using <code class="hljs">cat.Id</code>, which essentially means “no effect here”:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">import</span> cats._
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ItemRepository</span> </span>{
+  <span class="hljs-keyword">import</span> <span class="hljs-type">ItemRepository</span>._
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> items = <span class="hljs-type">Seq</span>(<span class="hljs-type">Item</span>(<span class="hljs-type">UUID</span>.randomUUID(), <span class="hljs-string">"item name"</span>))
+  <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">capabilities</span> </span>{
+    <span class="hljs-keyword">val</span> finder: <span class="hljs-type">Finder</span>[<span class="hljs-type">Id</span>] = <span class="hljs-keyword">new</span> <span class="hljs-type">Finder</span>[<span class="hljs-type">Id</span>]() {
+      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Id</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]] = items.find(_.id == id)
+    }
+  }
+}
+</code></pre>
+</div></div>
+<p>And then the effect – in this case <code class="hljs">Try</code> – can be wrapped around the original capability instance.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> idFinder = access.finder(itemRepository)
+<span class="hljs-keyword">val</span> tryFinder: <span class="hljs-type">Finder</span>[<span class="hljs-type">Try</span>] = <span class="hljs-keyword">new</span> <span class="hljs-type">Finder</span>[<span class="hljs-type">Try</span>] {
+  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find</span></span>(id: <span class="hljs-type">UUID</span>): <span class="hljs-type">Try</span>[<span class="hljs-type">Option</span>[<span class="hljs-type">Item</span>]] = <span class="hljs-type">Try</span>(idFinder.find(id))
+}
+</code></pre>
+</div></div>
+<p>When using <code class="hljs">Try</code>, the <code class="hljs">find</code> method will return either <code class="hljs">Success(maybeItem)</code> or <code class="hljs">Failure(throwable)</code> as a result, rather than throwing an exception up the stack.</p>
+<p>In addition to using a Tagless Final approach, the <code class="hljs">cats-effect</code> library may also be used to provide an <a href="https://typelevel.org/cats-effect/datatypes/io.html"><code class="hljs">IO</code> monad</a> around a sensitive operation and defer execution while maintaining stack safety:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">import</span> cats.effect.<span class="hljs-type">IO</span>
+<span class="hljs-keyword">val</span> program = <span class="hljs-type">IO</span>(finder.find(id)) <span class="hljs-comment">// does not execute finder</span>
+<span class="hljs-comment">// ...composes program with more operations based off finder...</span>
+program.unsafeRunSync()           <span class="hljs-comment">// executes program</span>
+</code></pre>
+</div></div>
+<h2 id="creating-capabilities-through-access-modifiers" class="a_section" data-magellan-target="creating-capabilities-through-access-modifiers">Creating Capabilities Through Access Modifiers<a class="a_hlink" href="#creating-capabilities-through-access-modifiers"></a></h2>
+<p>Creating a resource which exposes all its public methods is very convenient in situations where direct access to the resource is tightly restricted, and all external access is regulated through facets.  This is not always the case: for example, in an Inversion-of-Control container like Spring or Guice, all resources are accessible, i.e.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> repoThroughGuice = injector.instanceOf(classOf[<span class="hljs-type">ItemRepository</span>])
+repoThroughGuice.delete(<span class="hljs-string">"1"</span>) <span class="hljs-comment">// anyone can delete</span>
+</code></pre>
+</div></div>
+<p>In this situation, it may be desirable in some cases to have a resource with public methods, and a “protected” set of capabilities that are not accessible:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ItemRepository</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">name</span></span>: <span class="hljs-type">String</span>  <span class="hljs-comment">// okay for anyone to access this!</span>
+  
+  <span class="hljs-keyword">private</span>[???] <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">deleter</span></span>: <span class="hljs-type">Deleter</span> <span class="hljs-comment">// only accessible to authorized objects!</span>
+}
+</code></pre>
+</div></div>
+<p>There is a way to implement this!  In Scala, only the public methods on an object are exposed – private methods cannot be referenced externally.  We can use Scala‘s <a href="http://jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/">access modifiers and qualifiers</a> to selectively expose capabilities.  We’ll demonstrate in this section.</p>
+<p>So, say you have a class <code class="hljs">Document</code>, with a private <code class="hljs">Path</code> that contains the text of the document.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">import</span> java.nio.file._
+<span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Document</span>(<span class="hljs-params">private[this] val path: <span class="hljs-type">Path</span></span>) </span>{
+    ...
+}
+</code></pre>
+</div></div>
+<p>We want to restrict access so that we can read from the document without exposing the path.</p>
+<p>First, we create a companion object <code class="hljs">Document</code> and add a <code class="hljs">NameChanger</code> trait:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Document</span> </span>{
+  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Reader</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bufferedReader</span></span>[<span class="hljs-type">T</span>](block: <span class="hljs-type">BufferedReader</span> =&gt; <span class="hljs-type">T</span>): <span class="hljs-type">T</span>
+  }
+}
+</code></pre>
+</div></div>
+<p>Next, we create a private singleton object called <code class="hljs">capabilities</code> and add a <code class="hljs">reader</code> implementation:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Document</span>(<span class="hljs-params">private[this] val path: <span class="hljs-type">Path</span></span>) </span>{
+  <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">capabilities</span> </span>{
+    <span class="hljs-keyword">val</span> reader: <span class="hljs-type">Document</span>.<span class="hljs-type">Reader</span> = <span class="hljs-keyword">new</span> <span class="hljs-type">Document</span>.<span class="hljs-type">Reader</span> {
+      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bufferedReader</span></span>[<span class="hljs-type">T</span>](block: <span class="hljs-type">BufferedReader</span> =&gt; <span class="hljs-type">T</span>): <span class="hljs-type">T</span> = {
+        <span class="hljs-keyword">val</span> reader = <span class="hljs-type">Files</span>.newBufferedReader(<span class="hljs-type">Document</span>.<span class="hljs-keyword">this</span>.path, <span class="hljs-type">StandardCharsets</span>.<span class="hljs-type">UTF_8</span>)
+        <span class="hljs-keyword">try</span> {
+          block(reader)
+        } <span class="hljs-keyword">finally</span> {
+          reader.close()
+        }
+      }
+    }
+  }
+}
+</code></pre>
+</div></div>
+<p>Finally, we add an <code class="hljs">Access</code> class that can expose the <code class="hljs">Reader</code> for a particular <code class="hljs">Document</code> instance:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Document</span> </span>{
+  <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Access</span> <span class="hljs-title">private</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reader</span></span>(doc: <span class="hljs-type">Document</span>): <span class="hljs-type">Reader</span> = doc.capabilities.reader
+  }
+  <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Access</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> instance = <span class="hljs-keyword">new</span> <span class="hljs-type">Access</span>()
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">apply</span></span>(): <span class="hljs-type">Access</span> = instance
+  }
+}
+</code></pre>
+</div></div>
+<p>In order to have a reference to a <code class="hljs">reader</code>, you must have access to both a <code class="hljs">Document.Access</code> instance and a <code class="hljs">Document</code>:</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">val</span> path = <span class="hljs-type">Path</span>.get(<span class="hljs-string">"document.txt"</span>)
+<span class="hljs-keyword">val</span> document = <span class="hljs-keyword">new</span> <span class="hljs-type">Document</span>(path)
+<span class="hljs-keyword">val</span> access = <span class="hljs-type">Document</span>.<span class="hljs-type">Access</span>()
+<span class="hljs-keyword">val</span> reader = access.reader(document)
+<span class="hljs-keyword">val</span> text = reader.bufferedReader(_.readLine())
+</code></pre>
+</div></div>
+<p>When you put two capabilities together to expose functionality that is more than the individual pieces, it is called <em>amplification</em>.  Other useful examples of <em>amplification</em> are when a “can” and a “can opener” are put together, or a “private key” and “document encrypted with public key.”</p>
+<p>Creating an <code class="hljs">Access</code> class can also be useful because it can mediate between a resource and the capabilities on the resource, without directly involving the resource itself.  For example, referring back to the effects section above, a <code class="hljs">TryAccess</code> class may provide a <code class="hljs">Try</code> effect on all the capabilities of the <code class="hljs">Document</code>.</p>
+<div class="row"><div class="a_linked small-expand columns a_xscroll a_codeblock">
+<pre class="hljs"><code class="language-scala"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TryAccess</span> <span class="hljs-title">private</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reader</span></span>(doc: <span class="hljs-type">Document</span>): <span class="hljs-type">Reader</span>[<span class="hljs-type">Try</span>] = <span class="hljs-type">Try</span>(doc.capabilities.reader)
+}
+</code></pre>
+</div></div>
+<p>This does of course leave the question open of how you manage access to the <code class="hljs">Access</code> instance, since it hands out capabilities to anyone who asks.  This leads into the next section.</p>
+
+                 
+  <ul class="menu align-right simple a_navbar a_navbar_bottom">
+    
+      
+        <li><a href="introduction.html"  title="Introducing Capabilities" ><span class="a_foundation_icon"></span>  Previous</a></li>
+      
+    
+      
+        <li><a href="management.html"  title="Managing Capabilities" ><span class="a_foundation_icon"></span>  Next</a></li>
+      
+    
+      
+        <li><a href="site-contents.html"  title="Table of Contents" ><span class="a_foundation_icon"></span>  Contents</a></li>
+      
+    
+  </ul>
+ 
+              </main>
+              
+              
+                <div data-sticky-container class="small-12 medium-12 large-2 large-order-1 columns a_sitenav_container">
+                  <nav class="a_sitenav" data-sticky data-sticky-on="large" data-anchor="_sections">
+                    
+                    <ul>
+                       
+  <li >
+    
+      
+        <a href="index.html">Introduction</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="running.html">Running</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="guide.html">A Guide To Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="introduction.html">Introducing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li  class="a_thispage" >
+    
+      
+        <a href="creation.html">Creating Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="management.html">Managing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="authorization.html">Authorizing Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="confinement.html">Confining Capabilities</a>
+      
+    
+    
+  </li>
+  
+  <li >
+    
+      
+        <a href="other_works.html">Other works</a>
+      
+    
+    
+  </li>
+ 
+                    </ul>
+                    
+                    
+                  </nav>
+                </div>
+              
+              
+              
+                <div class="small-12 medium-12 large-2 large-order-3 columns a_show-for-xlarge" data-sticky-container>
+                  <nav class="a_pagenav" data-sticky data-sticky-on="large" data-anchor="_sections">
+                     <header><p>On This Page</p>
+</header> 
+                    <ul class="vertical menu" data-magellan>
+                       
+  
+    <li>
+      
+         <a href="#creating-capabilities">Creating Capabilities</a> 
+      
+      
+        <ul class="vertical menu">  
+  
+    <li>
+      
+         <a href="#creating-capabilities-through-facets">Creating Capabilities Through Facets</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#deferring-effects-in-capabilities-with-tagless-final">Deferring Effects in Capabilities with Tagless Final</a> 
+      
+      
+    </li>
+  
+  
+  
+    <li>
+      
+         <a href="#creating-capabilities-through-access-modifiers">Creating Capabilities Through Access Modifiers</a> 
+      
+      
+    </li>
+  
+  </ul>
+      
+    </li>
+  
+ 
+                    </ul>
+                  </nav>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer class="small-12 medium-12 large-12 columns align-self-bottom a_footer">
+        <div class="row">
+          <div class="small-12 medium-12 large-12 columns top-bar">
+            <div class="top-bar-left">
+              <p>© Copyright 2018 Will Sargent</p>
+
+            </div>
+            <div class="top-bar-right">
+              <p>Generated with <a href="https://github.com/szeiger/ornate">Ornate</a>.</p>
+
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script src="theme/js/jquery.min.js"></script>
+    <script src="theme/js/what-input.min.js"></script>
+    <script src="theme/js/foundation.min.js"></script>
+    
+    <script src="theme/js/app.js"></script>
+    
+  </body>
+</html>
