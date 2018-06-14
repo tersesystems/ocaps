@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>A Guide To Capabilities · Introduction</title>
+<title>Examples · Introduction</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 Introduction
 </span>
 <span class="md-header-nav__topic">
-A Guide To Capabilities
+Examples
 </span>
 </div>
 </div>
@@ -103,7 +103,7 @@ Introduction
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
-  <li><a href="../examples/index.html" class="page">Examples</a>
+  <li><a href="../examples/index.html" class="active page">Examples</a>
   <ul>
     <li><a href="../examples/overview.html" class="page">Overview</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
@@ -116,7 +116,7 @@ Introduction
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
   </ul></li>
-  <li><a href="../guide/index.html" class="active page">A Guide To Capabilities</a>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
     <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
@@ -126,6 +126,17 @@ Introduction
   </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../examples/index.html#examples" class="header">Examples</a>
+  <ul>
+    <li><a href="../examples/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
+    <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
+    <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
+    <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
@@ -136,21 +147,64 @@ Introduction
 </div>
 </div>
 </div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../examples/index.html#examples" class="header">Examples</a>
+  <ul>
+    <li><a href="../examples/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
+    <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
+    <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
+    <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#a-guide-to-capabilities" name="a-guide-to-capabilities" class="anchor"><span class="anchor-link"></span></a>A Guide To Capabilities</h1>
-<p>This is a guide to capabilities written for the general programmer, using Scala.</p>
+<h1><a href="#examples" name="examples" class="anchor"><span class="anchor-link"></span></a>Examples</h1>
+<p>This is a series of examples showing capabilities in action.</p>
+<h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
+<p>This section shows creation of capabilities and direct use.</p>
 <ul>
-  <li><a href="introduction.md">Introduction</a></li>
-  <li><a href="creation.md">Creating Capabilities</a></li>
-  <li><a href="authorization.md">Authorizing Capabilities</a></li>
-  <li><a href="management.md">Managing Capabilities</a></li>
-  <li><a href="confinement.md">Confining Capabilities</a></li>
+  <li><a href="overview.md">Overview</a></li>
+</ul>
+<h2><a href="#structural-patterns" name="structural-patterns" class="anchor"><span class="anchor-link"></span></a>Structural Patterns</h2>
+<p>This section shows structural patterns that do not change behavior.</p>
+<ul>
+  <li><a href="composition.md">Composition</a></li>
+  <li><a href="attenuation.md">Attenuation</a></li>
+</ul>
+<h2><a href="#behavioral-patterns" name="behavioral-patterns" class="anchor"><span class="anchor-link"></span></a>Behavioral Patterns</h2>
+<p>This section shows patterns that change the behavior of capabilities, typically adding side effects or blocking execution completely.</p>
+<ul>
+  <li><a href="modulation.md">Modulation</a></li>
+  <li><a href="revocation.md">Revocation</a></li>
+</ul>
+<h2><a href="#operational-patterns" name="operational-patterns" class="anchor"><span class="anchor-link"></span></a>Operational Patterns</h2>
+<p>This section shows capabilities used together or passed around.</p>
+<ul>
+  <li><a href="amplification.md">Amplification</a></li>
+  <li><a href="delegation.md">Delegation</a></li>
+  <li><a href="gatekeeper.md">Gatekeeper</a></li>
+</ul>
+<h2><a href="#confinement-patterns" name="confinement-patterns" class="anchor"><span class="anchor-link"></span></a>Confinement Patterns</h2>
+<p>This section shows capabilities being rendered inaccessible or made accessible through a membrane.</p>
+<ul>
+  <li><a href="dynamic_seal.md">Dynamic Sealing</a></li>
+  <li><a href="membrane.md">Membrane</a></li>
 </ul>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -166,7 +220,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/membrane.html" title="Membrane" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../running.html" title="Running" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -175,17 +229,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Membrane
+Running
 </span>
 </div>
 </a>
-<a href="../guide/introduction.html" title="Introducing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/overview.html" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Introducing Capabilities
+Overview
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>A Guide To Capabilities · Introduction</title>
+<title>Amplification · Introduction</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 Introduction
 </span>
 <span class="md-header-nav__topic">
-A Guide To Capabilities
+Amplification
 </span>
 </div>
 </div>
@@ -110,13 +110,13 @@ Introduction
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
-    <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/amplification.html" class="active page">Amplification</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
   </ul></li>
-  <li><a href="../guide/index.html" class="active page">A Guide To Capabilities</a>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
     <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
@@ -139,18 +139,69 @@ Introduction
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#a-guide-to-capabilities" name="a-guide-to-capabilities" class="anchor"><span class="anchor-link"></span></a>A Guide To Capabilities</h1>
-<p>This is a guide to capabilities written for the general programmer, using Scala.</p>
-<ul>
-  <li><a href="introduction.md">Introduction</a></li>
-  <li><a href="creation.md">Creating Capabilities</a></li>
-  <li><a href="authorization.md">Authorizing Capabilities</a></li>
-  <li><a href="management.md">Managing Capabilities</a></li>
-  <li><a href="confinement.md">Confining Capabilities</a></li>
-</ul>
+<h1><a href="#amplification" name="amplification" class="anchor"><span class="anchor-link"></span></a>Amplification</h1>
+<pre class="prettyprint"><code class="language-scala">/*
+ * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package ocaps.example
+
+import ocaps.Brand
+
+// Amplification is when two object references
+// put together result in an ability to do something
+// not possible if you don&#39;t have references to both.
+object Amplification {
+
+  case class Food(name: String)
+
+  case class Can(food: Brand.Box[Food])
+
+  class CanOpener(unsealer: Brand.Unsealer[Food]) {
+    def open(can: Can): Food = {
+      unsealer(can.food).get
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    // We want to get at the food here.
+
+    val (sealer, unsealer) = Brand.create[Food](&quot;canned food&quot;).tuple
+    val canOfSpam: Can = Can(sealer(Food(&quot;spam&quot;)))
+
+    // The can by itself has the food, but we have no way to get to it
+    val cannedFood: Brand.Box[Food] = canOfSpam.food
+    println(s&quot;food = ${cannedFood.toString}&quot;) // DOES NOT WORK
+
+    // The can opener by itself can open cans, but if we don&#39;t have a can
+    // then there&#39;s also no food.
+    val canOpener = new CanOpener(unsealer)
+
+    // We need both Can and CanOpener.
+    def openCan(can: Can, canOpener: CanOpener) = {
+      val food: Food = canOpener.open(can) // DOES WORK
+
+      println(s&quot;food = $food&quot;)
+    }
+
+    openCan(canOfSpam, canOpener)
+  }
+}</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/amplification.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -166,7 +217,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/membrane.html" title="Membrane" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/revocation.html" title="Revocation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -175,17 +226,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Membrane
+Revocation
 </span>
 </div>
 </a>
-<a href="../guide/introduction.html" title="Introducing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/delegation.html" title="Delegation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Introducing Capabilities
+Delegation
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

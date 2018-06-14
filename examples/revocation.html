@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>A Guide To Capabilities · Introduction</title>
+<title>Revocation · Introduction</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 Introduction
 </span>
 <span class="md-header-nav__topic">
-A Guide To Capabilities
+Revocation
 </span>
 </div>
 </div>
@@ -109,14 +109,14 @@ Introduction
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
-    <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/revocation.html" class="active page">Revocation</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
   </ul></li>
-  <li><a href="../guide/index.html" class="active page">A Guide To Capabilities</a>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
     <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
@@ -139,18 +139,116 @@ Introduction
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#a-guide-to-capabilities" name="a-guide-to-capabilities" class="anchor"><span class="anchor-link"></span></a>A Guide To Capabilities</h1>
-<p>This is a guide to capabilities written for the general programmer, using Scala.</p>
-<ul>
-  <li><a href="introduction.md">Introduction</a></li>
-  <li><a href="creation.md">Creating Capabilities</a></li>
-  <li><a href="authorization.md">Authorizing Capabilities</a></li>
-  <li><a href="management.md">Managing Capabilities</a></li>
-  <li><a href="confinement.md">Confining Capabilities</a></li>
-</ul>
+<h1><a href="#revocation" name="revocation" class="anchor"><span class="anchor-link"></span></a>Revocation</h1>
+<pre class="prettyprint"><code class="language-scala">/*
+ * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package ocaps.example
+
+import ocaps._
+
+object Revocation {
+
+  import scala.language.reflectiveCalls
+  import scala.util._
+  import scala.util.control.NonFatal
+
+  final class Foo(name: String) {
+    private[this] def privateDoTheThing(): Unit = {
+      println(s&quot;$name.doTheThing()&quot;)
+    }
+
+    private object capabilities {
+      import Foo._
+      val doer: Doer = new Doer {
+        override def doTheThing(): Unit = Foo.this.privateDoTheThing()
+      }
+    }
+  }
+
+  object Foo {
+    sealed trait Doer {
+      def doTheThing(): Unit
+    }
+
+    object Doer {
+      def caretaker(doer: Doer): Revocable[Doer] = {
+        Revocable(doer) { provider =&gt;
+          new Doer {
+            override def doTheThing(): Unit = provider().doTheThing()
+          }
+        }
+      }
+    }
+
+    class Policy {
+      def askForDoer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
+    }
+  }
+
+  import java.util.concurrent.TimeUnit._
+  import java.util.concurrent._
+
+  private val scheduler = Executors.newScheduledThreadPool(1)
+
+  // Guest has delegated authority to do the thing without having access to foo
+  class Guest(doer: Foo.Doer) {
+    def start(): Unit = {
+      // Keep doing the thing forever, every second.
+      val doTheThing: Runnable = {
+        () =&gt; {
+          try {
+            doer.doTheThing()
+          } catch {
+            case NonFatal(e) =&gt; println(&quot;Cannot do the thing!&quot;)
+          }
+        }
+      }
+      scheduler.scheduleAtFixedRate(doTheThing, 0, 1L, SECONDS)
+    }
+  }
+
+  // Revoker doesn&#39;t know about capability, only has kill switch
+  class ScheduledRevoker(revoker: Revoker) {
+    def start(): Unit = {
+      // After three seconds, the admin decides to stop you doing the thing.
+      val adminRevoke: Runnable = () =&gt; revoker.revoke()
+      scheduler.schedule(adminRevoke, 3L, SECONDS)
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    import Foo._
+
+    val foo = new Foo(&quot;foo&quot;)
+
+    val policy = new Policy
+    val Revocable(cap, revoker) = policy.askForDoer(foo).map(Foo.Doer.caretaker).get
+    new Guest(cap).start()
+    new ScheduledRevoker(revoker).start()
+
+    // After five seconds, exit program.
+    val shutdown: Runnable = () =&gt; scheduler.shutdown()
+    scheduler.schedule(shutdown, 5L, SECONDS)
+  }
+
+}</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/revocation.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -166,7 +264,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/membrane.html" title="Membrane" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -175,17 +273,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Membrane
+Modulation
 </span>
 </div>
 </a>
-<a href="../guide/introduction.html" title="Introducing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/amplification.html" title="Amplification" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Introducing Capabilities
+Amplification
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

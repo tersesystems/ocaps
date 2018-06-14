@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>A Guide To Capabilities · Introduction</title>
+<title>Modulation · Introduction</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 Introduction
 </span>
 <span class="md-header-nav__topic">
-A Guide To Capabilities
+Modulation
 </span>
 </div>
 </div>
@@ -108,7 +108,7 @@ Introduction
     <li><a href="../examples/overview.html" class="page">Overview</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
+    <li><a href="../examples/modulation.html" class="active page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
@@ -116,7 +116,7 @@ Introduction
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
   </ul></li>
-  <li><a href="../guide/index.html" class="active page">A Guide To Capabilities</a>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
     <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
@@ -139,18 +139,114 @@ Introduction
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#a-guide-to-capabilities" name="a-guide-to-capabilities" class="anchor"><span class="anchor-link"></span></a>A Guide To Capabilities</h1>
-<p>This is a guide to capabilities written for the general programmer, using Scala.</p>
-<ul>
-  <li><a href="introduction.md">Introduction</a></li>
-  <li><a href="creation.md">Creating Capabilities</a></li>
-  <li><a href="authorization.md">Authorizing Capabilities</a></li>
-  <li><a href="management.md">Managing Capabilities</a></li>
-  <li><a href="confinement.md">Confining Capabilities</a></li>
-</ul>
+<h1><a href="#modulation" name="modulation" class="anchor"><span class="anchor-link"></span></a>Modulation</h1>
+<pre class="prettyprint"><code class="language-scala">/*
+ * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package ocaps.example
+
+import java.util.concurrent.CountDownLatch
+
+import ocaps._
+import ocaps.macros._
+import org.slf4j.Logger
+
+import scala.concurrent.duration._
+import scala.util.Try
+
+object Modulation {
+  final case class Foo(private val name: String) {
+    private object capabilities {
+      val doer: Foo.Doer = new Foo.Doer {
+        override def doTheThing(): Int =  {
+          42
+        }
+      }
+    }
+  }
+
+  object Foo {
+    sealed trait Doer {
+      def doTheThing(): Int
+    }
+
+    class Access private {
+      def doer(foo: Foo): Doer = foo.capabilities.doer
+    }
+
+    object Access {
+      def apply(): Access = new Access
+    }
+  }
+
+  def manualDoer(doer: Foo.Doer): Foo.Doer = {
+    new Foo.Doer {
+      override def doTheThing(): Int = doer.doTheThing()
+    }
+  }
+
+  def countBasedExpiration(doer: Foo.Doer, count: Int): Foo.Doer = {
+    val countDownLatch = new CountDownLatch(count)
+    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
+    val before: String =&gt; Unit = _ =&gt; countDownLatch.countDown()
+    val after: (String, Any) =&gt; Unit = (_, _) =&gt;
+     if (countDownLatch.getCount == 0) {
+       revoker.revoke()
+     }
+    modulate[Foo.Doer](revocableDoer, before, after)
+  }
+
+  def timerBasedExpiration(doer: Foo.Doer, duration: FiniteDuration): Foo.Doer = {
+    val deadline = duration.fromNow
+    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
+    val before: String =&gt; Unit = _ =&gt; ()
+    val after: (String, Any) =&gt; Unit = { (_, _) =&gt;
+      if (deadline.isOverdue()) {
+        revoker.revoke()
+      }
+    }
+    modulate[Foo.Doer](revocableDoer, before, after)
+  }
+
+  def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
+    val before: String =&gt; Unit = methodName =&gt; {
+      logger.info(s&quot;$methodName: before call&quot;)
+    }
+    val after: (String, Any) =&gt; Unit = (methodName, result) =&gt;
+      logger.info(s&quot;$methodName: after returns $result&quot;)
+    modulate[Foo.Doer](doer, before, after)
+  }
+
+  def main(args: Array[String]): Unit = {
+    val access = Foo.Access()
+    val foo = new Foo(&quot;foo&quot;)
+    val doer = access.doer(foo)
+
+    val logger = org.slf4j.LoggerFactory.getLogger(&quot;modulation.Foo.Doer&quot;)
+    val modulatedDoer = countBasedExpiration(loggingDoer(doer, logger), 1)
+    val result1 = Try(modulatedDoer.doTheThing())
+    println(s&quot;result after first call: $result1&quot;)
+
+    val result2 = Try(modulatedDoer.doTheThing())
+    println(s&quot;result after second call: $result2&quot;)
+  }
+}</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/modulation.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -166,7 +262,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/membrane.html" title="Membrane" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/attenuation.html" title="Attenuation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -175,17 +271,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Membrane
+Attenuation
 </span>
 </div>
 </a>
-<a href="../guide/introduction.html" title="Introducing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/revocation.html" title="Revocation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Introducing Capabilities
+Revocation
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
