@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="site">
+<meta name="generator" content="Paradox, paradox-material-theme=0.4.0, mkdocs-material=2.2.2">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="site">
+<link rel="shortcut icon" href="../assets/images/favicon.png">
+<title>Managing Capabilities · Introduction</title>
+<link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
+<link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="../lib/prettify/prettify.css">
+<script src="../lib/modernizr/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+<label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+<span class="md-header-nav__topic">
+Introduction
+</span>
+<span class="md-header-nav__topic">
+Managing Capabilities
+</span>
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="search"></label>
+<div class="md-search__inner">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+<label class="md-icon md-search__icon" for="search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</span>
+<a href="../index.html" title="Introduction">
+Introduction
+</a>
+</label>
+<ul>
+  <li><a href="../running.html" class="page">Running</a></li>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
+  <ul>
+    <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
+    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
+    <li><a href="../guide/management.html" class="active page">Managing Capabilities</a></li>
+    <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
+  </ul></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/management.html#managing-capabilities" class="header">Managing Capabilities</a>
+  <ul>
+    <li><a href="../guide/management.html#managing-accessiblity-with-revocation" class="header">Managing Accessiblity with Revocation</a></li>
+    <li><a href="../guide/management.html#managing-behavior-with-modulation" class="header">Managing Behavior with Modulation</a></li>
+    <li><a href="../guide/management.html#managing-lifecycle-with-expiration" class="header">Managing Lifecycle with Expiration</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+<div class="md-nav__title--site md-version" title="Version">
+<i class="md-icon">label_outline</i> 0.1.0*
+</div>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/management.html#managing-capabilities" class="header">Managing Capabilities</a>
+  <ul>
+    <li><a href="../guide/management.html#managing-accessiblity-with-revocation" class="header">Managing Accessiblity with Revocation</a></li>
+    <li><a href="../guide/management.html#managing-behavior-with-modulation" class="header">Managing Behavior with Modulation</a></li>
+    <li><a href="../guide/management.html#managing-lifecycle-with-expiration" class="header">Managing Lifecycle with Expiration</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<h1><a href="#managing-capabilities" name="managing-capabilities" class="anchor"><span class="anchor-link"></span></a>Managing Capabilities</h1>
+<p>Management of capabilities is based around the concepts of <em>revocation</em> and <em>modulation</em>: being able to stop a capability that has already been assigned, and being able to augment the behavior of capabilities for security purposes.</p>
+<h3><a href="#managing-accessiblity-with-revocation" name="managing-accessiblity-with-revocation" class="anchor"><span class="anchor-link"></span></a>Managing Accessiblity with Revocation</h3>
+<p>This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout. This is done using <em>revocation</em>, but more importantly, this is done using a whole series of constructs based around <em>revocation</em>, the most important being the <code>Revocable</code> pattern, also known as the Caretaker.</p>
+<p>We&rsquo;ve shown an example of <em>revocation</em> in the bakery above, but revocation as a concept is important enough that it has a specific trait associated with it &ndash; a <code>Revoker</code>:</p>
+<pre class="prettyprint"><code class="language-scala">package ocaps
+
+trait Revoker {
+  def revoke(): Unit
+}
+</code></pre>
+<p>A revoker does one thing &ndash; it revokes access to a proxied capability. When the <code>revoke</code> method is invoked, the proxy will no longer forward calls to the capability, and will instead throw a <code>RevokedException</code>.</p>
+<p>Of course, a <code>Revoker</code> does no good without something to revoke.</p>
+<p>The <code>Revocable</code> handles the creation of a revoker and associated proxy. The apply method of the <code>Revocable</code> is implemented as follows:</p>
+<pre class="prettyprint"><code class="language-scala">package ocaps
+
+object Revocable {
+  def apply[C](capability: C)(cblock: (() =&gt; C) =&gt; C): Revocable[C] = {
+    val (provider, revoker) = Revoker.pair(capability)
+    val revocableCapability: C = cblock(provider)
+    Revocable(revocableCapability, revoker)
+  }
+}
+</code></pre>
+<p>The <code>cblock</code> of the Revocable is a constructor block &ndash; it passes in a capability provider, and returns the proxy implementation. This means that a constructor for a particular type must execute the <code>provider()</code> function, which goes through the revoker or throws an exception: </p>
+<pre class="prettyprint"><code class="language-scala">import ocaps._
+
+trait Doer {
+  def doTheThing(): Unit
+}
+
+object Doer {
+  def revocable(doer: Doer): Revocable[Doer] = {
+    Revocable(doer) { provider =&gt;
+      new Doer {
+        override def doTheThing(): Unit = provider().doTheThing()
+      }
+    }
+  }
+}
+</code></pre>
+<p>and will be used as follows:</p>
+<pre class="prettyprint"><code class="language-scala">val Revocable(revocableDoer, revoker) = Doer.revocable(access.doer)
+revocableDoer.doTheThing() // works fine
+revoker.revoke()
+revocableDoer.doTheThing() // throws exception!
+</code></pre>
+<p>You can also use the <code>revocable</code> macro, which will create the implementation proxy automatically:</p>
+<pre class="prettyprint"><code class="language-scala">import ocaps._
+import ocaps.macros._
+
+// takes a `Doer` trait as a type parameter and autocreates implementation
+val Revocable(revocableDoer, revoker) = revocable[Doer](access.doer)
+</code></pre>
+<p>If you have several revokers, you can compose them together using `Revoker.compose``:</p>
+<pre class="prettyprint"><code class="language-scala">val revokerABC = Revoker.compose(revokerA, revokerB, revokerC)
+revokerABC.revoke() // revoke A, B, and C all at the same time.
+</code></pre>
+<p>By using revokers, you can tie capabilities to the lifespan of a user session by revoking them on session close or timeout. Any call to the capability after revocation will result in failure. </p>
+<p>Recovery from revocation is application specific. If an operation fails, the component that owns the capability may request a fresh new capability to replace the revoked one, or may require reauthorization or reauthentication before reinstantiation. Akka Actors work extremely well in this context, as does judicious use of the IO monad.</p>
+<h3><a href="#managing-behavior-with-modulation" name="managing-behavior-with-modulation" class="anchor"><span class="anchor-link"></span></a>Managing Behavior with Modulation</h3>
+<p>Modulation is an extremely powerful technique that wraps a capability in additional behavior. The canonical example of modulation is logging:</p>
+<pre class="prettyprint"><code class="language-scala">def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
+  new Foo.Doer {
+    override def doTheThing(): Int = {
+      logger.info(s&quot;doTheThing: before call&quot;)
+      val result = doer.doTheThing()
+      logger.info(s&quot;doTheThing: after returns $result&quot;)
+      result
+    }
+  }
+}
+</code></pre>
+<p>Modulation of a capability must obey behavioral subtyping &ndash; it is acceptable to throw an exception and fail in security related conditions, but it is not acceptable to add new functionality, because it violates the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov substitution principle</a>. For example, the following is extremely rude:</p>
+<pre class="prettyprint"><code class="language-scala">def badlyBehavedDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
+  new Foo.Doer {
+    override def doTheThing(): Int = {
+      val result = doer.doTheThing()
+      if (result &gt; 0) -1 else result // NEVER DO THIS
+    }
+  }
+}
+</code></pre>
+<p>Modulation can be used in a <a href="https://en.wikipedia.org/wiki/Design_by_contract">design by contract</a> style preconditions and postconditions. For example, given an <code>ItemRepository.Finder</code>, we can specify a finder which must match a particular id (often called <em>narrowing</em>):</p>
+<pre class="prettyprint"><code class="language-scala">def idPreFinder(finder: ItemRepository.Finder, validIds: Set[UUID]): ItemRepository.Finder = {
+  new ItemRepository.Finder {
+    def find(id: UUID): Option[Item] = {
+      if (validIds.contains(id)) {
+        finder.find(id)
+      } else {
+        throw new CapabilityException(&quot;Invalid id!&quot;)
+      }
+    }
+  }
+}
+</code></pre>
+<p>Or modulation can verify a post condition exists &ndash; for example, ensuring that only items owned by a particular user can be found:</p>
+<pre class="prettyprint"><code class="language-scala">def userPostFinder(finder: ItemRepository.Finder, user: User): ItemRepository.Finder = {
+  new ItemRepository.Finder {
+    def find(id: UUID): Option[Item] = {
+      val result = finder.find(id)
+      result.foreach { item =&gt;
+         if (! item.owner.equals(user)) {
+           throw new CapabilityException(&quot;Invalid id!&quot;)
+         }
+      }
+      result
+    }
+  }
+}
+</code></pre>
+<p>Using modulation with capabilities, additional security guarantees can be added transparently to operations.</p>
+<p>To skip the boilerplate, there is a capability macro which can automate the implementation of modulation by providing <code>before</code> and <code>after</code> functions:</p>
+<pre class="prettyprint"><code class="language-scala">import ocaps.macros._
+
+def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
+  val before: String =&gt; Unit = methodName =&gt; {
+    logger.info(s&quot;$methodName: before call&quot;)
+  }
+  val after: (String, Any) =&gt; Unit = (methodName, result) =&gt;
+    logger.info(s&quot;$methodName: after returns $result&quot;)
+  modulate[Foo.Doer](doer, before, after)
+}
+</code></pre>
+<h3><a href="#managing-lifecycle-with-expiration" name="managing-lifecycle-with-expiration" class="anchor"><span class="anchor-link"></span></a>Managing Lifecycle with Expiration</h3>
+<p>Expiration combines <em>modulation</em> of a capability with <em>revocation</em>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p>
+<p>Expiration can be used to create a limited use capability, which is revoked after a certain number of calls.</p>
+<pre class="prettyprint"><code class="language-scala">def countBasedExpiration(doer: Foo.Doer, count: Int): Foo.Doer = {
+  val latch = new java.util.concurrent.atomic.AtomicInteger(1)
+  val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
+  val before: (String, Any) =&gt; Unit = (_, _) =&gt;
+   if (latch.getAndDecrement() == 0) {
+     revoker.revoke()
+   }
+  modulate[Foo.Doer](revocableDoer, before, after)
+} 
+</code></pre>
+<p>Count based expiration is especially useful when delegating a capability to an external worker which may execute at a much later date. If you recall the bakery that allows you to eat your cake once and only once, this is a generalization of the technique.</p>
+<p>A capability can also limit access by only allowing access based on a timer:</p>
+<pre class="prettyprint"><code class="language-scala">def timerBasedExpiration(doer: Foo.Doer, duration: FiniteDuration): Foo.Doer = {
+  val deadline = duration.fromNow
+  val Caretaker(revokerDoer, revoker) = caretaker[Foo.Doer](doer)
+  val before: String =&gt; Unit = _ =&gt; if (deadline.isOverdue()) {
+                                      revoker.revoke()
+                                    }
+  val after: (String, Any) =&gt; Unit = (_, _) =&gt; ()
+  }
+  modulate[Foo.Doer](revokerDoer, before, after)
+}
+</code></pre>
+<p>Timer based expiration is helpful in resisting <a href="https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use">Time of Check/Time of Use</a> attacks and providing &ldquo;sudo&rdquo; mode for limited admin access. </p>
+<p>Expiration can also depend on external behavior, such as a supervisor that may look for suspicious activity.</p>
+<pre class="prettyprint"><code class="language-scala">def supervisorBasedExpiration(doer: Foo.Doer, supervisor: Supervisor): Foo.Doer = {
+  val Revocable(revokerDoer, revoker) = revocable[Foo.Doer](doer)
+  val before: String =&gt; Unit = _methodName =&gt; {
+    if (! supervisor.accept(doer, methodName)) {
+      revoker.revoke()
+    }
+  }
+  val after: (String, Any) =&gt; Unit = (_, _) =&gt; ()
+  modulate[Foo.Doer](revokerDoer, before, after)
+}
+</code></pre>
+</div>
+<div>
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/management.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+0.1.0*
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="../guide/authorization.html" title="Authorizing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Previous
+</span>
+Authorizing Capabilities
+</span>
+</div>
+</a>
+<a href="../guide/confinement.html" title="Confining Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+Confining Capabilities
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://jonas.github.io/paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="../assets/javascripts/application.5165553b.js"></script>
+<script src="../assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"../."}})</script>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>

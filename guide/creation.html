@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="site">
+<meta name="generator" content="Paradox, paradox-material-theme=0.4.0, mkdocs-material=2.2.2">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="site">
+<link rel="shortcut icon" href="../assets/images/favicon.png">
+<title>Creating Capabilities · Introduction</title>
+<link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
+<link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="../lib/prettify/prettify.css">
+<script src="../lib/modernizr/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+<label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+<span class="md-header-nav__topic">
+Introduction
+</span>
+<span class="md-header-nav__topic">
+Creating Capabilities
+</span>
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="search"></label>
+<div class="md-search__inner">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+<label class="md-icon md-search__icon" for="search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</span>
+<a href="../index.html" title="Introduction">
+Introduction
+</a>
+</label>
+<ul>
+  <li><a href="../running.html" class="page">Running</a></li>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
+  <ul>
+    <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
+    <li><a href="../guide/creation.html" class="active page">Creating Capabilities</a></li>
+    <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
+    <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
+    <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
+  </ul></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/creation.html#creating-capabilities" class="header">Creating Capabilities</a>
+  <ul>
+    <li><a href="../guide/creation.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
+    <li><a href="../guide/creation.html#deferring-effects-in-capabilities-with-tagless-final" class="header">Deferring Effects in Capabilities with Tagless Final</a></li>
+    <li><a href="../guide/creation.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+<div class="md-nav__title--site md-version" title="Version">
+<i class="md-icon">label_outline</i> 0.1.0*
+</div>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/creation.html#creating-capabilities" class="header">Creating Capabilities</a>
+  <ul>
+    <li><a href="../guide/creation.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
+    <li><a href="../guide/creation.html#deferring-effects-in-capabilities-with-tagless-final" class="header">Deferring Effects in Capabilities with Tagless Final</a></li>
+    <li><a href="../guide/creation.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<h1><a href="#creating-capabilities" name="creating-capabilities" class="anchor"><span class="anchor-link"></span></a>Creating Capabilities</h1>
+<p>A capability is a programming level expression of the saying &ldquo;You can only eat your cake if you have it.&rdquo; </p>
+<pre class="prettyprint"><code class="language-scala">trait Cake {
+  def eat(): Unit
+}
+val cake = new Cake() {
+  def eat() = ()
+}
+cake.eat()
+</code></pre>
+<p>You may know that a resource (an instance of <code>Cake</code>) exists, but you still need an object reference <code>cake</code> in order to affect the <code>Cake</code> instance by calling the <code>eat()</code> method on it. This is a fairly trivial example, because if you can instantiate a cake yourself, you will have no problem referencing it.</p>
+<p>Things start getting more interesting when you add more objects, and you don&rsquo;t control or instantiate resources directly. For example, you may not be able to make cakes yourself, so you go to a bakery.</p>
+<pre class="prettyprint"><code class="language-scala">trait Bakery {
+  def buy(): Cake 
+}
+
+class Person(val bakery: Bakery) {
+  def buyAndEatCake() = eatCake(bakery.buy())
+  def eatCake(cake: Cake) = cake.eat()    
+}
+val bakery = new Bakery() {
+  def buy(): Cake = new Cake() { 
+    def eat() = ()
+  }
+}
+val you = new Person(bakery)
+you.buyAndEatCake()
+</code></pre>
+<p>Here, you&rsquo;re still interested in affecting a resource <code>Cake</code> by, well, eating it, but you don&rsquo;t have direct access to the cake. Instead, <code>you</code>, an instance of a <code>Person</code>, have a reference to a <code>Bakery</code>, and that <code>Bakery</code> may give you a cake. </p>
+<p>Note that because <code>bakery</code> is an object reference, it is also a capability. You can&rsquo;t buy things from a bakery unless you know how to get to one.</p>
+<p>The bakery may give you a cake. But it may throw an exception, because they don&rsquo;t have cakes or you don&rsquo;t have enough money, or because they&rsquo;re closed. In addition, you don&rsquo;t control the behavior of the <code>eat</code> method. You have a reference, but that reference is a contract and it&rsquo;s the object that chooses how to execute it &ndash; when you call <code>cake.eat()</code>, that may also throw an exception or do something behind the scenes. </p>
+<p>And this is where the power of capabilities comes in. As it stands, you can eat a cake as often as you like. The bakery may want you to only eat a cake once. Because the bakery controls access to the resource, it can enforce a capability policy around the eating of cake.</p>
+<pre class="prettyprint"><code class="language-scala">val enforcingBakery = new Bakery() {
+  def buy(): Cake = {
+    val latch = new java.util.concurrent.atomic.AtomicInteger(1)
+    val realCake = new Cake() {
+      def eat() = ()
+    }
+    new Cake() {
+      def eat() = {
+        if (latch.getAndDecrement == 1) {
+          realCake.eat()
+        } else {
+          throw new RuntimeException(&quot;You have already eaten this cake!&quot;)
+        }
+      }
+    }
+  }
+}
+
+val sneakyYou = new Person(enforcingBakery)
+val oneTimeCake = sneakyYou.bakery.buy()
+sneakyYou.eatCake(oneTimeCake)
+sneakyYou.eatCake(oneTimeCake)
+</code></pre>
+<p>You may get an object reference &ndash; a capability &ndash; to a <code>Cake</code>. But here, the actual cake is only accessible through a delegate (also called a &ldquo;forwarder&rdquo;) which proxies the call. You have no direct access to the resource (<code>realCake</code>), and you can affect the resource (call <code>realCake.eat()</code>) only if the proxy allows it. The proxy may refuse to proxy the call. This is called <em>revocation</em>, and it is a key part of capability-based systems.</p>
+<p>So if the only way you can get a cake is through a bakery, then you have to play by the bakery&rsquo;s rules.</p>
+<h2><a href="#creating-capabilities-through-facets" name="creating-capabilities-through-facets" class="anchor"><span class="anchor-link"></span></a>Creating Capabilities Through Facets</h2>
+<p>Let&rsquo;s dig a little deeper and discuss capabilities in the context of a <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> based repository, and show how resources and capabilities interact, and how to expose capabilities.</p>
+<blockquote>
+  <p>It&rsquo;s worth noticing that because a capability is an object reference, a resource which has an exposed capability is always referencable and so will not be eligible for garbage collection. In certain cases, we have many capabilities to resources which are no longer valid, such as cached items, or may have open filehandles. You should use or <code>ocaps.WeakResource</code> to wrap access to a resource in a <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html">weak reference</a>.</p>
+</blockquote>
+<p>When you think of a repository, you usually think of something like the following:</p>
+<pre class="prettyprint"><code class="language-scala">import scala.concurrent._
+case class Item(id: UUID, name: String)
+trait ItemRepository {
+  def create(item: Item): Future[Item]
+  def update(item: Item): Future[Item]
+  def delete(id: UUID): Future[Unit]
+  def find(id: UUID): Future[Option[Item]]
+}
+</code></pre>
+<p>However, recall the first rule: if you have a cake, you can eat it. If you have access to an <code>ItemRepository</code>, you can call all of the methods available on <code>ItemRepository</code>. If a class just wants to query for an item, it doesn&rsquo;t need the ability to create, update or delete that item. </p>
+<pre class="prettyprint"><code class="language-scala">case class Item(id: UUID, name: String)
+object ItemRepository {
+  trait Finder {
+    def find(id: UUID): Future[Option[Item]]
+  }
+  trait Updater {
+    def update(item: Item): Future[Item]
+  }
+  trait Deleter {
+    def delete(id: UUID): Future[Unit]
+  }
+  trait Creator {
+    def create(item: Item): Future[Item]
+  }
+}
+trait ItemRepository 
+  extends ItemRepository.Finder 
+  with ItemRepository.Updater
+  with ItemRepository.Creator
+  with ItemRepository.Deleter
+</code></pre>
+<p>Here, we&rsquo;ve broken down the individual methods of the <code>ItemRepository</code> into a series of traits. Rather than exposing the <code>ItemRepository</code> itself, we can expose the traits individually, and build up the repository as a <em>composition</em> of capabilities. </p>
+<pre class="prettyprint"><code class="language-scala">val item = Item(UUID.randomUUID(), &quot;item&quot;)
+val repo = new ItemRepository() {
+  def create(item: Item): Future[Item] = Future.successful(item)
+  def update(item: Item): Future[Item] = Future.successful(item)
+  def delete(id: UUID): Future[Unit] = Future.successful(())
+  def find(id: UUID): Future[Option[Item]] = Future.successful(item)
+}
+
+val finder = new ItemRepository.Finder() {
+  def find(id: UUID): Future[Option[Item]] = repo.finder(id)
+}
+</code></pre>
+<p>When we have a pattern like this, where capabilities have a shared underlying resource, we say that they are facets of the resource. In this case, we have a <code>finder</code> facet of the <code>ItemRepository</code> resource. Note that we create a new <code>Finder</code> instance, and proxy through to <code>repo.finder</code>. This is called <em>attenuation</em>.<br/>Facets do not have to be created through attenuation, and in some cases it&rsquo;s undesirable because it fixes traits onto the resource. We&rsquo;ll show another way facets can be created later in this section.</p>
+<p>Now we have the facet, we can use it in other operations:</p>
+<pre class="prettyprint"><code class="language-scala">class NameChanger(finder: ItemRepository.Finder) {
+  def findName(id: String): Future[String] = finder.find(id).map { maybeItem =&gt;
+    maybeItem.map(_.name)
+  }
+}
+</code></pre>
+<p>You would think that since <code>ItemRepository</code> implements the <code>Finder</code> trait itself, that you could just pass it around directly. The problem there is that an object reference is still an object reference <strong>no matter what type you give it</strong>. As such, you can get access to the other facets by downcasting to <code>ItemRepository</code>:</p>
+<pre class="prettyprint"><code class="language-scala">val onlyAFinder: ItemRepository.Finder = repo
+val recoveredRepo: ItemRepository = onlyAFinder.asInstanceOf[ItemRepository]
+</code></pre>
+<h2><a href="#deferring-effects-in-capabilities-with-tagless-final" name="deferring-effects-in-capabilities-with-tagless-final" class="anchor"><span class="anchor-link"></span></a>Deferring Effects in Capabilities with Tagless Final</h2>
+<p>Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques for cleaner effect handling. For example, rather than commit to a <code>Task[_]</code> or a <code>Try[_]</code>, a capability may be expressed in <a href="https://www.beyondthelines.net/programming/introduction-to-tagless-final/">tagless final</a> style with a type parameter <code>F</code> that is a standin for the kind of effect you want: </p>
+<pre class="prettyprint"><code class="language-scala">object ItemRepository {
+  trait Finder[F[_]] {
+    def find(id: UUID): F[Option[Item]]
+  }
+}
+</code></pre>
+<p>The <code>capabilities</code> companion is defined using <code>cat.Id</code>, which essentially means &ldquo;no effect here&rdquo;:</p>
+<pre class="prettyprint"><code class="language-scala">import cats._
+class ItemRepository {
+  import ItemRepository._
+  private val items = Seq(Item(UUID.randomUUID(), &quot;item name&quot;))
+  private object capabilities {
+    val finder: Finder[Id] = new Finder[Id]() {
+      override def find(id: UUID): Id[Option[Item]] = items.find(_.id == id)
+    }
+  }
+}
+</code></pre>
+<p>And then the effect &ndash; in this case <code>Try</code> &ndash; can be wrapped around the original capability instance.</p>
+<pre class="prettyprint"><code class="language-scala">val idFinder = access.finder(itemRepository)
+val tryFinder: Finder[Try] = new Finder[Try] {
+  override def find(id: UUID): Try[Option[Item]] = Try(idFinder.find(id))
+}
+</code></pre>
+<p>When using <code>Try</code>, the <code>find</code> method will return either <code>Success(maybeItem)</code> or <code>Failure(throwable)</code> as a result, rather than throwing an exception up the stack.</p>
+<p>In addition to using a Tagless Final approach, the <code>cats-effect</code> library may also be used to provide an <a href="https://typelevel.org/cats-effect/datatypes/io.html"><code>IO</code> monad</a> around a sensitive operation and defer execution while maintaining stack safety:</p>
+<pre class="prettyprint"><code class="language-scala">import cats.effect.IO
+val program = IO(finder.find(id)) // does not execute finder
+// ...composes program with more operations based off finder...
+program.unsafeRunSync()           // executes program
+</code></pre>
+<h2><a href="#creating-capabilities-through-access-modifiers" name="creating-capabilities-through-access-modifiers" class="anchor"><span class="anchor-link"></span></a>Creating Capabilities Through Access Modifiers</h2>
+<p>Creating a resource which exposes all its public methods is very convenient in situations where direct access to the resource is tightly restricted, and all external access is regulated through facets. This is not always the case: for example, in an Inversion-of-Control container like Spring or Guice, all resources are accessible, i.e.</p>
+<pre class="prettyprint"><code class="language-scala">val repoThroughGuice = injector.instanceOf(classOf[ItemRepository])
+repoThroughGuice.delete(&quot;1&quot;) // anyone can delete
+</code></pre>
+<p>In this situation, it may be desirable in some cases to have a resource with public methods, and a &ldquo;protected&rdquo; set of capabilities that are not accessible:</p>
+<pre class="prettyprint"><code class="language-scala">trait ItemRepository {
+  def name: String  // okay for anyone to access this!
+  
+  private[???] def deleter: Deleter // only accessible to authorized objects!
+}
+</code></pre>
+<p>There is a way to implement this! In Scala, only the public methods on an object are exposed &ndash; private methods cannot be referenced externally. We can use Scala&rsquo;s <a href="http://jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/">access modifiers and qualifiers</a> to selectively expose capabilities. We&rsquo;ll demonstrate in this section.</p>
+<p>So, say you have a class <code>Document</code>, with a private <code>Path</code> that contains the text of the document.</p>
+<pre class="prettyprint"><code class="language-scala">import java.nio.file._
+final class Document(private[this] val path: Path) {
+    ...
+}
+</code></pre>
+<p>We want to restrict access so that we can read from the document without exposing the path.</p>
+<p>First, we create a companion object <code>Document</code> and add a <code>NameChanger</code> trait:</p>
+<pre class="prettyprint"><code class="language-scala">object Document {
+  trait Reader {
+    def bufferedReader[T](block: BufferedReader =&gt; T): T
+  }
+}
+</code></pre>
+<p>Next, we create a private singleton object called <code>capabilities</code> and add a <code>reader</code> implementation:</p>
+<pre class="prettyprint"><code class="language-scala">final class Document(private[this] val path: Path) {
+  private object capabilities {
+    val reader: Document.Reader = new Document.Reader {
+      override def bufferedReader[T](block: BufferedReader =&gt; T): T = {
+        val reader = Files.newBufferedReader(Document.this.path, StandardCharsets.UTF_8)
+        try {
+          block(reader)
+        } finally {
+          reader.close()
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>Finally, we add an <code>Access</code> class that can expose the <code>Reader</code> for a particular <code>Document</code> instance:</p>
+<pre class="prettyprint"><code class="language-scala">object Document {
+  final class Access private {
+    def reader(doc: Document): Reader = doc.capabilities.reader
+  }
+  object Access {
+    private val instance = new Access()
+    def apply(): Access = instance
+  }
+}
+</code></pre>
+<p>In order to have a reference to a <code>reader</code>, you must have access to both a <code>Document.Access</code> instance and a <code>Document</code>:</p>
+<pre class="prettyprint"><code class="language-scala">val path = Path.get(&quot;document.txt&quot;)
+val document = new Document(path)
+val access = Document.Access()
+val reader = access.reader(document)
+val text = reader.bufferedReader(_.readLine())
+</code></pre>
+<p>When you put two capabilities together to expose functionality that is more than the individual pieces, it is called <em>amplification</em>. Other useful examples of <em>amplification</em> are when a &ldquo;can&rdquo; and a &ldquo;can opener&rdquo; are put together, or a &ldquo;private key&rdquo; and &ldquo;document encrypted with public key.&rdquo;</p>
+<p>Creating an <code>Access</code> class can also be useful because it can mediate between a resource and the capabilities on the resource, without directly involving the resource itself. For example, referring back to the effects section above, a <code>TryAccess</code> class may provide a <code>Try</code> effect on all the capabilities of the <code>Document</code>.</p>
+<pre class="prettyprint"><code class="language-scala">final class TryAccess private {
+  def reader(doc: Document): Reader[Try] = Try(doc.capabilities.reader)
+}
+</code></pre>
+<p>This does of course leave the question open of how you manage access to the <code>Access</code> instance, since it hands out capabilities to anyone who asks. This leads into the next section.</p>
+</div>
+<div>
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/creation.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+0.1.0*
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="../guide/introduction.html" title="Introducing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Previous
+</span>
+Introducing Capabilities
+</span>
+</div>
+</a>
+<a href="../guide/authorization.html" title="Authorizing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+Authorizing Capabilities
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://jonas.github.io/paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="../assets/javascripts/application.5165553b.js"></script>
+<script src="../assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"../."}})</script>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="site">
+<meta name="generator" content="Paradox, paradox-material-theme=0.4.0, mkdocs-material=2.2.2">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="site">
+<link rel="shortcut icon" href="../assets/images/favicon.png">
+<title>Introducing Capabilities · Introduction</title>
+<link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
+<link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="../lib/prettify/prettify.css">
+<script src="../lib/modernizr/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+<label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+<span class="md-header-nav__topic">
+Introduction
+</span>
+<span class="md-header-nav__topic">
+Introducing Capabilities
+</span>
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="search"></label>
+<div class="md-search__inner">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+<label class="md-icon md-search__icon" for="search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</span>
+<a href="../index.html" title="Introduction">
+Introduction
+</a>
+</label>
+<ul>
+  <li><a href="../running.html" class="page">Running</a></li>
+  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
+  <ul>
+    <li><a href="../guide/introduction.html" class="active page">Introducing Capabilities</a></li>
+    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
+    <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
+    <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
+  </ul></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
+  <ul>
+    <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
+    <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+<div class="md-nav__title--site md-version" title="Version">
+<i class="md-icon">label_outline</i> 0.1.0*
+</div>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
+  <ul>
+    <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
+    <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
+<p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in these systems comes from being able to build and compose powerful structures out of these primitives. </p>
+<p>The definition of capability used here is from <a href="https://ai.google/research/pubs/pub45570">Permission and Authority Revisited: towards a formalization</a>:</p>
+<p><strong>A capability is <em>sufficient justification</em> to affect a resource.</strong></p>
+<p>This guide will explain what this means, using the Scala programming language as the implementation.</p>
+<h2><a href="#scala-example" name="scala-example" class="anchor"><span class="anchor-link"></span></a>Scala Example</h2>
+<p>In Scala, a resource is <em>an object</em> and a capability is the <em>reference</em> to that object. Say that you have a class <code>Foo</code>:</p>
+<pre class="prettyprint"><code class="language-scala">case class Foo(name: String)
+</code></pre>
+<p>A class by itself doesn&rsquo;t mean anything &ndash; we have to create an instance of the class aka an object:</p>
+<pre class="prettyprint"><code class="language-scala">def createFoo: Unit = Foo(&quot;will&quot;) // create the object!
+</code></pre>
+<p>In the above sample, we&rsquo;ve left something out. We&rsquo;ve created a <code>Foo</code> instance &ndash; but because the method returns <code>Unit</code>, there is no reference to the object. We can&rsquo;t get the name. In order to be useful, we have to return a reference to the <code>Foo</code> instance:</p>
+<pre class="prettyprint"><code class="language-scala">def createFoo: Foo = Foo(&quot;will&quot;)
+</code></pre>
+<p>If you have a reference to an object, you can, at a minimum, access all of the public methods and fields on that object. </p>
+<pre class="prettyprint"><code class="language-scala">val foo = createFoo
+// now we can affect the object referred to as `foo` by accessing name
+val name = foo.name
+</code></pre>
+<p>If you call a method, or access a field, or modify a field, then you are <em>affecting the resource</em>. Therefore, your <code>foo</code> capability is sufficient justification to affect the resource that is the <code>Foo</code> instance.</p>
+<h2><a href="#differences-between-capabilities-and-oo" name="differences-between-capabilities-and-oo" class="anchor"><span class="anchor-link"></span></a>Differences between Capabilities and OO</h2>
+<p>It may seem like the only thing we&rsquo;ve done here is come up with different names for well known concepts, but that&rsquo;s not actually the case. Capabilities come from a different space altogether, where &ldquo;unforgeable references&rdquo; meant long strings or signed and encrypted messages. Implementing capabilities in an OO language &ndash; <em>object capabilities</em> or <em>ocap</em> for short &ndash; is a very clean mapping, because references to objects can&rsquo;t be forged or faked, and so much of the ground level work has already been done. </p>
+<p>But what distinguishes a capability from a plain old object reference? There are a few qualifications:</p>
+<ol>
+  <li>
+  <p>The resource is valuable, and typically long lived. It contains methods and data that should not be touched lightly. Controlling access to the resource is important.</p></li>
+  <li>
+  <p>The capability is the <strong>only way</strong> to access the resource. There is no back door (DI framework, static holder) reference that &ldquo;gets around&rdquo; the capability model. </p></li>
+  <li>
+  <p>The capability is opaque. You have an object reference to a trait, but you can&rsquo;t downcast that, introspect it, change access modifiers etc. The trait may run through any number of forwarders (the &lsquo;capability&rsquo; word for filters / proxies / delegates) before executing the call on the resource, and there is no way to circumvent that.</p></li>
+</ol>
+<p>In general, where OO programming is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a gatekeeper to give you another one.</p>
+<p>We&rsquo;ll go into detail in the next section.</p>
+</div>
+<div>
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/introduction.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+0.1.0*
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="../guide/index.html" title="A Guide To Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Previous
+</span>
+A Guide To Capabilities
+</span>
+</div>
+</a>
+<a href="../guide/creation.html" title="Creating Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+Creating Capabilities
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://jonas.github.io/paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="../assets/javascripts/application.5165553b.js"></script>
+<script src="../assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"../."}})</script>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>
