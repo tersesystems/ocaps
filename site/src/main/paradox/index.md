@@ -1,6 +1,7 @@
 @@@ index
 
 * [Running](running.md)
+* [Examples](examples/index.md)
 * [Guide](guide/index.md)
 
 @@@
