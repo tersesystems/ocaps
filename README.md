@@ -8,7 +8,7 @@
 - Macros for *composition*, *attenuation*, *revocable* and *modulating* capabilities.
 - No libraries dependencies (other than `scala-reflect`)
 
-Documentation can be found at https://wsargent.github.io/ocaps/
+Documentation can be found at [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)
 
 A guide to object capabilities can be found at [http://wsargent.github.io/ocaps/guide/](http://wsargent.github.io/ocaps/guide/)
 

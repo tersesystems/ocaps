@@ -17,9 +17,9 @@
 package ocaps
 
 /**
- *
- * @tparam A
- */
+  *
+  * @tparam A
+  */
 sealed abstract class Revocable[+A] {
   self =>
 
@@ -29,7 +29,8 @@ sealed abstract class Revocable[+A] {
 
   def get: A
 
-  @inline final def orNull[A1 >: A](implicit ev: Null <:< A1): A1 = this getOrElse ev(null)
+  @inline final def orNull[A1 >: A](implicit ev: Null <:< A1): A1 =
+    this getOrElse ev(null)
 
   @inline final def revoked: Boolean = revoker.revoked
 
@@ -39,22 +40,22 @@ sealed abstract class Revocable[+A] {
 object Revocable {
 
   /**
-   * Creates a new revocable from an input capability.
-   *
-   * {{{
-   * trait Doer {
-   *   def doTheThing(): Unit
-   * }
-   *
-   * def revocable(doer: Doer): Revocable[Doer] = {
-   *   Revocable(doer) { thunk =>
-   *     new Doer {
-   *       override def doTheThing(): Unit = forwarder().doTheThing()
-   *     }
-   *   }
-   * }
-   * }}}
-   */
+    * Creates a new revocable from an input capability.
+    *
+    * {{{
+    * trait Doer {
+    *   def doTheThing(): Unit
+    * }
+    *
+    * def revocable(doer: Doer): Revocable[Doer] = {
+    *   Revocable(doer) { thunk =>
+    *     new Doer {
+    *       override def doTheThing(): Unit = forwarder().doTheThing()
+    *     }
+    *   }
+    * }
+    * }}}
+    */
   def apply[C](capability: C)(cblock: Thunk[C] => C): Revocable[C] = {
     val (thunk, r) = Revoker.pair(capability)
     Revocable(cblock(thunk), r)
@@ -78,4 +79,3 @@ object Revocable {
   }
 
 }
-

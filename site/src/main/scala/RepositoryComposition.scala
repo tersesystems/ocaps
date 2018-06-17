@@ -22,14 +22,14 @@ import cats.{Id, _}
 import scala.util._
 
 /**
- * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
- *
- * The capabilities use tagless final to show how you can use different effects with capabilities.
- *
- * For example, the Id effect is an identity, so a failure will cause an exception.
- *
- * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
- */
+  * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
+  *
+  * The capabilities use tagless final to show how you can use different effects with capabilities.
+  *
+  * For example, the Id effect is an identity, so a failure will cause an exception.
+  *
+  * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
+  */
 object RepositoryComposition {
   val ID = UUID.fromString("c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7")
 
@@ -45,7 +45,11 @@ object RepositoryComposition {
   }
 
   def changeWithId(itemRepository: ItemRepository): Unit = {
-    val idNameChanger = new NameChanger[Id](access.finder(itemRepository), access.updater(itemRepository), _.map(identity))
+    val idNameChanger = new NameChanger[Id](
+      access.finder(itemRepository),
+      access.updater(itemRepository),
+      _.map(identity)
+    )
     val idResult = idNameChanger.changeName(ID, "new name")
     println(s"id result = $idResult")
   }
@@ -58,29 +62,34 @@ object RepositoryComposition {
 
     val idUpdater = access.updater(itemRepository)
     val tryUpdater = new Updater[Try] {
-      override def update(item: Item): Try[UpdateResult] = Try(idUpdater.update(item))
+      override def update(item: Item): Try[UpdateResult] =
+        Try(idUpdater.update(item))
     }
 
     val tryNameChanger = new NameChanger[Try](tryFinder, tryUpdater, {
       case Success(Some(result)) => result.map(Some(_))
-      case Success(None) => Success(None)
-      case Failure(ex) => Failure(ex)
+      case Success(None)         => Success(None)
+      case Failure(ex)           => Failure(ex)
     })
     val tryResult = tryNameChanger.changeName(ID, "new name")
     println(s"try result = $tryResult")
   }
 
-  class NameChanger[G[_]: Functor](finder: Finder[G], updater: Updater[G], transform: G[Option[G[UpdateResult]]] => G[Option[UpdateResult]]) {
+  class NameChanger[G[_]: Functor](
+    finder: Finder[G],
+    updater: Updater[G],
+    transform: G[Option[G[UpdateResult]]] => G[Option[UpdateResult]]
+  ) {
     def changeName(id: UUID, newName: String): G[Option[UpdateResult]] = {
-      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map { maybeItem: Option[Item] =>
-        maybeItem.map { item =>
-          updater.update(item.copy(name = newName))
-        }
+      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map {
+        maybeItem: Option[Item] =>
+          maybeItem.map { item =>
+            updater.update(item.copy(name = newName))
+          }
       }
       transform(saved)
     }
   }
-
 
   // #repository
   case class Item(id: UUID, name: String)
@@ -97,10 +106,12 @@ object RepositoryComposition {
     private object capabilities {
       // "Id" type comes from cats, and reItem(id, ItemName("user@example.com"))turns the result itself
       val finder: Finder[Id] = new Finder[Id]() {
-        override def find(id: UUID): Id[Option[Item]] = ItemRepository.this.find(id)
+        override def find(id: UUID): Id[Option[Item]] =
+          ItemRepository.this.find(id)
       }
       val updater: Updater[Id] = new Updater[Id]() {
-        override def update(item: Item): Id[UpdateResult] = ItemRepository.this.update(item)
+        override def update(item: Item): Id[UpdateResult] =
+          ItemRepository.this.update(item)
       }
     }
   }

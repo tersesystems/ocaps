@@ -66,8 +66,8 @@ object Revocation {
   class Guest(doer: Foo.Doer) {
     def start(): Unit = {
       // Keep doing the thing forever, every second.
-      val doTheThing: Runnable = {
-        () => {
+      val doTheThing: Runnable = { () =>
+        {
           try {
             doer.doTheThing()
           } catch {
@@ -94,7 +94,8 @@ object Revocation {
     val foo = new Foo("foo")
 
     val policy = new Policy
-    val Revocable(cap, revoker) = policy.askForDoer(foo).map(Foo.Doer.caretaker).get
+    val Revocable(cap, revoker) =
+      policy.askForDoer(foo).map(Foo.Doer.caretaker).get
     new Guest(cap).start()
     new ScheduledRevoker(revoker).start()
 

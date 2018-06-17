@@ -22,7 +22,7 @@ object Composition {
   final class Foo(private var name: String) {
     private object capabilities {
       val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit =  {
+        override def doTheThing(): Unit = {
           println(s"$name.doTheThing()")
         }
       }
@@ -66,7 +66,8 @@ object Composition {
     val doer: Doer = access.doer(foo)
     val changer: Changer = access.changer(foo)
     val derper: Derper = () => println("derp!")
-    val doerChangerDerper = compose[Doer with Changer with Derper](doer, changer, derper)
+    val doerChangerDerper =
+      compose[Doer with Changer with Derper](doer, changer, derper)
 
     // composition is often used when you want to return a "set" of capabilities after
     // some authorization event has taken place, after which you can do some pattern matching

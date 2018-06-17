@@ -34,13 +34,15 @@ object Membrane {
   // #location
   class Location(locale: Locale, timeZone: TimeZone) {
     private object capabilities {
-      def localeReader: Location.LocaleReader[Id] = new Location.LocaleReader[Id] {
-        override def locale: Locale = Location.this.locale
-      }
+      def localeReader: Location.LocaleReader[Id] =
+        new Location.LocaleReader[Id] {
+          override def locale: Locale = Location.this.locale
+        }
 
-      def timeZoneReader: Location.TimeZoneReader[Id] = new Location.TimeZoneReader[Id] {
-        override def timeZone: TimeZone = Location.this.timeZone
-      }
+      def timeZoneReader: Location.TimeZoneReader[Id] =
+        new Location.TimeZoneReader[Id] {
+          override def timeZone: TimeZone = Location.this.timeZone
+        }
     }
   }
 
@@ -92,7 +94,8 @@ object Membrane {
     val access = new Location.MembraneAccess(m)
 
     val dryLocale: LocaleReader[access.Wrapper] = access.localeReader(user)
-    val dryTimeZone: TimeZoneReader[access.Wrapper] = access.timeZoneReader(user)
+    val dryTimeZone: TimeZoneReader[access.Wrapper] =
+      access.timeZoneReader(user)
     // #membrane-setup
 
     // #execution
@@ -106,9 +109,13 @@ object Membrane {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
-        ZonedDateTime.now(timeZone.toZoneId)
-          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-            .withLocale(locale))
+        ZonedDateTime
+          .now(timeZone.toZoneId)
+          .format(
+            DateTimeFormatter
+              .ofLocalizedDateTime(FormatStyle.FULL)
+              .withLocale(locale)
+          )
       }
       format.get
     }

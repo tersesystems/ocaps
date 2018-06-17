@@ -39,7 +39,7 @@ object AfterAttenuation {
 
   // #definition
   final class Document(private var name: String) extends Document.NameChanger {
-    override def changeName(newName: String): Unit =  {
+    override def changeName(newName: String): Unit = {
       name = newName
     }
     override def toString: String = s"Document($name)"
@@ -69,7 +69,6 @@ object AfterAttenuation {
 }
 // #after-attenuation
 
-
 // #after-amplificationo
 object AfterAmplification {
 
@@ -77,7 +76,7 @@ object AfterAmplification {
   final class Document(private var name: String) {
     private object capabilities {
       val nameChanger = new Document.NameChanger {
-        override def changeName(newName: String): Unit =  {
+        override def changeName(newName: String): Unit = {
           name = newName
         }
       }

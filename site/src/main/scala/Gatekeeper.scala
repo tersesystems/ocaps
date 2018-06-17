@@ -52,15 +52,16 @@ object Gatekeeper {
   }
 
   /**
-   * AdminActivity operations use admin's security context
-   */
+    * AdminActivity operations use admin's security context
+    */
   class AdminActivity(gatekeeper: DocumentGatekeeper) {
     private val admin = new User("admin")
     private implicit val ctx: SecurityContext = new SecurityContext(admin)
 
     def createDocuments(users: Seq[User]): Seq[Document] = {
       for (owner <- users) yield {
-        val doc = Document(owner = owner.name, Files.createTempFile(null, ".txt"))
+        val doc =
+          Document(owner = owner.name, Files.createTempFile(null, ".txt"))
         val writer = gatekeeper.writer(doc).get
 
         writer.bufferedWriter() { bw: java.io.BufferedWriter =>
@@ -78,9 +79,13 @@ object Gatekeeper {
   }
 
   /**
-   * UserActivity operations are not guaranteed to have full access to capabilities.
-   */
-  class UserActivity(user: User, maybeReader: Option[Reader], maybeWriter: Option[Writer]) {
+    * UserActivity operations are not guaranteed to have full access to capabilities.
+    */
+  class UserActivity(
+    user: User,
+    maybeReader: Option[Reader],
+    maybeWriter: Option[Writer]
+  ) {
 
     def attemptDocument(doc: Document): Unit = {
       maybeWriter match {
@@ -110,8 +115,8 @@ object Gatekeeper {
   }
 
   /**
-   * Gatekeeper controls who has access to capabilities.
-   */
+    * Gatekeeper controls who has access to capabilities.
+    */
   class DocumentGatekeeper(access: Access) {
 
     private val policy = new DocumentPolicy
@@ -120,7 +125,11 @@ object Gatekeeper {
       if (policy.canRead(ctx.user, doc)) {
         Success(access.reader(doc))
       } else {
-        Failure(new CapabilityException(s"Cannot authorize ${ctx.user} for writer to doc $doc"))
+        Failure(
+          new CapabilityException(
+            s"Cannot authorize ${ctx.user} for writer to doc $doc"
+          )
+        )
       }
     }
 
@@ -128,7 +137,11 @@ object Gatekeeper {
       if (policy.canWrite(ctx.user, doc)) {
         Success(access.writer(doc))
       } else {
-        Failure(new CapabilityException(s"Cannot authorize ${ctx.user} for writer to doc $doc"))
+        Failure(
+          new CapabilityException(
+            s"Cannot authorize ${ctx.user} for writer to doc $doc"
+          )
+        )
       }
     }
 
@@ -136,15 +149,19 @@ object Gatekeeper {
       if (policy.canDelete(ctx.user, doc)) {
         Success(access.deleter(doc))
       } else {
-        Failure(new CapabilityException(s"Cannot authorize ${ctx.user} for deleter to doc $doc"))
+        Failure(
+          new CapabilityException(
+            s"Cannot authorize ${ctx.user} for deleter to doc $doc"
+          )
+        )
       }
     }
 
     /**
-     * Define the operational contract between users and documents
-     *
-     * https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf
-     */
+      * Define the operational contract between users and documents
+      *
+      * https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf
+      */
     // Normal users can read anything, but only write to document they own.
     class DocumentPolicy {
       def canRead(user: User, doc: Document): Boolean = true
@@ -169,21 +186,24 @@ object Gatekeeper {
   }
 
   /**
-   *  Implicit security context authorizes a particular user for a particular doc against a gatekeeper.
-   */
+    *  Implicit security context authorizes a particular user for a particular doc against a gatekeeper.
+    */
   class SecurityContext(val user: User)
 
   /**
-   * A document resource.  The path is private, and no operations are possible without
-   * an associated capability.
-   */
-  final class Document private(val owner: String,
-                               private[this] val path: Path) {
+    * A document resource.  The path is private, and no operations are possible without
+    * an associated capability.
+    */
+  final class Document private (
+    val owner: String,
+    private[this] val path: Path
+  ) {
 
     private object capabilities {
       val reader: Document.Reader = new Document.Reader {
         override def bufferedReader[T](block: BufferedReader => T): T = {
-          val reader = Files.newBufferedReader(Document.this.path, StandardCharsets.UTF_8)
+          val reader =
+            Files.newBufferedReader(Document.this.path, StandardCharsets.UTF_8)
           try {
             block(reader)
           } finally {
@@ -202,8 +222,14 @@ object Gatekeeper {
       }
 
       val writer: Document.Writer = new Document.Writer {
-        override def bufferedWriter[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: BufferedWriter => T): T = {
-          val bufWriter = Files.newBufferedWriter(Document.this.path, StandardCharsets.UTF_8, options: _*)
+        override def bufferedWriter[T](
+          options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+        )(block: BufferedWriter => T): T = {
+          val bufWriter = Files.newBufferedWriter(
+            Document.this.path,
+            StandardCharsets.UTF_8,
+            options: _*
+          )
           try {
             block(bufWriter)
           } finally {
@@ -211,7 +237,9 @@ object Gatekeeper {
           }
         }
 
-        override def outputStream[T](options: Seq[OpenOption])(block: OutputStream => T): T = {
+        override def outputStream[T](
+          options: Seq[OpenOption]
+        )(block: OutputStream => T): T = {
           val os = Files.newOutputStream(Document.this.path, options: _*)
           try {
             block(os)
@@ -235,8 +263,12 @@ object Gatekeeper {
     }
 
     trait Writer {
-      def bufferedWriter[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: BufferedWriter => T): T
-      def outputStream[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: OutputStream => T): T
+      def bufferedWriter[T](
+        options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+      )(block: BufferedWriter => T): T
+      def outputStream[T](
+        options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+      )(block: OutputStream => T): T
     }
 
     trait Deleter {
@@ -246,7 +278,7 @@ object Gatekeeper {
     final class Access private {
       def reader(document: Document): Reader = document.capabilities.reader
       def writer(document: Document): Writer = document.capabilities.writer
-      def deleter(document: Document): Deleter  = document.capabilities.deleter
+      def deleter(document: Document): Deleter = document.capabilities.deleter
     }
 
     object Access {

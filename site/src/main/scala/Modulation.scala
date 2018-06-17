@@ -27,7 +27,7 @@ object Modulation {
   final case class Foo(private val name: String) {
     private object capabilities {
       val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Int =  {
+        override def doTheThing(): Int = {
           42
         }
       }
@@ -62,15 +62,18 @@ object Modulation {
     val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
     val before: String => Unit = _ => countDownLatch.countDown()
     val after: (String, Any) => Unit = (_, _) =>
-     if (countDownLatch.getCount == 0) {
-       revoker.revoke()
-     }
+      if (countDownLatch.getCount == 0) {
+        revoker.revoke()
+      }
     modulate[Foo.Doer](revocableDoer, before, after)
   }
   // #countable
 
   // #timer
-  def timerBasedExpiration(doer: Foo.Doer, duration: FiniteDuration): Foo.Doer = {
+  def timerBasedExpiration(
+    doer: Foo.Doer,
+    duration: FiniteDuration
+  ): Foo.Doer = {
     val deadline = duration.fromNow
     val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
     val before: String => Unit = _ => ()

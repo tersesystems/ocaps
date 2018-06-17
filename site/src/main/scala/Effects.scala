@@ -17,9 +17,9 @@
 import scala.util._
 
 /**
- * Demonstration of using tagless final to apply an effect
- * (aka Algebraic Data Types aka Object Algebras) to a capability.
- */
+  * Demonstration of using tagless final to apply an effect
+  * (aka Algebraic Data Types aka Object Algebras) to a capability.
+  */
 object Effects {
   type Id[A] = A
 
@@ -27,7 +27,7 @@ object Effects {
   final class Document(private var name: String) {
     private object capabilities {
       val nameChanger = new Document.NameChanger[Id] {
-        override def changeName(newName: String): Unit =  {
+        override def changeName(newName: String): Unit = {
           name = newName
         }
       }
@@ -52,12 +52,13 @@ object Effects {
     // Apply a "Try" effect to the capability
     implicit val tryEffect: Effect[Try] = nameChanger => {
       new NameChanger[Try] {
-        override def changeName(name: String): Try[Unit] = Try(nameChanger.changeName(name))
+        override def changeName(name: String): Try[Unit] =
+          Try(nameChanger.changeName(name))
       }
     }
 
     class Access {
-      def nameChanger[F[_] : Effect](doc: Document): NameChanger[F] = {
+      def nameChanger[F[_]: Effect](doc: Document): NameChanger[F] = {
         val effect = implicitly[Effect[F]]
         effect.wrap(doc.capabilities.nameChanger)
       }

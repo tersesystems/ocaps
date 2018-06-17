@@ -37,10 +37,12 @@ object DynamicSeal {
   // All of the users are of the same type, and so private fields
   // are no good here.  In addition, the boxed field is public
   // so anyone who is asking and who has the unsealer can see it.
-  case class User(name: String,
-                  sentencer: User => User = identity,
-                  boxed: Option[Brand.Box[Message]] = None,
-                  private val brand: Option[Brand[Message]] = None) {
+  case class User(
+    name: String,
+    sentencer: User => User = identity,
+    boxed: Option[Brand.Box[Message]] = None,
+    private val brand: Option[Brand[Message]] = None
+  ) {
     def sentence(user: User): User = sentencer(user)
 
     def process(user: User): Option[Message] = {
@@ -56,26 +58,32 @@ object DynamicSeal {
     val softBrand = Brand.create[Message]("Brand for Judge Softtouch")
     val doomBrand = Brand.create[Message]("Brand for Judge Doom")
 
-    val judgeSofttouch = User("Judge Softtouch",
-      sentencer = { user => user.copy(boxed = Some(softBrand(Save))) },
-      brand = Some(softBrand))
+    val judgeSofttouch = User("Judge Softtouch", sentencer = { user =>
+      user.copy(boxed = Some(softBrand(Save)))
+    }, brand = Some(softBrand))
 
-    val judgeDoom = User("Judge Doom",
-      sentencer = { user => user.copy(boxed = Some(doomBrand(Kill))) },
-      brand = Some(doomBrand))
+    val judgeDoom = User("Judge Doom", sentencer = { user =>
+      user.copy(boxed = Some(doomBrand(Kill)))
+    }, brand = Some(doomBrand))
 
     val steve = judgeDoom.sentence(User("steve"))
     val will = judgeSofttouch.sentence(User("will"))
     val judgedDoom = judgeSofttouch.sentence(judgeDoom)
 
     val steveDecision = judgeDoom.process(steve)
-    println(s"User ${steve.name} has message ${steve.boxed} and decision $steveDecision")
+    println(
+      s"User ${steve.name} has message ${steve.boxed} and decision $steveDecision"
+    )
     val willDecision = judgeSofttouch.process(will)
-    println(s"User ${will.name} has message ${will.boxed} and decision $willDecision")
+    println(
+      s"User ${will.name} has message ${will.boxed} and decision $willDecision"
+    )
 
     // What's going on here...
     val judgeDecision = judgedDoom.process(judgedDoom)
-    println(s"User ${judgedDoom.name} has message ${judgedDoom.boxed} and decision $judgeDecision")
+    println(
+      s"User ${judgedDoom.name} has message ${judgedDoom.boxed} and decision $judgeDecision"
+    )
   }
 
 }

@@ -22,7 +22,7 @@ object Attenuation {
   final class Foo(private var name: String) {
     private object capabilities {
       val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit =  {
+        override def doTheThing(): Unit = {
           println(s"$name.doTheThing()")
         }
       }
@@ -64,7 +64,8 @@ object Attenuation {
     val doer: Doer = access.doer(foo)
     val changer: Changer = access.changer(foo)
     val derper: Derper = () => println("derp!")
-    val doerChangerDerper = compose[Doer with Changer with Derper](doer, changer, derper)
+    val doerChangerDerper =
+      compose[Doer with Changer with Derper](doer, changer, derper)
 
     // #unsafe
     // We want an attenuation that makes only Doer available

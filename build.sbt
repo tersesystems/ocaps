@@ -1,4 +1,16 @@
 
+val disableDocs = Seq[Setting[_]](
+  sources in (Compile, doc) := Seq.empty,
+  publishArtifact in (Compile, packageDoc) := false
+)
+
+val disablePublishing = Seq[Setting[_]](
+  publishArtifact := false,
+  skip in publish := true,
+  publish := {},
+  publishLocal := {}
+)
+
 // https://github.com/typelevel/cats/blob/master/build.sbt#L610
 lazy val scalaMacroDependencies: Seq[Setting[_]] = Seq(
   libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
@@ -32,6 +44,7 @@ lazy val core = (project in file("core"))
 // sbt "site/paradox"
 lazy val site = (project in file("site"))
   .enablePlugins(ParadoxPlugin, ParadoxMaterialThemePlugin, ParadoxSitePlugin, GhpagesPlugin)
+  .settings(disablePublishing)
   .settings(
     sourceDirectory in Paradox := sourceDirectory.value / "main" / "paradox",
     paradoxProperties in Paradox ++= Map("version" -> version.value),
@@ -47,10 +60,6 @@ lazy val site = (project in file("site"))
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",
 
-    publish := {},
-    publishLocal := {},
-    publishArtifact := false,
-    skip in publish := true,
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
     libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
     libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9"
@@ -61,6 +70,7 @@ lazy val site = (project in file("site"))
 // sbt "slides/tut"
 lazy val slides = (project in file("slides"))
   .enablePlugins(TutPlugin)
+  .settings(disablePublishing)
   .settings(moduleName := "slides")
   .settings(
     tutSourceDirectory := baseDirectory.value / "tut",
@@ -68,8 +78,9 @@ lazy val slides = (project in file("slides"))
     watchSources ++= (tutSourceDirectory.value ** "*.html").get
   ).dependsOn(core)
 
-lazy val root = (project in file(".")).settings(
-  name := "ocaps",
+lazy val root = (project in file(".")).settings(disablePublishing)
+  .settings(
+    name := "ocaps",
 
   // Settings that apply to all subprojects
   inThisBuild(List(
@@ -88,6 +99,15 @@ lazy val root = (project in file(".")).settings(
       "-Xfuture"
     ),
 
+    // define setting key to write configuration to .scalafmt.conf
+    SettingKey[Unit]("scalafmtGenerateConfig") :=
+      IO.write( // writes to file once when build is loaded
+        file(".scalafmt.conf"),
+        """style = IntelliJ
+          |docstrings = JavaDoc
+        """.stripMargin.getBytes("UTF-8")
+      ),
+
     // https://github.com/sbt/sbt-header
     organizationName := "Will Sargent",
     startYear := Some(2018),
@@ -96,29 +116,22 @@ lazy val root = (project in file(".")).settings(
     scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings")
   )),
 
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-
-    // don't publish root artifact
-  publish := {},
-  publishLocal := {},
-  publishArtifact := false,
-  skip in publish := true,
-
   // releasing
   //releaseCrossBuild := true,
   homepage := Some(url("https://github.com/wsargent/ocaps")),
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  publishArtifact in Test := false,
 
   // publishing
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := { _ => false },
-  publishTo := Some {
-    val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
-      "snapshots" at nexus + "content/repositories/snapshots"
-    else
-      "releases" at nexus + "service/local/staging/deploy/maven2"
-  },
+  //  publishMavenStyle := true,
+  //  pomIncludeRepository := { _ => false },
+  //  publishTo := Some {
+  //    val nexus = "https://oss.sonatype.org/"
+  //    if (isSnapshot.value)
+  //      "snapshots" at nexus + "content/repositories/snapshots"
+  //    else
+  //      "releases" at nexus + "service/local/staging/deploy/maven2"
+  //  },
 
 ).dependsOn(core, slides, site)
   .aggregate(core, slides, site)

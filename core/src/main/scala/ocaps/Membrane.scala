@@ -41,12 +41,13 @@ object Membrane {
   def apply(thunker: Thunker): Membrane = new Membrane(thunker)
 }
 
-class RevokerMembrane(revoker: Revoker with Thunker) extends Membrane(revoker) with Revoker {
+class RevokerMembrane(revoker: Revoker with Thunker)
+    extends Membrane(revoker)
+    with Revoker {
   @inline override final def revoked: Boolean = revoker.revoked
 
   @inline override final def revoke(): Unit = revoker.revoke()
 }
-
 
 object RevokerMembrane {
   def apply(): RevokerMembrane = {

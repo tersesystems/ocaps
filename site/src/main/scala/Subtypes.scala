@@ -100,7 +100,6 @@ object Subtypes {
     }
   }
 
-
   def main(args: Array[String]): Unit = {
 
     var steve = User("steve")
@@ -124,4 +123,3 @@ object Subtypes {
     jeff.eats(pear2)
   }
 }
-

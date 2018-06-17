@@ -21,46 +21,52 @@ object macros {
   import scala.reflect.macros._
 
   /**
-   * Composition merges together two capabilities into one that has the power of both.
-   *
-   * Use this as follows:
-   *
-   * {{{
-   * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
-   * }}}
-   *
-   * and it has the effect of
-   *
-   * {{{
-   * object Foo {
-   *
-   *  sealed trait Doer {
-   *    def doTheThing(): Unit
-   *  }
-   *
-   *  sealed trait Changer {
-   *    def changeName(name: String): Foo
-   * }
-   *
-   *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
-   *     new Doer with Changer {
-   *       override def doTheThing(): Unit = doer.doTheThing()
-   *       override def changeName(name: String): Foo = changer.changeName(name)
-   *     }
-   *   }
-   * }
-   * }}}
-   */
+    * Composition merges together two capabilities into one that has the power of both.
+    *
+    * Use this as follows:
+    *
+    * {{{
+    * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
+    * }}}
+    *
+    * and it has the effect of
+    *
+    * {{{
+    * object Foo {
+    *
+    *  sealed trait Doer {
+    *    def doTheThing(): Unit
+    *  }
+    *
+    *  sealed trait Changer {
+    *    def changeName(name: String): Foo
+    * }
+    *
+    *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
+    *     new Doer with Changer {
+    *       override def doTheThing(): Unit = doer.doTheThing()
+    *       override def changeName(name: String): Foo = changer.changeName(name)
+    *     }
+    *   }
+    * }
+    * }}}
+    */
   def compose[R](xs: Any*): R = macro impl.compose[R]
 
   def attenuate[R](capability: Any): R = macro impl.attenuate[R]
 
-  def modulate[R](capability: Any, before: String => Unit, after: (String, Any) => Unit): R = macro impl.modulate[R]
+  def modulate[R](
+    capability: Any,
+    before: String => Unit,
+    after: (String, Any) => Unit
+  ): R = macro impl.modulate[R]
 
   def revocable[R](capability: Any): Revocable[R] = macro impl.revocable[R]
 
   private object impl {
-    def compose[R: c.WeakTypeTag](c: blackbox.Context)(xs: c.Expr[Any]*): c.universe.Tree = {
+    def compose[R: c.WeakTypeTag](
+      c: blackbox.Context
+    )(xs: c.Expr[Any]*): c.universe.Tree = {
       import c.universe._
 
       def members(tpe: c.universe.Type, input: c.Expr[Any]) = {
@@ -73,7 +79,9 @@ object macros {
             } else {
               val paramLists = member.asMethod.paramLists
               val paramDefs = paramLists.map {
-                _.map { sym => q"val ${sym.name.toTermName}: ${sym.typeSignature}" }
+                _.map { sym =>
+                  q"val ${sym.name.toTermName}: ${sym.typeSignature}"
+                }
               }
               val paramNames = paramLists.map {
                 _.map {
@@ -95,7 +103,9 @@ object macros {
       q"$impl: $tpeR"
     }
 
-    def attenuate[R: c.WeakTypeTag](c: blackbox.Context)(capability: c.Expr[Any]): c.universe.Tree = {
+    def attenuate[R: c.WeakTypeTag](
+      c: blackbox.Context
+    )(capability: c.Expr[Any]): c.universe.Tree = {
       import c.universe._
 
       def members(tpe: c.universe.Type, input: c.Expr[Any]) = {
@@ -108,7 +118,9 @@ object macros {
             } else {
               val paramLists = member.asMethod.paramLists
               val paramDefs = paramLists.map {
-                _.map { sym => q"val ${sym.name.toTermName}: ${sym.typeSignature}" }
+                _.map { sym =>
+                  q"val ${sym.name.toTermName}: ${sym.typeSignature}"
+                }
               }
               val paramNames = paramLists.map {
                 _.map {
@@ -128,7 +140,11 @@ object macros {
       q"$impl: $tpeR"
     }
 
-    def modulate[R: c.WeakTypeTag](c: blackbox.Context)(capability: c.Expr[R], before: c.Expr[String => Unit], after: c.Expr[(String, Any) => Unit]): c.universe.Tree = {
+    def modulate[R: c.WeakTypeTag](c: blackbox.Context)(
+      capability: c.Expr[R],
+      before: c.Expr[String => Unit],
+      after: c.Expr[(String, Any) => Unit]
+    ): c.universe.Tree = {
       import c.universe._
 
       // Have to untypecheck the external tree as it has a different owner
@@ -148,7 +164,9 @@ object macros {
             } else {
               val paramLists = member.asMethod.paramLists
               val paramDefs = paramLists.map {
-                _.map { sym => q"val ${sym.name.toTermName}: ${sym.typeSignature}" }
+                _.map { sym =>
+                  q"val ${sym.name.toTermName}: ${sym.typeSignature}"
+                }
               }
               val paramNames = paramLists.map {
                 _.map {
@@ -169,20 +187,29 @@ object macros {
       }
 
       val tpeR = implicitly[WeakTypeTag[R]].tpe
-      val implementedMembers: Seq[c.universe.Tree] = members(tpeR, capability) ++ Seq(beforeDef, afterDef)
+      val implementedMembers
+        : Seq[c.universe.Tree] = members(tpeR, capability) ++ Seq(
+        beforeDef,
+        afterDef
+      )
 
       val impl = q"new $tpeR { ..$implementedMembers }"
       q"$impl: $tpeR"
     }
 
-    def revocable[R: c.WeakTypeTag](c: blackbox.Context)(capability: c.Expr[Any]): c.universe.Tree = {
+    def revocable[R: c.WeakTypeTag](
+      c: blackbox.Context
+    )(capability: c.Expr[Any]): c.universe.Tree = {
       import c.universe._
 
       val tpe = implicitly[c.WeakTypeTag[R]].tpe
 
       // Try to assert a pure trait...
       tpe.decls.foreach { decl =>
-        assert(decl.isAbstract, s"Type must be abstract, but $decl has implementation!")
+        assert(
+          decl.isAbstract,
+          s"Type must be abstract, but $decl has implementation!"
+        )
       }
 
       val implementedMembers = tpe.members.collect {
@@ -192,7 +219,8 @@ object macros {
           // trait Reader {
           //   def bufferedReader[T](charset: Charset)(block: BufferedReader => T): Try[T]
           // }
-          val termTypeParams = m.typeParams.map(t => q"type ${t.name.toTypeName}")
+          val termTypeParams =
+            m.typeParams.map(t => q"type ${t.name.toTypeName}")
           //val mapped = termTypeParams.map(_.toString).map(name => {
           //  TypeDef(Modifiers(Flag.DEFERRED),TypeName(name), List(),TypeBoundsTree(EmptyTree, EmptyTree))
           //})
@@ -204,7 +232,9 @@ object macros {
           } else {
             val paramLists = m.paramLists
             val paramDefs = paramLists.map {
-              _.map { sym => q"val ${sym.name.toTermName}: ${sym.typeSignature}" }
+              _.map { sym =>
+                q"val ${sym.name.toTermName}: ${sym.typeSignature}"
+              }
             }
             val paramNames = paramLists.map {
               _.map {
