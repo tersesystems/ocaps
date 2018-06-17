@@ -20,7 +20,7 @@ package object ocaps {
   type Thunk[C] = (() => C)
 
   object Thunk {
-    def apply[C](capability: => C): Thunk[C] = () => capability
+    def apply[C](capability: => C): Thunk[C] = capability _
   }
 
   trait Thunker {

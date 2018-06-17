@@ -1,6 +1,6 @@
 @@@ index
 
-* [Overview](overview.md)
+* [Construction](construction/index.md)
 * [Composition](composition.md)
 * [Attenuation](attenuation.md)
 * [Modulation](modulation.md)
@@ -17,11 +17,11 @@
 
 This is a series of examples showing capabilities in action.
 
-## Overview
+## Construction
 
 This section shows creation of capabilities and direct use.
 
-* [Overview](overview.md)
+* [Construction](construction/index.md)
 
 ## Structural Patterns
 

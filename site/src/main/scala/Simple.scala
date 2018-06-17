@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// #before
 object Before {
 
   // #definition
@@ -31,8 +32,9 @@ object Before {
   }
   // #usage
 }
+// #before
 
-
+// #after-attenuation
 object AfterAttenuation {
 
   // #definition
@@ -65,8 +67,10 @@ object AfterAttenuation {
   }
   // #usage
 }
+// #after-attenuation
 
 
+// #after-amplificationo
 object AfterAmplification {
 
   // #definition

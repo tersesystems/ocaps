@@ -183,24 +183,23 @@ This is a bit abstract, so it's worth giving an example.
 ```scala
 class Force {
   private object capabilities {}
-  
 }
 
 object Force {
-    sealed trait JediCapability {
-      def cleanRoom(): CleanRoomResults = ???
-    }
+  sealed trait JediCapability {
+    def cleanRoom(): CleanRoomResults = ???
+  }
     
-    sealed trait SithCapability {
-      def forcePush(): ForcePushResults = ???
-      def choke(): ChokeResults = ???
-    }
+  sealed trait SithCapability {
+    def forcePush(): ForcePushResults = ???
+    def choke(): ChokeResults = ???
+  }
     
-    trait ForceCapability extends JediCapability with SithCapability
+  trait ForceCapability extends JediCapability with SithCapability
     
-    trait Jedi {
-      def useTheForceWisely(jediPowers: JediCapability): Unit
-    }
+  trait Jedi {
+    def useTheForceWisely(jediPowers: JediCapability): Unit
+  }
 }
 ```
 
