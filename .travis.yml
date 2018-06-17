@@ -1,0 +1,18 @@
+language: scala
+
+scala:
+- 2.12.4
+
+jdk:
+- oraclejdk8
+- oraclejdk9
+
+cache:
+  directories:
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.gradle/caches"
+
+before_cache:
+- rm -rf $HOME/.ivy2/cache/ocaps/*
+- rm -rf $HOME/.ivy2/cache/scala_*/sbt_*/ocaps/*
+- find $HOME/.ivy2/cache -name "ivydata-*.properties" -print0 | xargs -n10 -0 rm

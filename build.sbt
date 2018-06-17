@@ -84,7 +84,7 @@ lazy val root = (project in file(".")).settings(disablePublishing)
 
   // Settings that apply to all subprojects
   inThisBuild(List(
-    organization := "com.tersesystems",
+    organization := "ocaps",
     scalaVersion := "2.12.6",
     scalacOptions in ThisBuild ++= Seq(
       "-deprecation",
