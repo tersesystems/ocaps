@@ -47,17 +47,17 @@ object Revocable {
    * }
    *
    * def revocable(doer: Doer): Revocable[Doer] = {
-   *   Revocable(doer) { provider =>
+   *   Revocable(doer) { thunk =>
    *     new Doer {
-   *       override def doTheThing(): Unit = provider().doTheThing()
+   *       override def doTheThing(): Unit = forwarder().doTheThing()
    *     }
    *   }
    * }
    * }}}
    */
-  def apply[C](capability: C)(cblock: Forwarder[C] => C): Revocable[C] = {
-    val (provider, r) = Revoker.pair(capability)
-    Revocable(cblock(provider), r)
+  def apply[C](capability: C)(cblock: Thunk[C] => C): Revocable[C] = {
+    val (thunk, r) = Revoker.pair(capability)
+    Revocable(cblock(thunk), r)
   }
 
   def apply[C](c: C, r: Revoker): Revocable[C] = {

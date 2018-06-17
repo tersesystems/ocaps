@@ -5,14 +5,14 @@
 * Show subtype
 
 
-@@snip [Simple.scala](../../../../../example/src/main/scala/ocaps/example/Simple.scala)
+@@fiddle [Simple.scala](../../scala/Simple.scala) { extraParams=theme=light&layout=v75 cssStyle=width:100%;height:800px }
 
 ## Effects
 
-@@snip [Effects.scala](../../../../../example/src/main/scala/ocaps/example/Effects.scala)
+@@snip [Effects.scala](../../scala/Effects.scala)
 
 ## Subtypes
 
-@@snip [Subtypes.scala](../../../../../example/src/main/scala/ocaps/example/Subtypes.scala)
+@@snip [Subtypes.scala](../../scala/Subtypes.scala)
 
 

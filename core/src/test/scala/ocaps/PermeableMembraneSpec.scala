@@ -1,5 +1,0 @@
-package ocaps
-
-class PermeableMembraneSpec {
-
-}

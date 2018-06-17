@@ -1,3 +1,3 @@
 # Revocation
 
-@@snip [Revocation.scala](../../../../../example/src/main/scala/ocaps/example/Revocation.scala)
+@@snip [Revocation.scala](../../scala/Revocation.scala)

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
-import ocaps.Brand
+import ocaps._
 
 // Amplification is when two object references
 // put together result in an ability to do something

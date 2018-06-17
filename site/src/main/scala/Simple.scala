@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 object Before {
 
   // #definition
@@ -29,7 +27,7 @@ object Before {
   def main(args: Array[String]): Unit = {
     val document = new Document("will")
     document.changeName("steve")
-    println(s"result = $document")
+    println(s"Before: result = $document")
   }
   // #usage
 }
@@ -63,7 +61,7 @@ object AfterAttenuation {
       override def changeName(name: String): Unit = document.changeName(name)
     }
     nameChanger.changeName("steve")
-    println(s"result = $document")
+    println(s"AfterAttenuation: result = $document")
   }
   // #usage
 }
@@ -109,7 +107,7 @@ object AfterAmplification {
     val access = Document.Access()
     val nameChanger = access.nameChanger(document)
     nameChanger.changeName("steve")
-    println(s"result = $document")
+    println(s"AfterAmplification: result = $document")
   }
   // #usage
 }

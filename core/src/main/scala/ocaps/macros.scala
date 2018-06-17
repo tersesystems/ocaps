@@ -200,7 +200,7 @@ object macros {
           val term = m.asTerm
           val termName = term.name.toTermName
           if (term.isVal) {
-            q"override val $termName = provider().$termName"
+            q"override val $termName = thunk().$termName"
           } else {
             val paramLists = m.paramLists
             val paramDefs = paramLists.map {
@@ -211,13 +211,13 @@ object macros {
                 _.name.toTermName
               }
             }
-            q"override def $termName[..$termTypeParams](...$paramDefs) = provider().$termName(...$paramNames)"
+            q"override def $termName[..$termTypeParams](...$paramDefs) = thunk().$termName(...$paramNames)"
           }
       }(collection.breakOut)
       val revokerCapability = q"new $tpe { ..$implementedMembers }"
       // god awful hack, but it seems to resolve the type problems in termTypeParams
       val parsed = c.parse(showCode(revokerCapability))
-      val args = List(q"$capability", q"{ provider => $parsed }")
+      val args = List(q"$capability", q"{ thunk => $parsed }")
       q"""
          import ocaps.Revocable;
          Revocable[$tpe](...$args): Revocable[$tpe]

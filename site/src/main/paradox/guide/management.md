@@ -28,14 +28,14 @@ package ocaps
 
 object Revocable {
   def apply[C](capability: C)(cblock: (() => C) => C): Revocable[C] = {
-    val (provider, revoker) = Revoker.pair(capability)
-    val revocableCapability: C = cblock(provider)
+    val (thunk, revoker) = Revoker.pair(capability)
+    val revocableCapability: C = cblock(thunk)
     Revocable(revocableCapability, revoker)
   }
 }
 ```
 
-The `cblock` of the Revocable is a constructor block -- it passes in a capability provider, and returns the proxy implementation. This means that a constructor for a particular type must execute the `provider()` function, which goes through the revoker or throws an exception: 
+The `cblock` of the Revocable is a constructor block -- it passes in a capability thunk, and returns the proxy implementation.
 
 ```scala
 import ocaps._
@@ -46,9 +46,9 @@ trait Doer {
 
 object Doer {
   def revocable(doer: Doer): Revocable[Doer] = {
-    Revocable(doer) { provider =>
+    Revocable(doer) { thunkedDoer =>
       new Doer {
-        override def doTheThing(): Unit = provider().doTheThing()
+        override def doTheThing(): Unit = thunkedDoer().doTheThing()
       }
     }
   }

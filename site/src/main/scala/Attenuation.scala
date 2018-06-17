@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
+import ocaps._
 import ocaps.macros._
 
 object Attenuation {

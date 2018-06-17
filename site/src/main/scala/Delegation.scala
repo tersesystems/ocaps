@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import ocaps._
 
 import scala.util.{Success, Try}

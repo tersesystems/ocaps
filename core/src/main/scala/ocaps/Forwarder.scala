@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package ocaps
+package object ocaps {
 
-trait Forwarder[C] extends (() => C)
+  // Deferred execution
+  type Thunk[C] = (() => C)
 
-object Forwarder {
-  def apply[C](capability: C): Forwarder[C] = () => capability
-}
+  object Thunk {
+    def apply[C](capability: => C): Thunk[C] = () => capability
+  }
 
-trait ForwarderFactory {
-  def apply[C](capability: C): Forwarder[C]
+  trait Thunker {
+    def thunk[C](capability: => C): Thunk[C]
+  }
 }

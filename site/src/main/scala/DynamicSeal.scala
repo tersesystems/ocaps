@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
-import ocaps.Brand
+import ocaps._
 
 // Brands allow for "flexible private fields" where
 // you have lexical scoping or in situations where

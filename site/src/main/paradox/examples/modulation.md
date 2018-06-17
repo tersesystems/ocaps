@@ -1,3 +1,3 @@
 # Modulation
 
-@@snip [Modulation.scala](../../../../../example/src/main/scala/ocaps/example/Modulation.scala)
+@@snip [Modulation.scala](../../scala/Modulation.scala)

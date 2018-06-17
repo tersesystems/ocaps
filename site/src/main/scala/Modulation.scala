@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import java.util.concurrent.CountDownLatch
 
-import ocaps._
-import ocaps.macros._
 import org.slf4j.Logger
 
 import scala.concurrent.duration._
-import scala.util.Try
+
+import ocaps._
+import ocaps.macros._
 
 object Modulation {
   final case class Foo(private val name: String) {
@@ -97,6 +95,7 @@ object Modulation {
   // #logging
 
   def main(args: Array[String]): Unit = {
+    import scala.util.Try
     val access = Foo.Access()
     val foo = new Foo("foo")
     val doer = access.doer(foo)

@@ -323,10 +323,10 @@ trait revoker {
 }
 ```
 
-Providing a capability with a `revoker` is done through a `Caretaker` pattern, which exposes the caretaker with the capability.
+Providing a capability with a `revoker` is done through a `Revocable` pattern, which exposes the caretaker with the capability.
 
 ```scala
-trait Caretaker[C] {
+trait Revocable[C] {
   def capability: C
   def revoker: revoker
 }
@@ -338,7 +338,7 @@ The caretaker provides a capability which closes over the previous one, but whic
 The `Caretaker` has a `provider` function which will call out to the underlying `doer` on every method invocation.
 
 ```scala
-val caretaker: CareTaker[Foo.Doer] = Foo.Doer.caretaker(doer)
+val revocable: Revocable[Foo.Doer] = Foo.Doer.caretaker(doer)
 val revokerDoer: Foo.Doer = caretaker.get
 val revoker = caretaker.revoker
 
@@ -378,7 +378,7 @@ Now, the program is safer on several levels.  Yoda only has Jedi Powers, can del
 object Foo {
   object Doer {
     // Note there's no external reference to the external FooCapability here
-    def logger(provider: Foo.Doer): Foo.Doer = new Foo.Doer {
+    def logger(provider: => Foo.Doer): Foo.Doer = new Foo.Doer {
       override def doTheThing(): Unit = {
         println("about to do the thing")
         provider.doTheThing()

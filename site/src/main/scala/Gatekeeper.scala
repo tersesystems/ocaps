@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import java.io.{BufferedReader, BufferedWriter, InputStream, OutputStream}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, _}
 
-import ocaps._
-
 import scala.util._
+import ocaps._
 
 object Gatekeeper {
   import Document._

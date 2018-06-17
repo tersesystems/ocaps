@@ -16,41 +16,44 @@
 
 package ocaps
 
-abstract class PermeableMembrane(factory: ForwarderFactory) {
-
-  // Not final because the scala compiler spits out a warning:
-  // https://issues.scala-lang.org/browse/SI-4440
-  case class SupplierWrapper[+A](supplier: () => A) extends Wrapper[A] {
-    def get: A = supplier()
-  }
+class Membrane(thunker: Thunker) {
 
   sealed abstract class Wrapper[+A] {
     def get: A
 
-    @inline final def map[B](f: A => B): Wrapper[B] = SupplierWrapper(() => f(this.get))
+    @inline final def map[B](f: A => B): Wrapper[B] = {
+      new Wrapper[B]() {
+        override def get: B = Thunk(f(Wrapper.this.get))()
+      }
+    }
 
     @inline final def flatMap[B](f: A => Wrapper[B]): Wrapper[B] = f(this.get)
   }
 
   def wrap[A](capability: => A): Wrapper[A] = {
-    SupplierWrapper(factory(capability))
+    new Wrapper[A] {
+      def get: A = thunker.thunk(capability)()
+    }
   }
 }
 
-class RevokerMembrane(revoker: Revoker with ForwarderFactory) extends PermeableMembrane(revoker) with Revoker {
+object Membrane {
+  def apply(thunker: Thunker): Membrane = new Membrane(thunker)
+}
 
+class RevokerMembrane(revoker: Revoker with Thunker) extends Membrane(revoker) with Revoker {
   @inline override final def revoked: Boolean = revoker.revoked
 
   @inline override final def revoke(): Unit = revoker.revoke()
-
 }
+
 
 object RevokerMembrane {
   def apply(): RevokerMembrane = {
     apply(new LatchRevoker())
   }
 
-  def apply(revoker: Revoker with ForwarderFactory): RevokerMembrane = {
+  def apply(revoker: Revoker with Thunker): RevokerMembrane = {
     new RevokerMembrane(revoker)
   }
 }

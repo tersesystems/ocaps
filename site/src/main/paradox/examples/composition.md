@@ -1,6 +1,6 @@
 # Composition
 
-@@snip [Composition.scala](../../../../../example/src/main/scala/ocaps/example/Composition.scala)
+@@snip [Composition.scala](../../scala/Composition.scala)
 
 
-@@snip [RepositoryComposition.scala](../../../../../example/src/main/scala/ocaps/example/RepositoryComposition.scala)
+@@snip [RepositoryComposition.scala](../../scala/RepositoryComposition.scala)

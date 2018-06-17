@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
+import ocaps._
 import ocaps.macros._
-
-import scala.util.{Success, Try}
 
 object Composition {
 
@@ -52,8 +49,8 @@ object Composition {
     }
 
     class Access private {
-      def doer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
-      def changer(foo: Foo): Try[Changer] = Success(foo.capabilities.changer)
+      def doer(foo: Foo): Doer = (foo.capabilities.doer)
+      def changer(foo: Foo): Changer = (foo.capabilities.changer)
     }
 
     object Access {
@@ -66,8 +63,8 @@ object Composition {
     import Foo._
     val access = Foo.Access()
     val foo = new Foo("foo")
-    val doer: Doer = access.doer(foo).get
-    val changer: Changer = access.changer(foo).get
+    val doer: Doer = access.doer(foo)
+    val changer: Changer = access.changer(foo)
     val derper: Derper = () => println("derp!")
     val doerChangerDerper = compose[Doer with Changer with Derper](doer, changer, derper)
 

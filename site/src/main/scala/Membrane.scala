@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import java.time.ZonedDateTime
 import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.util.{Locale, TimeZone}
 
 import cats._
 import cats.effect.IO
+
 import ocaps._
-import ocaps.example.Membrane.Location.{LocaleReader, TimeZoneReader}
 
 import scala.language.reflectiveCalls
 
@@ -31,6 +29,7 @@ import scala.language.reflectiveCalls
 // http://blog.ezyang.com/2013/03/what-is-a-membran/
 
 object Membrane {
+  import Location.{LocaleReader, TimeZoneReader}
 
   // #location
   class Location(locale: Locale, timeZone: TimeZone) {
@@ -64,7 +63,7 @@ object Membrane {
       }
     }
 
-    class MembraneAccess(val membrane: PermeableMembrane) {
+    class MembraneAccess(val membrane: Membrane) {
       type Wrapper[+A] = membrane.Wrapper[A]
 
       def localeReader(location: Location): LocaleReader[Wrapper] = {

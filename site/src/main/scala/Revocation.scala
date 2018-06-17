@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import ocaps._
 
 object Revocation {
@@ -45,9 +43,9 @@ object Revocation {
     // #caretaker
     object Doer {
       def caretaker(doer: Doer): Revocable[Doer] = {
-        Revocable(doer) { provider =>
+        Revocable(doer) { thunk =>
           new Doer {
-            override def doTheThing(): Unit = provider().doTheThing()
+            override def doTheThing(): Unit = thunk().doTheThing()
           }
         }
       }

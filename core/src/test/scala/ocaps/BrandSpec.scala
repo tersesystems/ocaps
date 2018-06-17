@@ -85,17 +85,6 @@ class BrandSpec extends WordSpec with Matchers {
       response.body should equal("hello")
     }
 
-    "seal and unseal with dependent type" in {
-      val brand1 = DependentBrand.create[String]("hint")
-      val brand2 = DependentBrand.create[String]("hint")
-
-      val unsealer1 = brand1.unsealer
-      val unsealer2 = brand2.unsealer
-
-      val box = brand1.sealer("hello")
-      unsealer1.apply(box)
-    }
-
   }
 
 }

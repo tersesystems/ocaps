@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import scala.language.existentials
 import scala.util.Try
 

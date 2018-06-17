@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 import java.util.UUID
 
 import cats.implicits._

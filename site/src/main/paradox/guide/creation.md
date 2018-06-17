@@ -1,6 +1,8 @@
 # Creating Capabilities
 
-A capability is a programming level expression of the saying "You can only eat your cake if you have it."  
+The introduction gave a basic explanation of capabilities, but did not demonstrate why access to the capability is so important.
+
+In esssence, a capability is a programming level expression of the saying "You can only eat your cake if you have it."  
 
 ```scala
 trait Cake {
@@ -213,7 +215,7 @@ In this situation, it may be desirable in some cases to have a resource with pub
 trait ItemRepository {
   def name: String  // okay for anyone to access this!
   
-  private[???] def deleter: Deleter // only accessible to authorized objects!
+  private[???] def deleter: Deleter // only accessible to authorized objects, if we knew what ??? was
 }
 ```
 

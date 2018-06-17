@@ -20,8 +20,6 @@ import java.util.concurrent.CountDownLatch
 
 import scala.util.control.NoStackTrace
 
-
-
 /**
  * Provides a handle to revoke a given capability.
  */
@@ -36,28 +34,26 @@ trait Revoker {
    * @return true if revoke() has been called, false otherwise.
    */
   def revoked: Boolean
-
 }
 
 /**
  * An implementation of a wrapping revoker that uses a countdown latch internally.
  */
-class LatchRevoker extends Revoker with ForwarderFactory {
+class LatchRevoker extends Revoker with Thunker {
   private val latch = new CountDownLatch(1)
   override def revoke(): Unit = latch.countDown()
   override def revoked: Boolean = latch.getCount == 0
 
   /**
-   * Returns a function that returns the capability C if this
-   * revoker is not `revoked`. If it has been revoked, then
-   * it throws `RevokedException` instead of returning the function.
+   * Return a Thunk of C, which returns C if this revoker is not `revoked`. If it has been revoked, then
+   * then the thunk, when called, throws `RevokedException`.
    *
    * @throws RevokedException if revoked
    * @param cap the capability
    * @tparam C
    * @return a function providing a capability
    */
-  override def apply[C](cap: C): Forwarder[C] = {
+  override def thunk[C](cap: => C): Thunk[C] = {
     () => if (revoked) {
       throw new RevokedException("Capability revoked!")
     } else {
@@ -76,16 +72,17 @@ object Revoker {
   def apply(): Revoker = new LatchRevoker()
 
   /**
-   * Creates a pair with a provider which may throw an exception, and a revoker
-   * controlling that provider. Commonly used with `ocap.Revocable`.
+   * Creates a pair with a thunk which may throw an exception when called.
+   *
+   * Commonly used with `ocap.Revocable`.
    *
    * @param capability the input capability
    * @tparam C the type of the capability.
-   * @return a provider of a capability and a revoker as a tuple.
+   * @return a thunk of a capability and a revoker as a tuple.
    */
-  def pair[C](capability: C): (Forwarder[C], Revoker) = {
+  def pair[C](capability: => C): (Thunk[C], Revoker) = {
     val revoker = new LatchRevoker()
-    (revoker(capability), revoker)
+    (revoker.thunk(capability), revoker)
   }
 
   /**

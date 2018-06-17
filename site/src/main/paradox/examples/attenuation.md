@@ -1,3 +1,3 @@
 # Attenuation
 
-@@snip [Attenuation.scala](../../../../../example/src/main/scala/ocaps/example/Attenuation.scala)
+@@snip [Attenuation.scala](../../scala/Attenuation.scala)

@@ -23,6 +23,8 @@ lazy val core = (project in file("core"))
     name := "ocaps-core",
     // https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
     //libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.12.6",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"  % Test,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
   )
 
@@ -43,8 +45,16 @@ lazy val site = (project in file("site"))
       )
     },
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
-    git.remoteRepo := "git@github.com:wsargent/ocaps.git"
-  )
+    git.remoteRepo := "git@github.com:wsargent/ocaps.git",
+
+    publish := {},
+    publishLocal := {},
+    publishArtifact := false,
+    skip in publish := true,
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9"
+  ).dependsOn(core)
 
 // Slides for Scaladays
 // https://github.com/julien-truffaut/presentation.g8
@@ -57,18 +67,6 @@ lazy val slides = (project in file("slides"))
     //tutTargetDirectory := baseDirectory.value / "../docs",
     watchSources ++= (tutSourceDirectory.value ** "*.html").get
   ).dependsOn(core)
-
-lazy val example = (project in file("example"))
-  .settings(
-    publish := {},
-    publishLocal := {},
-    publishArtifact := false,
-    skip in publish := true,
-    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
-    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9"
-  )
-  .dependsOn(core)
 
 lazy val root = (project in file(".")).settings(
   name := "ocaps",
@@ -122,5 +120,5 @@ lazy val root = (project in file(".")).settings(
       "releases" at nexus + "service/local/staging/deploy/maven2"
   },
 
-).dependsOn(core, example, slides, site)
-  .aggregate(core, example, slides, site)
+).dependsOn(core, slides, site)
+  .aggregate(core, slides, site)

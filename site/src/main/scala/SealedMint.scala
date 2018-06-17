@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package ocaps.example
-
 object SealedMint {
 
   final class Mint private (name: String) { self =>
