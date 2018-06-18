@@ -165,7 +165,7 @@ object ItemRepository {
 }
 ```
 
-We refer to this as an effect, where effect means "whatever distinguishes `F[A]` from `A`.
+We refer to this as an effect, where effect means "whatever distinguishes `F[A]` from `A`."
 
 The `capabilities` companion is defined using `cat.Id`, which essentially means "no effect here":
 
