@@ -132,7 +132,7 @@ ocaps
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
-    <li><a href="../guide/introduction.html#oo-vs-capabilities" class="header">OO vs Capabilities</a></li>
+    <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
     <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
@@ -156,7 +156,7 @@ ocaps
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
-    <li><a href="../guide/introduction.html#oo-vs-capabilities" class="header">OO vs Capabilities</a></li>
+    <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
     <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
@@ -171,16 +171,14 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
-<p>This guide will explain what this means, using the Scala programming language as the implementation.</p>
-<h2><a href="#oo-vs-capabilities" name="oo-vs-capabilities" class="anchor"><span class="anchor-link"></span></a>OO vs Capabilities</h2>
-<p>Object oriented programming starts with a single object. </p>
-<p>Functional programming starts with a single function. </p>
-<p>The power in these systems comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
-<p>Capability based systems start with a single capability, and builds on it by wiring capabilities together. </p>
+<p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
+<p>Object-capability systems (OCAP) start with a single capability, and builds on it by wiring capabilities together. </p>
+<p>So what is a capability?</p>
+<h2><a href="#definition" name="definition" class="anchor"><span class="anchor-link"></span></a>Definition</h2>
 <p>The definition of capability used here is from <a href="https://ai.google/research/pubs/pub45570">Permission and Authority Revisited: towards a formalization</a>:</p>
 <p><strong>A capability is <em>sufficient justification</em> to affect a resource.</strong></p>
 <p>In Scala, a resource is <em>an object</em> and a capability is the <em>reference</em> to that object.</p>
-<p>There is an important difference between capabilities and object oriented programming. Where OOP is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a gatekeeper to give you another one.</p>
+<p>There is an important difference between capabilities and object oriented programming. Whereas OOP is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a <a href="../examples/gatekeeper.html">gatekeeper</a> to give you another one.</p>
 <h2><a href="#scala-example" name="scala-example" class="anchor"><span class="anchor-link"></span></a>Scala Example</h2>
 <p>Say that you have a class <code>Foo</code>:</p>
 <pre class="prettyprint"><code class="language-scala">case class Foo(name: String)
