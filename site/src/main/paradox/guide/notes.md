@@ -44,7 +44,7 @@ final class Foo(name: String) {
 }
 ```
 
-And now we have a capability.  We can expose the capabilities of Foo through a Powerbox that has access.
+And now we have a capability.  We can expose the capabilities of Foo through Access.
 
 ```scala
 import scala.util.{Success, Try}
@@ -67,8 +67,8 @@ object Foo {
     def doTheThing(): Unit
   }
 
-  class Powerbox {
-    def askForDoer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
+  class Access {
+    def doer(foo: Foo) = foo.capabilities.doer
   }
 }
 ```
@@ -78,13 +78,12 @@ And then try it out:
 ```scala
 object Main {
   def main(args: Array[String]): Unit = {
-    val powerbox = new Foo.Powerbox()
+    val access = new Foo.Access()
 
     val foo = new Foo("foo")
 
-    powerbox.askForDoer(foo).map { doer =>
-      doer.doTheThing()
-    }
+    val doer = access.doer(foo)
+    doer.doTheThing()
   }
 }
 ```
@@ -424,16 +423,6 @@ Example: In a Cap OS for mobile smartphones, having a combined capability compos
   
 ### Sealer/Unsealer
 
-### Powerbox
-
-A powerbox is the opposite of a sandbox.  Rather than isolating the system, it selectively grants short-lived authority by providing capabilities.
-
-* http://wiki.c2.com/?PowerBox
-* http://www.combex.com/papers/darpa-report/html/ (from DarpaBrowser)
-* http://www.skyhunter.com/marcs/ewalnut.html (Powerbox Capability Manager section)
-* https://docs.sandstorm.io/en/latest/developing/powerbox/
-* https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/powerbox.capnp
-
 So `bob.foo(carol)` means that `bob` has the reference to carol now.  In a membrane, we're not only wrapping
 access to carol, but also to bob???
 
@@ -453,59 +442,6 @@ Every single parameter has to be wrapped in in something that is revoker.
 So Int => Membrane[Int] etc.
 This may be not workable in Scala, and I don't doubt you could bypass it.
 
-## Affine Types
-
-Affine Types are "use-once" types that  You can simulate affine types in Scala through isolated actors, but revoking a capability after first use will also do.
-
-http://materials.dagstuhl.de/files/17/17051/17051.PhilippHaller.Slides1.pdf 
- 
-
- 
-"object capability discipline" -- we can restrict types to match what we expect (is this part of membrane?) 
- 
-## Loader Isolation
-
-Loader isolation figures into the original [Object Capability thesis](http://www.erights.org/talks/thesis/markm-thesis.pdf), but is at the level of the JVM rather than Scala.  The Java ClassLoader is discussed extensively in section 10.  The [Wikipedia article](https://en.wikipedia.org/wiki/Object-capability_model) says "A loader obeys _loader isolation_ if the new object's only initial references are from the explicitly provided state, with no implicit grants by the loader itself. The Java ClassLoader violates loader isolation, making confinement of unexamined loaded code impossible." but does not provide citation.  
-
-That's technically true, but isolation in Java is still possible, even if it may not be complete.
-
-This is important in Java, because if everything uses the same classloader, a new instance can be brought up through reflection.  Additionally, if a security loader is not enabled on the system, then private variables can be made accessible on the system and swapped out.  For an example, see [Monkeypatching Java Classes](https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/).  You can enable the security manager, but it's very easy to disable unless you are [very careful about the sandbox](https://tersesystems.com/blog/2015/12/29/sandbox-experiment/).  And when you combine all of the above with the many gadgets available through [Java Deserialization](https://tersesystems.com/blog/2015/11/08/closing-the-open-door-of-java-object-serialization/), it's pretty clear that a dedicated attacker can circumvent the JVM.
-
-Instantiating a new instance through reflection does not automatically put it in the chain of references, but it does allow a bypass of the Scala access modifier logic.  However, if the classloader doesn't have those classes at all, they can't be instantiated.
-
-You break apart your public API classes and your data transfer objects from your implementation code.  Then you create another classloader, and register the SPI from there, enabling public access through the API without access to the underlying implementation.  In Java 9, you can use the module system, but that's still incredibly new and untried.
-
-### Custom class loader
-
-You load in projects through URLClassLoader, and use SBT BuildInfo.
-
-```scala
-lazy val core = project enablePlugins BuildInfoPlugin settings (
-  buildInfoKeys := Seq(BuildInfoKey.map(exportedProducts in (`third-party`, Runtime)) {
-    case (_, classFiles) ⇒ ("thirdParty", classFiles.map(_.data.toURI.toURL)) 
-  })
-```
-
-```scala
-def createInstance(): foo.bar.API = {
-  val loader = new java.net.URLClassLoader(buildinfo.BuildInfo.thirdParty.toArray, parent)
-  loader.loadClass("foo.bar.Impl").asSubclass(classOf[foo.bar.API]).newInstance()
-}
-```
-  
-https://stackoverflow.com/questions/29578808/using-a-custom-class-loader-for-a-module-dependency-in-sbt
-
-### OSGI
-
-If you're going down this route, you probably want an OSGI container like Apache Karaf, which can run bundles with strict container isolation.  OSGI lets you put the API into one bundle, and the implementation into another bundle.  Then use the OSGI service registry to construct the instance, by adding a ServiceFactory implementation and an instance of the API interface.  
-
-It is really hard to find anything that uses both OSGI and sbt.  Phil Andrews has two projects which work, but almost everything else is set up to build an OSGI package externally and does not make use of the end product.
-
-* https://github.com/PhilAndrew/JumpMicro
-* https://github.com/PhilAndrew/sbt-osgi-felix-akka-blueprint-camel
-
-Realistically speaking, it's probably OSGI in Java, or you set up a Manifest.MF file directly.  The simplest possible OSGI module is by [Michael Rice](https://michaelrice.com/2015/04/the-simplest-osgi-karaf-hello-world-demo-i-could-come-up-with/) with https://github.com/mrice/osgi-demo which can be used as a model.
- 
 // https://gist.github.com/mbedward/6e3dbb232bafec0792ba
 // https://github.com/adamw/quicklens/blob/master/quicklens/src/main/scala/com/softwaremill/quicklens/QuicklensMacros.scala
 // https://github.com/wix/accord/blob/master/core/src/main/scala/com/wix/accord/transform/ValidationTransform.scala
@@ -515,9 +451,6 @@ Realistically speaking, it's probably OSGI in Java, or you set up a Manifest.MF 
 // https://github.com/echojc/scala-macro-template
 // https://blog.scalac.io/2016/05/26/simple-types-in-play.html
 // https://stackoverflow.com/questions/25188440/applying-type-constructors-to-generated-type-parameters-with-scala-macros
-
-
-
 
 # Other works
  

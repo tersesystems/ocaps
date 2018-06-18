@@ -8,7 +8,7 @@ import cats.Id
 import cats.effect.IO
 import org.scalatest._
 
-class MembraneSpec extends WordSpec with Matchers  {
+class PermeableMembraneSpec extends WordSpec with Matchers  {
 
   // #location
   class Location(locale: Locale, timeZone: TimeZone) {
@@ -42,7 +42,7 @@ class MembraneSpec extends WordSpec with Matchers  {
       }
     }
 
-    class MembraneAccess(val membrane: Membrane) {
+    class MembraneAccess(val membrane: PermeableMembrane) {
       type Wrapper[+A] = membrane.Wrapper[A]
 
       def localeReader(location: Location): LocaleReader[Wrapper] = {
@@ -118,7 +118,7 @@ class MembraneSpec extends WordSpec with Matchers  {
   "Ad-hoc Membrane" should {
 
     "work" in {
-      val m = Membrane(new Thunker {
+      val m = PermeableMembrane(new Thunker {
         override def thunk[C](capability: => C): Thunk[C] = {
           () => {
             val cap = capability

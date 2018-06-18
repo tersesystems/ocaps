@@ -65,7 +65,7 @@ object Membrane {
       }
     }
 
-    class MembraneAccess(val membrane: Membrane) {
+    class MembraneAccess(val membrane: PermeableMembrane) {
       type Wrapper[+A] = membrane.Wrapper[A]
 
       def localeReader(location: Location): LocaleReader[Wrapper] = {

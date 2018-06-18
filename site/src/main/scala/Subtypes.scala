@@ -17,6 +17,7 @@
 import scala.language.existentials
 import scala.util.Try
 
+// #subtypes
 object Subtypes {
 
   import Fruit._
@@ -66,7 +67,7 @@ object Subtypes {
       }
     }
 
-    object Policy {
+    class Access {
       // Expose this capability raw, with no checks or anything.
       def eater[F <: Fruit](fruit: F): Eater[F] = fruit.capabilities.eater
     }
@@ -82,8 +83,8 @@ object Subtypes {
 
   case class User(name: String, caps: Map[Fruit, Eater[_]] = Map.empty) {
 
-    def canEat[F <: Fruit](fruit: F): User = {
-      copy(caps = caps + (fruit -> Policy.eater(fruit)))
+    def canEat[F <: Fruit](fruit: F, eater: Eater[F]): User = {
+      copy(caps = caps + (fruit -> eater))
     }
 
     def eats[F <: Fruit](fruit: F): Try[Option[F]] = {
@@ -102,9 +103,14 @@ object Subtypes {
 
   def main(args: Array[String]): Unit = {
 
+    val access = new Access
+    def grantEater[F <: Fruit](user: User, fruit: F): Eater[F] = {
+      access.eater(fruit)
+    }
+
     var steve = User("steve")
     val apple = new Apple()
-    steve = steve.canEat(apple)
+    steve = steve.canEat(apple, grantEater(steve, apple))
     val eatenApple: Try[Option[Apple]] = steve.eats(apple)
     println(s"steve's apple = $eatenApple")
 
@@ -114,7 +120,7 @@ object Subtypes {
     var mutt = User("mutt")
 
     val pear = new Pear()
-    mutt = mutt.canEat(pear)
+    mutt = mutt.canEat(pear, grantEater(mutt, pear))
     val eatenPear: Try[Option[Pear]] = mutt.eats(pear)
     println(s"mutt's pear = $eatenPear")
 
@@ -123,3 +129,4 @@ object Subtypes {
     jeff.eats(pear2)
   }
 }
+// #subtypes

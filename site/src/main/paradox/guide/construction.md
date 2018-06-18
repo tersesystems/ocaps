@@ -1,4 +1,4 @@
-# Creating Capabilities
+# Constructing Capabilities
 
 The introduction gave a basic explanation of capabilities, but did not demonstrate why access to the capability is so important.
 
@@ -153,9 +153,9 @@ val onlyAFinder: ItemRepository.Finder = repo
 val recoveredRepo: ItemRepository = onlyAFinder.asInstanceOf[ItemRepository]
 ```
 
-## Deferring Effects in Capabilities with Tagless Final
+## Effects in Capabilities with Tagless Final
 
-Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques for cleaner effect handling.  For example, rather than commit to a `Task[_]` or a `Try[_]`, a capability may be expressed in [tagless final](https://www.beyondthelines.net/programming/introduction-to-tagless-final/) style with a type parameter `F` that is a standin for the kind of effect you want:   
+Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques. For example, rather than commit to a `monix.Task[_]` or a `Try[_]`, a capability may be expressed in [tagless final](https://www.beyondthelines.net/programming/introduction-to-tagless-final/) style with a type parameter `F` that is a standin for the thing you want:   
 
 ```scala
 object ItemRepository {
@@ -164,6 +164,8 @@ object ItemRepository {
   }
 }
 ```
+
+We refer to this as an effect, where effect means "whatever distinguishes `F[A]` from `A`.
 
 The `capabilities` companion is defined using `cat.Id`, which essentially means "no effect here":
 

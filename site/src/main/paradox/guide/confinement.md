@@ -2,10 +2,6 @@
 
 Managing capabilities in the context of an architecture can be complex. 
 
-Design patterns of capability patterns can be hard to manage.  One way to package capabilities is to use *composition*, but it may also make sense to organize capabilities in a tree structure connected to resources.
-
-> [I]f your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier. -- [Objects as Secure Capabilities, Joe Duffy](http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/)
-
 One issue is that managing capabilities can mean limiting scope and access to an object reference, but many architectures assume a context in which all object references are publically accessible -- for example, events may be sent across an event bus, or through a streaming model.  And because data structures inherently involve object references, there's the question of how to keep capabilities safe and isolated.
 
 We touched on this a little bit in the `Access` class which uses access modifiers and a companion object to construct capabilities which cannot be accessed directly.  Unfortunately, in Scala, [access modifiers and qualifiers only apply to enclosing scope](http://www.jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/), so there is no way to qualify private access to things outside that scope.  However, there is a way to protect capabilities to produce this effect -- through the use of `Brand`.
@@ -47,62 +43,53 @@ object Main {
 
 Because both an unsealer and the sealed item are necessary to unseal, the act of unsealing is inherently a case of *amplification*, where putting two capabilities together lets you do things that neither one could do individually.
 
-Because dynamic sealing is
+Sealers can be used for many things.  It's helpful to think of them in the context where you would use public key encryption, for example
 
-Signing
+* Signing -- an box can be passed around and an unsealer on a resource can be made public, attesting to its origin.
+* Encryption -- a public sealer can "encrypt" information by boxing it, and sending it to an actor with the sealer.
+* Assurance -- boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.
+* Private Channel -- two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or `LoggingReceive` is enabled.
 
-Encryption
+One possible application of dynamic sealing is that all `Access` objects can be sealed and safely bound in a dependency injection framework, and a revocable unsealer capability can be passed around to enable access from a central gatekeeper.  I still need to implement this, but I think it's fairly straightforward.
 
-Private Channel
+```scala
+// import scalaguice so we don't use new TypeLiteral[Box[Foo.Access]] {}
+class Module extends ScalaModule {
+  def configure() = {
+    bind[Box[Foo.Access]]
+     .toProvider(fooAccessProvider)
+     .in(Scopes.SINGLETON)
+  }
+}
+```
 
-Fuck yes, this is awesome.
+This can also be used to pass around "root level" objects such as database connections and JSSE key managers that you may want to restrict access to generally.  Anyone using the database connection will have to unseal it, and you can provide the unsealer capability to use revocation or logging to flush it out.
 
-https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/
+Please see the [Dynamic Sealing example](../examples/dynamic_seal.md) for a demonstration.
 
+Dynamic sealing has an independent lineage from capabilities programming.  The original paper, [Protection in Programming Languages](http://www.erights.org/history/morris73.pdf) was written in 1973,  However, the morning paper [summary on the paper](https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/) is actually clearer and better written than the paper itself.
 
-
-
-I think there is a use case I'm not accounting for -- in an Akka actor system hierarchy, you could have multiple actors that were all of the same type, but implement dynamic sealing to provide the same kind of "dynamic private" access privacy when passing messages -- so the parent may have the unsealer but the children do not.  Is this more in line with how sealers are used in practice?
-
-Okay, so https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf says 
-
-> We now consider one of the oldest and most influential OCPs: dynamic sealing, also called the sealer-unsealer pattern. Originally proposed by Morris [1973], dynamic sealing makes it possible to support data abstraction in the absence of static typing. In this section, we show how OCPL supports compositional reasoning about dynamic sealing. In particular, we show how to implement dynamic sealing in HLA and how to give a compositional specification for this implementation, from which we derive useful specifications for interesting abstractions built on top of it and prove robust safety for representative clients. (We consider an alternative implementation of the OCP, satisfying a slightly weaker specification, in Appendix A. We also show how ideal specifications for cryptographic signing and encryption primitives can be derived from the specification of dynamic sealing in Appendix B.) 
-
-> The functionality of dynamic sealing. Morris [1973] introduced dynamic sealing to enforce data abstraction while interoperating with untrusted, potentially ill-typed code. He stipulated a function makeseal for generating pairs of functions (seal, unseal), such that (i) for every value v, seal v returns a value v ′ serving as an opaque, low-integrity proxy for v; and (ii) for every value v ′ , unseal v ′ returns v, if v ′ was produced by seal v, and otherwise gets stuck. The key point is that this seal-unseal pair supports data abstraction: the client of these functions can freely pass sealed values to untrusted code since they are low-integrity, while at the same time imposing whatever internal invariant it wants on the underlying values that they represent.
-
-Paper on sealers (which does not actually have that word in it, only the operations Seal and Unseal) http://www.erights.org/history/morris73.pdf
-
-https://ai.google/research/pubs/pub45568
-
-http://www.cis.upenn.edu/~bcpierce/papers/infohide3.pdf
-
-https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/
+[Robust and Compositional Verification of Object
+ Capability Patterns](https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf) has a section on dynamic sealing.
+ 
+The discussion on the use of dynamic sealing in communication channels is from [Modules, Abstract Types, and Distributed Versioning](https://www.cl.cam.ac.uk/~pes20/versions-popl.pdf).
 
 ## Confining Operations with Membranes
 
-A membrane is an extension of a `Revocable` that transitively imposes revocability on all
-references exchanged via the membrane.
+A membrane is an extension of a `Revocable` that transitively imposes revocability on all references exchanged via the membrane.  
 
-* [What is a Membrane?](http://blog.ezyang.com/2013/03/what-is-a-membran/)
-* [Trustworthy Proxies: Virtualizing Objects with Invariants](https://research.google.com/pubs/pub40736.html)
-* https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html
+Membranes are supposed to stop messages passing from one place to another without being wrapped.  They are most commonly used for ["uncooperative revocation"](https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html), although any effect can be applied with a membrane, not just revocation.
 
-Membranes are supposed to stop messages passing from one place to another without being wrapped.
+Membranes are useful in a situation in which you have to run some foreign code in a sandbox, and you absolutely do not trust it.  Tellingly, the papers above implement membranes using Javascript, where any website can tell code to be run locally in the browser.  Mozilla uses capabilities heavily internally, and membranes ensure an airgap between the browser's internal code and the code available to the site Javascript.
 
-The generalized way to implement a membrane in Java and Scala is to use an `InvocationHandler` as a dynamic proxy.
+The JVM is not a great platform for implementing a completely safe membranae.  In particular, the JVM SecurityManager is easily subverted, and Java Serialization attacks mean that the boundary is very hard to enforce.
 
-* http://www.baeldung.com/java-dynamic-proxies
-* https://www.concretepage.com/java/dynamic-proxy-with-proxy-and-invocationhandler-in-java
+In general, the best way to implement a membrane in Java would be to implement a generic method interceptor in [Byte Buddy](http://bytebuddy.net/#/) and attach behavior outside of the context of "normal" Java code.
 
-There are two ways to implement membranes in a type safe way.
+However, because membranes can implement any effect, and because membranes have a strong conceptual affinity with some FP concepts, it's actually very easy to implement "co-operative revocation" using a dependently typed effect.  This is best called a "permeable membrane", because it is an opt-in system that only works if the effect is propagated.
 
-The first is to have a membrane class which will wrap everything, and have the membrane act as an effect.  This does require classes to "opt in" to the membrane.
+Please see the @ref:[Membrane example](../examples/membrane.md) for details how Membrane is used in `ocaps`.
 
-The second is to make all capabilities take an implicit membrane context.
+The clearest layman explanation of membranes is [What is a Membrane?](http://blog.ezyang.com/2013/03/what-is-a-membran/) by Edward Z. Yang.  
 
-* [Capability confinement by membranes](https://www.info.ucl.ac.be/~pvr/rr2005-03.pdf)
-
-TODO
-
-// http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns#Membranes
-// http://blog.ezyang.com/2013/03/what-is-a-membran/
+[Trustworthy Proxies: Virtualizing Objects with Invariants](https://research.google.com/pubs/pub40736.html) is an implementation of membranes in Javascript, although somehow the abstract completely avoids that word.

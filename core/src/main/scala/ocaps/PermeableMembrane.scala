@@ -16,7 +16,22 @@
 
 package ocaps
 
-class Membrane(thunker: Thunker) {
+/**
+ * A permeable membrane that can wrap operations with the same so that the same effect is felt
+ * on all participants of the operation.
+ *
+ * This is a permeable membrane, because you must expplicitly
+ *
+ * {{{
+ * val m = RevokerMembrane()
+ * val wrappedCap1: m.Wrapper[Capability1] = m.wrap(capability1)
+ * val wrappedCap2: m.Wrapper[Capability2] = m.wrap(capability2)
+ * m.revoke() // revokes wrappedCap1 and wrappedCap2.
+ * }}}
+ *
+ * @param thunker
+ */
+class PermeableMembrane(thunker: Thunker) {
 
   sealed abstract class Wrapper[+A] {
     def get: A
@@ -37,12 +52,12 @@ class Membrane(thunker: Thunker) {
   }
 }
 
-object Membrane {
-  def apply(thunker: Thunker): Membrane = new Membrane(thunker)
+object PermeableMembrane {
+  def apply(thunker: Thunker): PermeableMembrane = new PermeableMembrane(thunker)
 }
 
 class RevokerMembrane(revoker: Revoker with Thunker)
-    extends Membrane(revoker)
+    extends PermeableMembrane(revoker)
     with Revoker {
   @inline override final def revoked: Boolean = revoker.revoked
 

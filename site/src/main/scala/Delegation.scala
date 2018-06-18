@@ -39,13 +39,12 @@ object Delegation {
       def doTheThing(): Unit
     }
 
-    class Policy private {
-      def askForDoer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
+    class Access private {
+      def doer(foo: Foo): Doer = foo.capabilities.doer
     }
 
-    object Policy {
-      // restrict access to powerbox here
-      def apply(): Policy = new Policy
+    object Access {
+      def apply(): Access = new Access
     }
   }
 
@@ -73,10 +72,10 @@ object Delegation {
   }
 
   def main(args: Array[String]): Unit = {
-    val powerbox = Foo.Policy()
+    val access = Foo.Access()
 
     val foo = new Foo("foo")
-    val doer = powerbox.askForDoer(foo).get
+    val doer = access.doer(foo)
 
     val alice = new User("alice")
     alice.setDoer(doer)

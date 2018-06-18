@@ -20,6 +20,7 @@ import scala.util._
   * Demonstration of using tagless final to apply an effect
   * (aka Algebraic Data Types aka Object Algebras) to a capability.
   */
+// #effects
 object Effects {
   type Id[A] = A
 
@@ -84,3 +85,4 @@ object Effects {
   }
   // #usage
 }
+// #effects

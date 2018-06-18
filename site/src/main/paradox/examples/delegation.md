@@ -1,3 +1,3 @@
 # Delegation
 
-@@fiddle [Delegation.scala](../../scala/Delegation.scala)
+@@snip [Delegation.scala](../../scala/Delegation.scala)

@@ -12,9 +12,9 @@
 
 Documentation can be found at [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)
 
-A guide to object capabilities can be found at [http://wsargent.github.io/ocaps/guide/](http://wsargent.github.io/ocaps/guide/)
+Examples can be found at [http://wsargent.github.io/ocaps/examples/](http://wsargent.github.io/ocaps/examples/)
 
-Examples to object capabilities can be found at [http://wsargent.github.io/ocaps/examples/](http://wsargent.github.io/ocaps/examples/)
+A guide to object capabilities can be found at [http://wsargent.github.io/ocaps/guide/](http://wsargent.github.io/ocaps/guide/)
 
 
 ## Usage

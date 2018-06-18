@@ -16,6 +16,7 @@
 
 import ocaps._
 
+// #revocation
 object Revocation {
 
   import scala.language.reflectiveCalls
@@ -23,7 +24,7 @@ object Revocation {
   import scala.util.control.NonFatal
 
   final class Foo(name: String) {
-    private[this] def privateDoTheThing(): Unit = {
+    private def privateDoTheThing(): Unit = {
       println(s"$name.doTheThing()")
     }
 
@@ -40,9 +41,9 @@ object Revocation {
       def doTheThing(): Unit
     }
 
-    // #caretaker
+    // #manual
     object Doer {
-      def caretaker(doer: Doer): Revocable[Doer] = {
+      def revocable(doer: Doer): Revocable[Doer] = {
         Revocable(doer) { thunk =>
           new Doer {
             override def doTheThing(): Unit = thunk().doTheThing()
@@ -50,10 +51,10 @@ object Revocation {
         }
       }
     }
-    // #caretaker
+    // #manual
 
-    class Policy {
-      def askForDoer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
+    class Access {
+      def doer(foo: Foo): Doer = foo.capabilities.doer
     }
   }
 
@@ -90,13 +91,16 @@ object Revocation {
 
   def main(args: Array[String]): Unit = {
     import Foo._
-
     val foo = new Foo("foo")
 
-    val policy = new Policy
-    val Revocable(cap, revoker) =
-      policy.askForDoer(foo).map(Foo.Doer.caretaker).get
-    new Guest(cap).start()
+    val access = new Access
+    val doer = access.doer(foo)
+
+    // macro generates code equivalent to the `revocable` code above
+    //val Revocable(revocableDoer, revoker) = Foo.Doer.revocable(doer)
+    val Revocable(revocableDoer, revoker) = macros.revocable[Doer](doer)
+
+    new Guest(revocableDoer).start()
     new ScheduledRevoker(revoker).start()
 
     // After five seconds, exit program.
@@ -105,3 +109,4 @@ object Revocation {
   }
 
 }
+// #revocation
