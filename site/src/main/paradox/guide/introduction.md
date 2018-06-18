@@ -1,17 +1,13 @@
 
 # Introducing Capabilities
 
-This guide will explain what this means, using the Scala programming language as the implementation.
+Object oriented programming starts with a single object.  Functional programming starts with a single function.  The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives.  OOP is all about wiring objects together.  FP is all about wiring functions together. 
 
-## OO vs Capabilities
+Object-capability systems (OCAP) start with a single capability, and builds on it by wiring capabilities together.  
 
-Object oriented programming starts with a single object.  
+So what is a capability?
 
-Functional programming starts with a single function.  
-
-The power in these systems comes from being able to build and compose powerful structures out of these primitives.  OOP is all about wiring objects together.  FP is all about wiring functions together. 
-
-Capability based systems start with a single capability, and builds on it by wiring capabilities together.  
+## Definition
  
 The definition of capability used here is from [Permission and Authority Revisited: towards a formalization](https://ai.google/research/pubs/pub45570):
 
@@ -19,7 +15,7 @@ The definition of capability used here is from [Permission and Authority Revisit
 
 In Scala, a resource is *an object* and a capability is the *reference* to that object.
  
-There is an important difference between capabilities and object oriented programming.  Where OOP is typically interested in **making things accessible** and creating graphs of things, a capability is a security tool, used for **making things inaccessible**.  A capability is a precious thing, a tightly guarded key to a locked room full of treasure.  You are only handed one, and if you lose it, then you must ask a gatekeeper to give you another one.
+There is an important difference between capabilities and object oriented programming.  Whereas OOP is typically interested in **making things accessible** and creating graphs of things, a capability is a security tool, used for **making things inaccessible**.  A capability is a precious thing, a tightly guarded key to a locked room full of treasure.  You are only handed one, and if you lose it, then you must ask a @ref:[gatekeeper](../examples/gatekeeper.md) to give you another one.
 
 ## Scala Example
 
