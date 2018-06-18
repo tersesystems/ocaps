@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Membrane · Introduction</title>
+<title>Membrane · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Membrane
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -129,7 +131,7 @@ Introduction
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -140,6 +142,130 @@ Introduction
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#membrane" name="membrane" class="anchor"><span class="anchor-link"></span></a>Membrane</h1>
+<pre class="prettyprint"><code class="language-scala">/*
+ * Copyright 2018 Will Sargent
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.time.ZonedDateTime
+import java.time.format.{DateTimeFormatter, FormatStyle}
+import java.util.{Locale, TimeZone}
+
+import cats._
+import cats.effect.IO
+
+import ocaps._
+
+import scala.language.reflectiveCalls
+
+// http://blog.ezyang.com/2013/03/what-is-a-membran/
+
+object Membrane {
+  import Location.{LocaleReader, TimeZoneReader}
+
+  class Location(locale: Locale, timeZone: TimeZone) {
+    private object capabilities {
+      def localeReader: Location.LocaleReader[Id] =
+        new Location.LocaleReader[Id] {
+          override def locale: Locale = Location.this.locale
+        }
+
+      def timeZoneReader: Location.TimeZoneReader[Id] =
+        new Location.TimeZoneReader[Id] {
+          override def timeZone: TimeZone = Location.this.timeZone
+        }
+    }
+  }
+
+  object Location {
+    trait LocaleReader[F[_]] {
+      def locale: F[Locale]
+    }
+
+    trait TimeZoneReader[F[_]] {
+      def timeZone: F[TimeZone]
+    }
+
+    class IdAccess {
+      def localeReader(location: Location): LocaleReader[Id] = {
+        location.capabilities.localeReader
+      }
+
+      def timeZoneReader(location: Location): TimeZoneReader[Id] = {
+        location.capabilities.timeZoneReader
+      }
+    }
+
+    class MembraneAccess(val membrane: PermeableMembrane) {
+      type Wrapper[+A] = membrane.Wrapper[A]
+
+      def localeReader(location: Location): LocaleReader[Wrapper] = {
+        new LocaleReader[Wrapper] {
+          override def locale: Wrapper[Locale] = {
+            membrane.wrap(location.capabilities.localeReader.locale)
+          }
+        }
+      }
+
+      def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
+        new TimeZoneReader[Wrapper] {
+          override def timeZone: Wrapper[TimeZone] = {
+            membrane.wrap(location.capabilities.timeZoneReader.timeZone)
+          }
+        }
+      }
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val m = RevokerMembrane()
+    val user = new Location(Locale.US, TimeZone.getTimeZone(&quot;PST&quot;))
+    val access = new Location.MembraneAccess(m)
+
+    val dryLocale: LocaleReader[access.Wrapper] = access.localeReader(user)
+    val dryTimeZone: TimeZoneReader[access.Wrapper] =
+      access.timeZoneReader(user)
+
+    // Use an IO monad because the wrapper could throw revokerException when we call get
+
+    // Uncommment this to see the operation fail...
+    //m.revoke()
+
+    val program: IO[String] = IO {
+      val format: access.Wrapper[String] = for {
+        timeZone &lt;- dryTimeZone.timeZone
+        locale &lt;- dryLocale.locale
+      } yield {
+        ZonedDateTime
+          .now(timeZone.toZoneId)
+          .format(
+            DateTimeFormatter
+              .ofLocalizedDateTime(FormatStyle.FULL)
+              .withLocale(locale)
+          )
+      }
+      format.get
+    }
+    program.unsafeRunAsync {
+      case Left(ex) =&gt;
+        ex.printStackTrace()
+      case Right(success) =&gt;
+        println(s&quot;Using time ${success}&quot;)
+    }
+  }
+
+}</code></pre>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/membrane.md" title="Edit this page" class="md-source-file md-edit">
@@ -148,7 +274,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>

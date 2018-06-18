@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Overview · Introduction</title>
+<title>Construction with Subtypes · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,10 +51,10 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
-Overview
+Construction with Subtypes
 </span>
 </div>
 </div>
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="active page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="active page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,43 +121,18 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
   </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="toc">Table of contents</label>
-<ul>
-  <li><a href="../examples/overview.html#overview" class="header">Overview</a>
-  <ul>
-    <li><a href="../examples/overview.html#effects" class="header">Effects</a></li>
-    <li><a href="../examples/overview.html#subtypes" class="header">Subtypes</a></li>
-  </ul></li>
-</ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
-</nav>
-
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="toc">Table of contents</label>
-<ul>
-  <li><a href="../examples/overview.html#overview" class="header">Overview</a>
-  <ul>
-    <li><a href="../examples/overview.html#effects" class="header">Effects</a></li>
-    <li><a href="../examples/overview.html#subtypes" class="header">Subtypes</a></li>
-  </ul></li>
-</ul>
 </nav>
 
 </div>
@@ -164,211 +141,22 @@ Introduction
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h1>
-<ul>
-  <li>Show effects</li>
-  <li>Show simple</li>
-  <li>Show subtype</li>
-</ul>
+<h1><a href="#construction-with-subtypes" name="construction-with-subtypes" class="anchor"><span class="anchor-link"></span></a>Construction with Subtypes</h1>
 <pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ * Copyright 2018 Will Sargent
  *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-package ocaps.example
-
-object Before {
-
-  final class Document(private[this] var name: String) {
-    def changeName(newName: String): Unit = name = newName
-    override def toString: String = s&quot;Document($name)&quot;
-  }
-
-  def main(args: Array[String]): Unit = {
-    val document = new Document(&quot;will&quot;)
-    document.changeName(&quot;steve&quot;)
-    println(s&quot;result = $document&quot;)
-  }
-}
-
-
-object AfterAttenuation {
-
-  final class Document(private var name: String) extends Document.NameChanger {
-    override def changeName(newName: String): Unit =  {
-      name = newName
-    }
-    override def toString: String = s&quot;Document($name)&quot;
-  }
-
-  object Document {
-    trait NameChanger {
-      def changeName(name: String): Unit
-    }
-  }
-
-  def main(args: Array[String]): Unit = {
-    val document = new Document(&quot;will&quot;)
-
-    // expose a single facet through attenuation
-    val nameChanger = new Document.NameChanger {
-      override def changeName(name: String): Unit = document.changeName(name)
-    }
-    nameChanger.changeName(&quot;steve&quot;)
-    println(s&quot;result = $document&quot;)
-  }
-}
-
-
-object AfterAmplification {
-
-  final class Document(private var name: String) {
-    private object capabilities {
-      val nameChanger = new Document.NameChanger {
-        override def changeName(newName: String): Unit =  {
-          name = newName
-        }
-      }
-    }
-    override def toString: String = s&quot;Document($name)&quot;
-  }
-
-  object Document {
-    sealed trait NameChanger {
-      def changeName(name: String): Unit
-    }
-
-    // Policy controls who has access to what
-    class Access private {
-      def nameChanger(doc: Document): NameChanger = {
-        doc.capabilities.nameChanger
-      }
-    }
-
-    object Access {
-      def apply(): Access = new Access
-    }
-  }
-
-  def main(args: Array[String]): Unit = {
-    val document = new Document(&quot;will&quot;)
-    val access = Document.Access()
-    val nameChanger = access.nameChanger(document)
-    nameChanger.changeName(&quot;steve&quot;)
-    println(s&quot;result = $document&quot;)
-  }
-}</code></pre>
-<h2><a href="#effects" name="effects" class="anchor"><span class="anchor-link"></span></a>Effects</h2>
-<pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
- *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-package ocaps.example
-
-import scala.util._
-
-/**
- * Demonstration of using tagless final to apply an effect
- * (aka Algebraic Data Types aka Object Algebras) to a capability.
- */
-object Effects {
-  type Id[A] = A
-
-  final class Document(private var name: String) {
-    private object capabilities {
-      val nameChanger = new Document.NameChanger[Id] {
-        override def changeName(newName: String): Unit =  {
-          name = newName
-        }
-      }
-    }
-    override def toString: String = s&quot;Document($name)&quot;
-  }
-
-  object Document {
-    sealed trait NameChanger[F[_]] {
-      def changeName(name: String): F[Unit]
-    }
-
-    trait Effect[F[_]] {
-      def wrap(nameChanger: NameChanger[Id]): NameChanger[F]
-    }
-
-    // The default &quot;no effect&quot; type Id[A] = A
-    implicit val idEffect: Effect[Id] = nameChanger =&gt; identity(nameChanger)
-
-    // Apply a &quot;Try&quot; effect to the capability
-    implicit val tryEffect: Effect[Try] = nameChanger =&gt; {
-      new NameChanger[Try] {
-        override def changeName(name: String): Try[Unit] = Try(nameChanger.changeName(name))
-      }
-    }
-
-    class Access {
-      def nameChanger[F[_] : Effect](doc: Document): NameChanger[F] = {
-        val effect = implicitly[Effect[F]]
-        effect.wrap(doc.capabilities.nameChanger)
-      }
-    }
-  }
-
-  def main(args: Array[String]): Unit = {
-    val document = new Document(&quot;will&quot;)
-    val access = new Document.Access()
-
-    val nameChanger: Document.NameChanger[Try] = access.nameChanger(document)
-    // or...
-    // val nameChanger: NameChanger[Id] = access.nameChanger(document)
-
-    nameChanger.changeName(&quot;steve&quot;) match {
-      case Success(_) =&gt;
-        println(s&quot;result = $document&quot;)
-      case Failure(ex) =&gt;
-        println(s&quot;exception = $ex&quot;)
-    }
-  }
-}</code></pre>
-<h2><a href="#subtypes" name="subtypes" class="anchor"><span class="anchor-link"></span></a>Subtypes</h2>
-<pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
- *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-package ocaps.example
 
 import scala.language.existentials
 import scala.util.Try
@@ -422,7 +210,7 @@ object Subtypes {
       }
     }
 
-    object Policy {
+    class Access {
       // Expose this capability raw, with no checks or anything.
       def eater[F &lt;: Fruit](fruit: F): Eater[F] = fruit.capabilities.eater
     }
@@ -438,8 +226,8 @@ object Subtypes {
 
   case class User(name: String, caps: Map[Fruit, Eater[_]] = Map.empty) {
 
-    def canEat[F &lt;: Fruit](fruit: F): User = {
-      copy(caps = caps + (fruit -&gt; Policy.eater(fruit)))
+    def canEat[F &lt;: Fruit](fruit: F, eater: Eater[F]): User = {
+      copy(caps = caps + (fruit -&gt; eater))
     }
 
     def eats[F &lt;: Fruit](fruit: F): Try[Option[F]] = {
@@ -456,12 +244,16 @@ object Subtypes {
     }
   }
 
-
   def main(args: Array[String]): Unit = {
+
+    val access = new Access
+    def grantEater[F &lt;: Fruit](user: User, fruit: F): Eater[F] = {
+      access.eater(fruit)
+    }
 
     var steve = User(&quot;steve&quot;)
     val apple = new Apple()
-    steve = steve.canEat(apple)
+    steve = steve.canEat(apple, grantEater(steve, apple))
     val eatenApple: Try[Option[Apple]] = steve.eats(apple)
     println(s&quot;steve&#39;s apple = $eatenApple&quot;)
 
@@ -471,7 +263,7 @@ object Subtypes {
     var mutt = User(&quot;mutt&quot;)
 
     val pear = new Pear()
-    mutt = mutt.canEat(pear)
+    mutt = mutt.canEat(pear, grantEater(mutt, pear))
     val eatenPear: Try[Option[Pear]] = mutt.eats(pear)
     println(s&quot;mutt&#39;s pear = $eatenPear&quot;)
 
@@ -479,17 +271,16 @@ object Subtypes {
     val pear2 = new Pear()
     jeff.eats(pear2)
   }
-}
-</code></pre>
+}</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/overview.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/subtypes.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
@@ -499,7 +290,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/index.html" title="Examples" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/effects.html" title="Construction with Effects" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -508,7 +299,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Examples
+Construction with Effects
 </span>
 </div>
 </a>

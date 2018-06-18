@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="assets/images/favicon.png">
-<title>Running · Introduction</title>
+<title>Running · ocaps</title>
 <link rel="stylesheet" href="assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Running
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="index.html" title="Introduction">
-Introduction
+<a href="index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="running.html" class="active page">Running</a></li>
   <li><a href="examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="examples/overview.html" class="page">Overview</a></li>
+    <li><a href="examples/construction.html" class="page">Construction</a></li>
+    <li><a href="examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="examples/composition.html" class="page">Composition</a></li>
     <li><a href="examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -131,12 +133,13 @@ Introduction
   <li><a href="running.html#running" class="header">Running</a>
   <ul>
     <li><a href="running.html#dependencies" class="header">Dependencies</a></li>
+    <li><a href="running.html#imports" class="header">Imports</a></li>
   </ul></li>
 </ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -152,6 +155,7 @@ Introduction
   <li><a href="running.html#running" class="header">Running</a>
   <ul>
     <li><a href="running.html#dependencies" class="header">Dependencies</a></li>
+    <li><a href="running.html#imports" class="header">Imports</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -163,15 +167,24 @@ Introduction
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#running" name="running" class="anchor"><span class="anchor-link"></span></a>Running</h1>
-<p>ocaps is available in <a href="https://bintray.com/bintray/jcenter">JCenter</a>.</p>
+<p>The ocaps artifacts are available in <a href="https://bintray.com/wsargent/maven/ocaps-core">https://bintray.com/wsargent/maven/ocaps-core</a>.</p>
+<p>Source code is available in <a href="https://github.com/wsargent/ocaps">https://github.com/wsargent/ocaps</a>. Issues can be added at <a href="https://github.com/wsargent/ocaps/issues">https://github.com/wsargent/ocaps/issues</a>.</p>
 <h2><a href="#dependencies" name="dependencies" class="anchor"><span class="anchor-link"></span></a>Dependencies</h2>
-<p>To add <code>ocaps</code> to your project, add the following to <code>build.sbt</code>:</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.tersesystems" %% "ocaps" % "0.1.0-SNAPSHOT"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
-  &lt;groupId&gt;com.tersesystems&lt;/groupId&gt;
+<p>To add <code>ocaps</code> to your project, add the following resolver to <code>build.sbt</code>:</p>
+<pre class="prettyprint"><code class="language-scala">resolvers += Resolver.bintrayRepo(&quot;wsargent&quot;,&quot;maven&quot;)
+</code></pre>
+<p>And add the given library dependency in <code>build.sbt</code>:</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "ocaps" %% "ocaps" % "0.0.3-SNAPSHOT"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;ocaps&lt;/groupId&gt;
   &lt;artifactId&gt;ocaps_2.12&lt;/artifactId&gt;
-  &lt;version&gt;0.1.0-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;0.0.3-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">dependencies {
-  compile group: 'com.tersesystems', name: 'ocaps_2.12', version: '0.1.0-SNAPSHOT'
+  compile group: 'ocaps', name: 'ocaps_2.12', version: '0.0.3-SNAPSHOT'
 }</code></pre></dd></dl>
+<h2><a href="#imports" name="imports" class="anchor"><span class="anchor-link"></span></a>Imports</h2>
+<p>To import the <code>ocaps</code> library classes, please add the following to your Scala files:</p>
+<pre><code>import ocaps._
+import ocaps.macros._
+</code></pre>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/running.md" title="Edit this page" class="md-source-file md-edit">
@@ -180,7 +193,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
@@ -190,7 +203,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="index.html" title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="index.html" title="ocaps" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -199,7 +212,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Introduction
+ocaps
 </span>
 </div>
 </a>

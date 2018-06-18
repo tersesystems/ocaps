@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Composition · Introduction</title>
+<title>Composition · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Composition
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="active page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -129,7 +131,7 @@ Introduction
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -141,33 +143,30 @@ Introduction
 <div class="md-content__searchable">
 <h1><a href="#composition" name="composition" class="anchor"><span class="anchor-link"></span></a>Composition</h1>
 <pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ * Copyright 2018 Will Sargent
  *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package ocaps.example
-
+import ocaps._
 import ocaps.macros._
-
-import scala.util.{Success, Try}
 
 object Composition {
 
   final class Foo(private var name: String) {
     private object capabilities {
       val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit =  {
+        override def doTheThing(): Unit = {
           println(s&quot;$name.doTheThing()&quot;)
         }
       }
@@ -194,8 +193,8 @@ object Composition {
     }
 
     class Access private {
-      def doer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
-      def changer(foo: Foo): Try[Changer] = Success(foo.capabilities.changer)
+      def doer(foo: Foo): Doer = (foo.capabilities.doer)
+      def changer(foo: Foo): Changer = (foo.capabilities.changer)
     }
 
     object Access {
@@ -207,10 +206,11 @@ object Composition {
     import Foo._
     val access = Foo.Access()
     val foo = new Foo(&quot;foo&quot;)
-    val doer: Doer = access.doer(foo).get
-    val changer: Changer = access.changer(foo).get
+    val doer: Doer = access.doer(foo)
+    val changer: Changer = access.changer(foo)
     val derper: Derper = () =&gt; println(&quot;derp!&quot;)
-    val doerChangerDerper = compose[Doer with Changer with Derper](doer, changer, derper)
+    val doerChangerDerper =
+      compose[Doer with Changer with Derper](doer, changer, derper)
 
     // composition is often used when you want to return a &quot;set&quot; of capabilities after
     // some authorization event has taken place, after which you can do some pattern matching
@@ -229,22 +229,20 @@ object Composition {
   }
 }</code></pre>
 <pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ * Copyright 2018 Will Sargent
  *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-package ocaps.example
 
 import java.util.UUID
 
@@ -254,14 +252,14 @@ import cats.{Id, _}
 import scala.util._
 
 /**
- * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
- *
- * The capabilities use tagless final to show how you can use different effects with capabilities.
- *
- * For example, the Id effect is an identity, so a failure will cause an exception.
- *
- * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
- */
+  * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
+  *
+  * The capabilities use tagless final to show how you can use different effects with capabilities.
+  *
+  * For example, the Id effect is an identity, so a failure will cause an exception.
+  *
+  * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
+  */
 object RepositoryComposition {
   val ID = UUID.fromString(&quot;c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7&quot;)
 
@@ -277,7 +275,11 @@ object RepositoryComposition {
   }
 
   def changeWithId(itemRepository: ItemRepository): Unit = {
-    val idNameChanger = new NameChanger[Id](access.finder(itemRepository), access.updater(itemRepository), _.map(identity))
+    val idNameChanger = new NameChanger[Id](
+      access.finder(itemRepository),
+      access.updater(itemRepository),
+      _.map(identity)
+    )
     val idResult = idNameChanger.changeName(ID, &quot;new name&quot;)
     println(s&quot;id result = $idResult&quot;)
   }
@@ -290,29 +292,34 @@ object RepositoryComposition {
 
     val idUpdater = access.updater(itemRepository)
     val tryUpdater = new Updater[Try] {
-      override def update(item: Item): Try[UpdateResult] = Try(idUpdater.update(item))
+      override def update(item: Item): Try[UpdateResult] =
+        Try(idUpdater.update(item))
     }
 
     val tryNameChanger = new NameChanger[Try](tryFinder, tryUpdater, {
       case Success(Some(result)) =&gt; result.map(Some(_))
-      case Success(None) =&gt; Success(None)
-      case Failure(ex) =&gt; Failure(ex)
+      case Success(None)         =&gt; Success(None)
+      case Failure(ex)           =&gt; Failure(ex)
     })
     val tryResult = tryNameChanger.changeName(ID, &quot;new name&quot;)
     println(s&quot;try result = $tryResult&quot;)
   }
 
-  class NameChanger[G[_]: Functor](finder: Finder[G], updater: Updater[G], transform: G[Option[G[UpdateResult]]] =&gt; G[Option[UpdateResult]]) {
+  class NameChanger[G[_]: Functor](
+    finder: Finder[G],
+    updater: Updater[G],
+    transform: G[Option[G[UpdateResult]]] =&gt; G[Option[UpdateResult]]
+  ) {
     def changeName(id: UUID, newName: String): G[Option[UpdateResult]] = {
-      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map { maybeItem: Option[Item] =&gt;
-        maybeItem.map { item =&gt;
-          updater.update(item.copy(name = newName))
-        }
+      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map {
+        maybeItem: Option[Item] =&gt;
+          maybeItem.map { item =&gt;
+            updater.update(item.copy(name = newName))
+          }
       }
       transform(saved)
     }
   }
-
 
   case class Item(id: UUID, name: String)
 
@@ -328,10 +335,12 @@ object RepositoryComposition {
     private object capabilities {
       // &quot;Id&quot; type comes from cats, and reItem(id, ItemName(&quot;user@example.com&quot;))turns the result itself
       val finder: Finder[Id] = new Finder[Id]() {
-        override def find(id: UUID): Id[Option[Item]] = ItemRepository.this.find(id)
+        override def find(id: UUID): Id[Option[Item]] =
+          ItemRepository.this.find(id)
       }
       val updater: Updater[Id] = new Updater[Id]() {
-        override def update(item: Item): Id[UpdateResult] = ItemRepository.this.update(item)
+        override def update(item: Item): Id[UpdateResult] =
+          ItemRepository.this.update(item)
       }
     }
   }
@@ -362,7 +371,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
@@ -372,7 +381,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/overview.html" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/subtypes.html" title="Construction with Subtypes" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -381,7 +390,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Overview
+Construction with Subtypes
 </span>
 </div>
 </a>

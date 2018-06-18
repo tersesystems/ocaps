@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Dynamic Sealing · ocaps</title>
+<title>Construction with Effects · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 ocaps
 </span>
 <span class="md-header-nav__topic">
-Dynamic Sealing
+Construction with Effects
 </span>
 </div>
 </div>
@@ -106,7 +106,7 @@ ocaps
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
     <li><a href="../examples/construction.html" class="page">Construction</a></li>
-    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/effects.html" class="active page">Construction with Effects</a></li>
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
@@ -115,7 +115,7 @@ ocaps
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
-    <li><a href="../examples/dynamic_seal.html" class="active page">Dynamic Sealing</a></li>
+    <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
   </ul></li>
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
@@ -141,7 +141,7 @@ ocaps
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#dynamic-sealing" name="dynamic-sealing" class="anchor"><span class="anchor-link"></span></a>Dynamic Sealing</h1>
+<h1><a href="#construction-with-effects" name="construction-with-effects" class="anchor"><span class="anchor-link"></span></a>Construction with Effects</h1>
 <pre class="prettyprint"><code class="language-scala">/*
  * Copyright 2018 Will Sargent
  *
@@ -158,82 +158,73 @@ ocaps
  * limitations under the License.
  */
 
-import ocaps._
+import scala.util._
 
-// Brands allow for &quot;flexible private fields&quot; where
-// you have lexical scoping or in situations where
-// access modifiers are not suitable (i.e. there is not
-// a containing class)
-object DynamicSeal {
+/**
+  * Demonstration of using tagless final to apply an effect
+  * (aka Algebraic Data Types aka Object Algebras) to a capability.
+  */
+object Effects {
+  type Id[A] = A
 
-  sealed trait Message
+  final class Document(private var name: String) {
+    private object capabilities {
+      val nameChanger = new Document.NameChanger[Id] {
+        override def changeName(newName: String): Unit = {
+          name = newName
+        }
+      }
+    }
+    override def toString: String = s&quot;Document($name)&quot;
+  }
 
-  case object Save extends Message
+  object Document {
+    sealed trait NameChanger[F[_]] {
+      def changeName(name: String): F[Unit]
+    }
 
-  case object Kill extends Message
+    trait Effect[F[_]] {
+      def wrap(nameChanger: NameChanger[Id]): NameChanger[F]
+    }
 
-  sealed trait Decision
+    // The default &quot;no effect&quot; type Id[A] = A
+    implicit val idEffect: Effect[Id] = nameChanger =&gt; identity(nameChanger)
 
-  case object Saved extends Decision
+    // Apply a &quot;Try&quot; effect to the capability
+    implicit val tryEffect: Effect[Try] = nameChanger =&gt; {
+      new NameChanger[Try] {
+        override def changeName(name: String): Try[Unit] =
+          Try(nameChanger.changeName(name))
+      }
+    }
 
-  case object Killed extends Decision
-
-  // All of the users are of the same type, and so private fields
-  // are no good here.  In addition, the boxed field is public
-  // so anyone who is asking and who has the unsealer can see it.
-  case class User(
-    name: String,
-    sentencer: User =&gt; User = identity,
-    boxed: Option[Brand.Box[Message]] = None,
-    private val brand: Option[Brand[Message]] = None
-  ) {
-    def sentence(user: User): User = sentencer(user)
-
-    def process(user: User): Option[Message] = {
-      for {
-        box &lt;- user.boxed
-        brand &lt;- brand
-        message &lt;- brand.unapply(box)
-      } yield message
+    class Access {
+      def nameChanger[F[_]: Effect](doc: Document): NameChanger[F] = {
+        val effect = implicitly[Effect[F]]
+        effect.wrap(doc.capabilities.nameChanger)
+      }
     }
   }
 
   def main(args: Array[String]): Unit = {
-    val softBrand = Brand.create[Message](&quot;Brand for Judge Softtouch&quot;)
-    val doomBrand = Brand.create[Message](&quot;Brand for Judge Doom&quot;)
+    val document = new Document(&quot;will&quot;)
+    val access = new Document.Access()
 
-    val judgeSofttouch = User(&quot;Judge Softtouch&quot;, sentencer = { user =&gt;
-      user.copy(boxed = Some(softBrand(Save)))
-    }, brand = Some(softBrand))
+    val nameChanger: Document.NameChanger[Try] = access.nameChanger(document)
+    // or...
+    // val nameChanger: NameChanger[Id] = access.nameChanger(document)
 
-    val judgeDoom = User(&quot;Judge Doom&quot;, sentencer = { user =&gt;
-      user.copy(boxed = Some(doomBrand(Kill)))
-    }, brand = Some(doomBrand))
-
-    val steve = judgeDoom.sentence(User(&quot;steve&quot;))
-    val will = judgeSofttouch.sentence(User(&quot;will&quot;))
-    val judgedDoom = judgeSofttouch.sentence(judgeDoom)
-
-    val steveDecision = judgeDoom.process(steve)
-    println(
-      s&quot;User ${steve.name} has message ${steve.boxed} and decision $steveDecision&quot;
-    )
-    val willDecision = judgeSofttouch.process(will)
-    println(
-      s&quot;User ${will.name} has message ${will.boxed} and decision $willDecision&quot;
-    )
-
-    // What&#39;s going on here...
-    val judgeDecision = judgedDoom.process(judgedDoom)
-    println(
-      s&quot;User ${judgedDoom.name} has message ${judgedDoom.boxed} and decision $judgeDecision&quot;
-    )
+    nameChanger.changeName(&quot;steve&quot;) match {
+      case Success(_) =&gt;
+        println(s&quot;result = $document&quot;)
+      case Failure(ex) =&gt;
+        println(s&quot;exception = $ex&quot;)
+    }
   }
-
 }</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/dynamic_seal.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/effects.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -249,7 +240,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/gatekeeper.html" title="Gatekeeper" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/construction.html" title="Construction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -258,17 +249,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Gatekeeper
+Construction
 </span>
 </div>
 </a>
-<a href="../examples/membrane.html" title="Membrane" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/subtypes.html" title="Construction with Subtypes" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Membrane
+Construction with Subtypes
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

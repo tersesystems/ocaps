@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Creating Capabilities · Introduction</title>
+<title>Constructing Capabilities · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,10 +51,10 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
-Creating Capabilities
+Constructing Capabilities
 </span>
 </div>
 </div>
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="active page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="active page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -128,17 +130,17 @@ Introduction
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="toc">Table of contents</label>
 <ul>
-  <li><a href="../guide/creation.html#creating-capabilities" class="header">Creating Capabilities</a>
+  <li><a href="../guide/construction.html#constructing-capabilities" class="header">Constructing Capabilities</a>
   <ul>
-    <li><a href="../guide/creation.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
-    <li><a href="../guide/creation.html#deferring-effects-in-capabilities-with-tagless-final" class="header">Deferring Effects in Capabilities with Tagless Final</a></li>
-    <li><a href="../guide/creation.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
+    <li><a href="../guide/construction.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
+    <li><a href="../guide/construction.html#effects-in-capabilities-with-tagless-final" class="header">Effects in Capabilities with Tagless Final</a></li>
+    <li><a href="../guide/construction.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
   </ul></li>
 </ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -151,11 +153,11 @@ Introduction
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="toc">Table of contents</label>
 <ul>
-  <li><a href="../guide/creation.html#creating-capabilities" class="header">Creating Capabilities</a>
+  <li><a href="../guide/construction.html#constructing-capabilities" class="header">Constructing Capabilities</a>
   <ul>
-    <li><a href="../guide/creation.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
-    <li><a href="../guide/creation.html#deferring-effects-in-capabilities-with-tagless-final" class="header">Deferring Effects in Capabilities with Tagless Final</a></li>
-    <li><a href="../guide/creation.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
+    <li><a href="../guide/construction.html#creating-capabilities-through-facets" class="header">Creating Capabilities Through Facets</a></li>
+    <li><a href="../guide/construction.html#effects-in-capabilities-with-tagless-final" class="header">Effects in Capabilities with Tagless Final</a></li>
+    <li><a href="../guide/construction.html#creating-capabilities-through-access-modifiers" class="header">Creating Capabilities Through Access Modifiers</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -166,8 +168,9 @@ Introduction
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#creating-capabilities" name="creating-capabilities" class="anchor"><span class="anchor-link"></span></a>Creating Capabilities</h1>
-<p>A capability is a programming level expression of the saying &ldquo;You can only eat your cake if you have it.&rdquo; </p>
+<h1><a href="#constructing-capabilities" name="constructing-capabilities" class="anchor"><span class="anchor-link"></span></a>Constructing Capabilities</h1>
+<p>The introduction gave a basic explanation of capabilities, but did not demonstrate why access to the capability is so important.</p>
+<p>In esssence, a capability is a programming level expression of the saying &ldquo;You can only eat your cake if you have it.&rdquo; </p>
 <pre class="prettyprint"><code class="language-scala">trait Cake {
   def eat(): Unit
 }
@@ -285,14 +288,15 @@ val finder = new ItemRepository.Finder() {
 <pre class="prettyprint"><code class="language-scala">val onlyAFinder: ItemRepository.Finder = repo
 val recoveredRepo: ItemRepository = onlyAFinder.asInstanceOf[ItemRepository]
 </code></pre>
-<h2><a href="#deferring-effects-in-capabilities-with-tagless-final" name="deferring-effects-in-capabilities-with-tagless-final" class="anchor"><span class="anchor-link"></span></a>Deferring Effects in Capabilities with Tagless Final</h2>
-<p>Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques for cleaner effect handling. For example, rather than commit to a <code>Task[_]</code> or a <code>Try[_]</code>, a capability may be expressed in <a href="https://www.beyondthelines.net/programming/introduction-to-tagless-final/">tagless final</a> style with a type parameter <code>F</code> that is a standin for the kind of effect you want: </p>
+<h2><a href="#effects-in-capabilities-with-tagless-final" name="effects-in-capabilities-with-tagless-final" class="anchor"><span class="anchor-link"></span></a>Effects in Capabilities with Tagless Final</h2>
+<p>Rather than throwing exceptions as a side effect, capabilities can make use of functional programming techniques. For example, rather than commit to a <code>monix.Task[_]</code> or a <code>Try[_]</code>, a capability may be expressed in <a href="https://www.beyondthelines.net/programming/introduction-to-tagless-final/">tagless final</a> style with a type parameter <code>F</code> that is a standin for the thing you want: </p>
 <pre class="prettyprint"><code class="language-scala">object ItemRepository {
   trait Finder[F[_]] {
     def find(id: UUID): F[Option[Item]]
   }
 }
 </code></pre>
+<p>We refer to this as an effect, where effect means &quot;whatever distinguishes <code>F[A]</code> from <code>A</code>.</p>
 <p>The <code>capabilities</code> companion is defined using <code>cat.Id</code>, which essentially means &ldquo;no effect here&rdquo;:</p>
 <pre class="prettyprint"><code class="language-scala">import cats._
 class ItemRepository {
@@ -327,7 +331,7 @@ repoThroughGuice.delete(&quot;1&quot;) // anyone can delete
 <pre class="prettyprint"><code class="language-scala">trait ItemRepository {
   def name: String  // okay for anyone to access this!
   
-  private[???] def deleter: Deleter // only accessible to authorized objects!
+  private[???] def deleter: Deleter // only accessible to authorized objects, if we knew what ??? was
 }
 </code></pre>
 <p>There is a way to implement this! In Scala, only the public methods on an object are exposed &ndash; private methods cannot be referenced externally. We can use Scala&rsquo;s <a href="http://jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/">access modifiers and qualifiers</a> to selectively expose capabilities. We&rsquo;ll demonstrate in this section.</p>
@@ -388,13 +392,13 @@ val text = reader.bufferedReader(_.readLine())
 <p>This does of course leave the question open of how you manage access to the <code>Access</code> instance, since it hands out capabilities to anyone who asks. This leads into the next section.</p>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/creation.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/construction.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>

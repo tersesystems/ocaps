@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Confining Capabilities · Introduction</title>
+<title>Confining Capabilities · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Confining Capabilities
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="active page">Confining Capabilities</a></li>
@@ -137,7 +139,7 @@ Introduction
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -166,10 +168,6 @@ Introduction
 <div class="md-content__searchable">
 <h1><a href="#confining-capabilities" name="confining-capabilities" class="anchor"><span class="anchor-link"></span></a>Confining Capabilities</h1>
 <p>Managing capabilities in the context of an architecture can be complex. </p>
-<p>Design patterns of capability patterns can be hard to manage. One way to package capabilities is to use <em>composition</em>, but it may also make sense to organize capabilities in a tree structure connected to resources.</p>
-<blockquote>
-  <p>[I]f your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier. &ndash; <a href="http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/">Objects as Secure Capabilities, Joe Duffy</a></p>
-</blockquote>
 <p>One issue is that managing capabilities can mean limiting scope and access to an object reference, but many architectures assume a context in which all object references are publically accessible &ndash; for example, events may be sent across an event bus, or through a streaming model. And because data structures inherently involve object references, there&rsquo;s the question of how to keep capabilities safe and isolated.</p>
 <p>We touched on this a little bit in the <code>Access</code> class which uses access modifiers and a companion object to construct capabilities which cannot be accessed directly. Unfortunately, in Scala, <a href="http://www.jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/">access modifiers and qualifiers only apply to enclosing scope</a>, so there is no way to qualify private access to things outside that scope. However, there is a way to protect capabilities to produce this effect &ndash; through the use of <code>Brand</code>.</p>
 <h2><a href="#encapsulating-capabilities-with-brands" name="encapsulating-capabilities-with-brands" class="anchor"><span class="anchor-link"></span></a>Encapsulating Capabilities with Brands</h2>
@@ -204,43 +202,38 @@ object Main {
 }
 </code></pre>
 <p>Because both an unsealer and the sealed item are necessary to unseal, the act of unsealing is inherently a case of <em>amplification</em>, where putting two capabilities together lets you do things that neither one could do individually.</p>
-<p>Because dynamic sealing is</p>
-<p>Signing</p>
-<p>Encryption</p>
-<p>Private Channel</p>
-<p>Fuck yes, this is awesome.</p>
-<p><a href="https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/">https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/</a></p>
-<p>I think there is a use case I&rsquo;m not accounting for &ndash; in an Akka actor system hierarchy, you could have multiple actors that were all of the same type, but implement dynamic sealing to provide the same kind of &ldquo;dynamic private&rdquo; access privacy when passing messages &ndash; so the parent may have the unsealer but the children do not. Is this more in line with how sealers are used in practice?</p>
-<p>Okay, so <a href="https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf">https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf</a> says </p>
-<blockquote>
-  <p>We now consider one of the oldest and most influential OCPs: dynamic sealing, also called the sealer-unsealer pattern. Originally proposed by Morris [1973], dynamic sealing makes it possible to support data abstraction in the absence of static typing. In this section, we show how OCPL supports compositional reasoning about dynamic sealing. In particular, we show how to implement dynamic sealing in HLA and how to give a compositional specification for this implementation, from which we derive useful specifications for interesting abstractions built on top of it and prove robust safety for representative clients. (We consider an alternative implementation of the OCP, satisfying a slightly weaker specification, in Appendix A. We also show how ideal specifications for cryptographic signing and encryption primitives can be derived from the specification of dynamic sealing in Appendix B.) </p>
-  <p>The functionality of dynamic sealing. Morris [1973] introduced dynamic sealing to enforce data abstraction while interoperating with untrusted, potentially ill-typed code. He stipulated a function makeseal for generating pairs of functions (seal, unseal), such that (i) for every value v, seal v returns a value v ′ serving as an opaque, low-integrity proxy for v; and (ii) for every value v ′ , unseal v ′ returns v, if v ′ was produced by seal v, and otherwise gets stuck. The key point is that this seal-unseal pair supports data abstraction: the client of these functions can freely pass sealed values to untrusted code since they are low-integrity, while at the same time imposing whatever internal invariant it wants on the underlying values that they represent.</p>
-</blockquote>
-<p>Paper on sealers (which does not actually have that word in it, only the operations Seal and Unseal) <a href="http://www.erights.org/history/morris73.pdf">http://www.erights.org/history/morris73.pdf</a></p>
-<p><a href="https://ai.google/research/pubs/pub45568">https://ai.google/research/pubs/pub45568</a></p>
-<p><a href="http://www.cis.upenn.edu/~bcpierce/papers/infohide3.pdf">http://www.cis.upenn.edu/~bcpierce/papers/infohide3.pdf</a></p>
-<p><a href="https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/">https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/</a></p>
+<p>Sealers can be used for many things. It&rsquo;s helpful to think of them in the context where you would use public key encryption, for example</p>
+<ul>
+  <li>Signing &ndash; an box can be passed around and an unsealer on a resource can be made public, attesting to its origin.</li>
+  <li>Encryption &ndash; a public sealer can &ldquo;encrypt&rdquo; information by boxing it, and sending it to an actor with the sealer.</li>
+  <li>Assurance &ndash; boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.</li>
+  <li>Private Channel &ndash; two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or <code>LoggingReceive</code> is enabled.</li>
+</ul>
+<p>One possible application of dynamic sealing is that all <code>Access</code> objects can be sealed and safely bound in a dependency injection framework, and a revocable unsealer capability can be passed around to enable access from a central gatekeeper. I still need to implement this, but I think it&rsquo;s fairly straightforward.</p>
+<pre class="prettyprint"><code class="language-scala">// import scalaguice so we don&#39;t use new TypeLiteral[Box[Foo.Access]] {}
+class Module extends ScalaModule {
+  def configure() = {
+    bind[Box[Foo.Access]]
+     .toProvider(fooAccessProvider)
+     .in(Scopes.SINGLETON)
+  }
+}
+</code></pre>
+<p>This can also be used to pass around &ldquo;root level&rdquo; objects such as database connections and JSSE key managers that you may want to restrict access to generally. Anyone using the database connection will have to unseal it, and you can provide the unsealer capability to use revocation or logging to flush it out.</p>
+<p>Please see the <a href="../examples/dynamic_seal.md">Dynamic Sealing example</a> for a demonstration.</p>
+<p>Dynamic sealing has an independent lineage from capabilities programming. The original paper, <a href="http://www.erights.org/history/morris73.pdf">Protection in Programming Languages</a> was written in 1973, However, the morning paper <a href="https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/">summary on the paper</a> is actually clearer and better written than the paper itself.</p>
+<p><a href="https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf">Robust and Compositional Verification of Object  Capability Patterns</a> has a section on dynamic sealing.</p>
+<p>The discussion on the use of dynamic sealing in communication channels is from <a href="https://www.cl.cam.ac.uk/~pes20/versions-popl.pdf">Modules, Abstract Types, and Distributed Versioning</a>.</p>
 <h2><a href="#confining-operations-with-membranes" name="confining-operations-with-membranes" class="anchor"><span class="anchor-link"></span></a>Confining Operations with Membranes</h2>
-<p>A membrane is an extension of a <code>Revocable</code> that transitively imposes revocability on all references exchanged via the membrane.</p>
-<ul>
-  <li><a href="http://blog.ezyang.com/2013/03/what-is-a-membran/">What is a Membrane?</a></li>
-  <li><a href="https://research.google.com/pubs/pub40736.html">Trustworthy Proxies: Virtualizing Objects with Invariants</a></li>
-  <li><a href="https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html">https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html</a></li>
-</ul>
-<p>Membranes are supposed to stop messages passing from one place to another without being wrapped.</p>
-<p>The generalized way to implement a membrane in Java and Scala is to use an <code>InvocationHandler</code> as a dynamic proxy.</p>
-<ul>
-  <li><a href="http://www.baeldung.com/java-dynamic-proxies">http://www.baeldung.com/java-dynamic-proxies</a></li>
-  <li><a href="https://www.concretepage.com/java/dynamic-proxy-with-proxy-and-invocationhandler-in-java">https://www.concretepage.com/java/dynamic-proxy-with-proxy-and-invocationhandler-in-java</a></li>
-</ul>
-<p>There are two ways to implement membranes in a type safe way.</p>
-<p>The first is to have a membrane class which will wrap everything, and have the membrane act as an effect. This does require classes to &ldquo;opt in&rdquo; to the membrane.</p>
-<p>The second is to make all capabilities take an implicit membrane context.</p>
-<ul>
-  <li><a href="https://www.info.ucl.ac.be/~pvr/rr2005-03.pdf">Capability confinement by membranes</a></li>
-</ul>
-<p>TODO</p>
-<p>// <a href="http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns#Membranes">http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns#Membranes</a> // <a href="http://blog.ezyang.com/2013/03/what-is-a-membran/">http://blog.ezyang.com/2013/03/what-is-a-membran/</a></p>
+<p>A membrane is an extension of a <code>Revocable</code> that transitively imposes revocability on all references exchanged via the membrane. </p>
+<p>Membranes are supposed to stop messages passing from one place to another without being wrapped. They are most commonly used for <a href="https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html">&ldquo;uncooperative revocation&rdquo;</a>, although any effect can be applied with a membrane, not just revocation.</p>
+<p>Membranes are useful in a situation in which you have to run some foreign code in a sandbox, and you absolutely do not trust it. Tellingly, the papers above implement membranes using Javascript, where any website can tell code to be run locally in the browser. Mozilla uses capabilities heavily internally, and membranes ensure an airgap between the browser&rsquo;s internal code and the code available to the site Javascript.</p>
+<p>The JVM is not a great platform for implementing a completely safe membranae. In particular, the JVM SecurityManager is easily subverted, and Java Serialization attacks mean that the boundary is very hard to enforce.</p>
+<p>In general, the best way to implement a membrane in Java would be to implement a generic method interceptor in <a href="http://bytebuddy.net/#/">Byte Buddy</a> and attach behavior outside of the context of &ldquo;normal&rdquo; Java code.</p>
+<p>However, because membranes can implement any effect, and because membranes have a strong conceptual affinity with some FP concepts, it&rsquo;s actually very easy to implement &ldquo;co-operative revocation&rdquo; using a dependently typed effect. This is best called a &ldquo;permeable membrane&rdquo;, because it is an opt-in system that only works if the effect is propagated.</p>
+<p>Please see the <a href="../examples/membrane.html">Membrane example</a> for details how Membrane is used in <code>ocaps</code>.</p>
+<p>The clearest layman explanation of membranes is <a href="http://blog.ezyang.com/2013/03/what-is-a-membran/">What is a Membrane?</a> by Edward Z. Yang. </p>
+<p><a href="https://research.google.com/pubs/pub40736.html">Trustworthy Proxies: Virtualizing Objects with Invariants</a> is an implementation of membranes in Javascript, although somehow the abstract completely avoids that word.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/confinement.md" title="Edit this page" class="md-source-file md-edit">
@@ -249,7 +242,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>

@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Introducing Capabilities · Introduction</title>
+<title>Introducing Capabilities · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Introducing Capabilities
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="active page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -130,14 +132,16 @@ Introduction
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
+    <li><a href="../guide/introduction.html#oo-vs-capabilities" class="header">OO vs Capabilities</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
+    <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
   </ul></li>
 </ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -152,8 +156,10 @@ Introduction
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
+    <li><a href="../guide/introduction.html#oo-vs-capabilities" class="header">OO vs Capabilities</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
+    <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -165,12 +171,18 @@ Introduction
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
-<p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in these systems comes from being able to build and compose powerful structures out of these primitives. </p>
+<p>This guide will explain what this means, using the Scala programming language as the implementation.</p>
+<h2><a href="#oo-vs-capabilities" name="oo-vs-capabilities" class="anchor"><span class="anchor-link"></span></a>OO vs Capabilities</h2>
+<p>Object oriented programming starts with a single object. </p>
+<p>Functional programming starts with a single function. </p>
+<p>The power in these systems comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
+<p>Capability based systems start with a single capability, and builds on it by wiring capabilities together. </p>
 <p>The definition of capability used here is from <a href="https://ai.google/research/pubs/pub45570">Permission and Authority Revisited: towards a formalization</a>:</p>
 <p><strong>A capability is <em>sufficient justification</em> to affect a resource.</strong></p>
-<p>This guide will explain what this means, using the Scala programming language as the implementation.</p>
+<p>In Scala, a resource is <em>an object</em> and a capability is the <em>reference</em> to that object.</p>
+<p>There is an important difference between capabilities and object oriented programming. Where OOP is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a gatekeeper to give you another one.</p>
 <h2><a href="#scala-example" name="scala-example" class="anchor"><span class="anchor-link"></span></a>Scala Example</h2>
-<p>In Scala, a resource is <em>an object</em> and a capability is the <em>reference</em> to that object. Say that you have a class <code>Foo</code>:</p>
+<p>Say that you have a class <code>Foo</code>:</p>
 <pre class="prettyprint"><code class="language-scala">case class Foo(name: String)
 </code></pre>
 <p>A class by itself doesn&rsquo;t mean anything &ndash; we have to create an instance of the class aka an object:</p>
@@ -196,8 +208,10 @@ val name = foo.name
   <li>
   <p>The capability is opaque. You have an object reference to a trait, but you can&rsquo;t downcast that, introspect it, change access modifiers etc. The trait may run through any number of forwarders (the &lsquo;capability&rsquo; word for filters / proxies / delegates) before executing the call on the resource, and there is no way to circumvent that.</p></li>
 </ol>
-<p>In general, where OO programming is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a gatekeeper to give you another one.</p>
-<p>We&rsquo;ll go into detail in the next section.</p>
+<h2><a href="#caveats-and-assumptions" name="caveats-and-assumptions" class="anchor"><span class="anchor-link"></span></a>Caveats and Assumptions</h2>
+<p>The assumption in this document is that you are playing a straight game, where references are handled only through creation (you created the reference), parentage (you are a subclass and you have access to references scoped by your parent class), or through scoping (you were handed references through parameters in the class, or followed an existing reference). </p>
+<p>Basically, you&rsquo;re not setting or accessing capabilities through global state through singleton objects, static fields, or thread locals. You can use Akka and only send capabilities through messages between actors for a more accurate capability model, but it&rsquo;s not required.</p>
+<p>Likewise, we assume that you&rsquo;re not a hostile attacker &ndash; if you are hostile and can execute code in the JVM, it&rsquo;s trivial to subvert the SecurityManager, call <code>setAccessible</code> and start monkeypatching, so effectively all fields and methods are public if you scratch hard enough. Scala is not an ocap language, this is purely about capabilities as a software engineering practice.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/introduction.md" title="Edit this page" class="md-source-file md-edit">
@@ -206,7 +220,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
@@ -229,13 +243,13 @@ A Guide To Capabilities
 </span>
 </div>
 </a>
-<a href="../guide/creation.html" title="Creating Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../guide/construction.html" title="Constructing Capabilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Creating Capabilities
+Constructing Capabilities
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

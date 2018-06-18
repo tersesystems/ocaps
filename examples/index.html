@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Examples · Introduction</title>
+<title>Examples · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Examples
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="active page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -130,7 +132,8 @@ Introduction
 <ul>
   <li><a href="../examples/index.html#examples" class="header">Examples</a>
   <ul>
-    <li><a href="../examples/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../examples/index.html#imports" class="header">Imports</a></li>
+    <li><a href="../examples/index.html#construction" class="header">Construction</a></li>
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
@@ -140,7 +143,7 @@ Introduction
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -155,7 +158,8 @@ Introduction
 <ul>
   <li><a href="../examples/index.html#examples" class="header">Examples</a>
   <ul>
-    <li><a href="../examples/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../examples/index.html#imports" class="header">Imports</a></li>
+    <li><a href="../examples/index.html#construction" class="header">Construction</a></li>
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
@@ -171,36 +175,44 @@ Introduction
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#examples" name="examples" class="anchor"><span class="anchor-link"></span></a>Examples</h1>
-<p>This is a series of examples showing capabilities in action.</p>
-<h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
+<p>This is a series of examples showing capabilities in action using <code>ocaps</code>. </p>
+<p><strong>If you are not familiar with capabilities, please read through <a href="../guide/index.html">the guide</a> for a more in-depth explanation.</strong></p>
+<h2><a href="#imports" name="imports" class="anchor"><span class="anchor-link"></span></a>Imports</h2>
+<p>All the examples given rely on the following imports:</p>
+<pre><code>import ocaps._
+import ocaps.macros._
+</code></pre>
+<h2><a href="#construction" name="construction" class="anchor"><span class="anchor-link"></span></a>Construction</h2>
 <p>This section shows creation of capabilities and direct use.</p>
 <ul>
-  <li><a href="overview.md">Overview</a></li>
+  <li><a href="construction.html">Construction</a></li>
+  <li><a href="effects.html">Construction with Effects</a></li>
+  <li><a href="subtypes.html">Construction with Subtypes</a></li>
 </ul>
 <h2><a href="#structural-patterns" name="structural-patterns" class="anchor"><span class="anchor-link"></span></a>Structural Patterns</h2>
 <p>This section shows structural patterns that do not change behavior.</p>
 <ul>
-  <li><a href="composition.md">Composition</a></li>
-  <li><a href="attenuation.md">Attenuation</a></li>
+  <li><a href="composition.html">Composition</a></li>
+  <li><a href="attenuation.html">Attenuation</a></li>
 </ul>
 <h2><a href="#behavioral-patterns" name="behavioral-patterns" class="anchor"><span class="anchor-link"></span></a>Behavioral Patterns</h2>
 <p>This section shows patterns that change the behavior of capabilities, typically adding side effects or blocking execution completely.</p>
 <ul>
-  <li><a href="modulation.md">Modulation</a></li>
-  <li><a href="revocation.md">Revocation</a></li>
+  <li><a href="modulation.html">Modulation</a></li>
+  <li><a href="revocation.html">Revocation</a></li>
 </ul>
 <h2><a href="#operational-patterns" name="operational-patterns" class="anchor"><span class="anchor-link"></span></a>Operational Patterns</h2>
 <p>This section shows capabilities used together or passed around.</p>
 <ul>
-  <li><a href="amplification.md">Amplification</a></li>
-  <li><a href="delegation.md">Delegation</a></li>
-  <li><a href="gatekeeper.md">Gatekeeper</a></li>
+  <li><a href="amplification.html">Amplification</a></li>
+  <li><a href="delegation.html">Delegation</a></li>
+  <li><a href="gatekeeper.html">Gatekeeper</a></li>
 </ul>
 <h2><a href="#confinement-patterns" name="confinement-patterns" class="anchor"><span class="anchor-link"></span></a>Confinement Patterns</h2>
 <p>This section shows capabilities being rendered inaccessible or made accessible through a membrane.</p>
 <ul>
-  <li><a href="dynamic_seal.md">Dynamic Sealing</a></li>
-  <li><a href="membrane.md">Membrane</a></li>
+  <li><a href="dynamic_seal.html">Dynamic Sealing</a></li>
+  <li><a href="membrane.html">Membrane</a></li>
 </ul>
 </div>
 <div>
@@ -210,7 +222,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
@@ -233,13 +245,13 @@ Running
 </span>
 </div>
 </a>
-<a href="../examples/overview.html" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/construction.html" title="Construction" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Overview
+Construction
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

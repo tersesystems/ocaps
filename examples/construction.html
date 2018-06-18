@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Attenuation · ocaps</title>
+<title>Construction · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 ocaps
 </span>
 <span class="md-header-nav__topic">
-Attenuation
+Construction
 </span>
 </div>
 </div>
@@ -105,11 +105,11 @@ ocaps
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/construction.html" class="active page">Construction</a></li>
     <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
-    <li><a href="../examples/attenuation.html" class="active page">Attenuation</a></li>
+    <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
@@ -128,6 +128,15 @@ ocaps
   </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../examples/construction.html#construction" class="header">Construction</a>
+  <ul>
+    <li><a href="../examples/construction.html#before" class="header">Before</a></li>
+    <li><a href="../examples/construction.html#construction-through-access" class="header">Construction Through Access</a></li>
+    <li><a href="../examples/construction.html#construction-through-composition" class="header">Construction Through Composition</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
@@ -138,100 +147,127 @@ ocaps
 </div>
 </div>
 </div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="toc">Table of contents</label>
+<ul>
+  <li><a href="../examples/construction.html#construction" class="header">Construction</a>
+  <ul>
+    <li><a href="../examples/construction.html#before" class="header">Before</a></li>
+    <li><a href="../examples/construction.html#construction-through-access" class="header">Construction Through Access</a></li>
+    <li><a href="../examples/construction.html#construction-through-composition" class="header">Construction Through Composition</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#attenuation" name="attenuation" class="anchor"><span class="anchor-link"></span></a>Attenuation</h1>
-<pre class="prettyprint"><code class="language-scala">/*
- * Copyright 2018 Will Sargent
- *
- * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+<h1><a href="#construction" name="construction" class="anchor"><span class="anchor-link"></span></a>Construction</h1>
+<p>Constructing a capability in Scala is all about deciding what operations on a resource should be isolated and encapsulated with access control.</p>
+<h2><a href="#before" name="before" class="anchor"><span class="anchor-link"></span></a>Before</h2>
+<p>We&rsquo;ll start by showing a class that has methods that we want to capabilities. Here&rsquo;s a <code>Document</code> class that lets you change the name.</p>
+<pre class="prettyprint"><code class="language-scala">object Before {
 
-import ocaps._
-import ocaps.macros._
-
-object Attenuation {
-
-  final class Foo(private var name: String) {
-    private object capabilities {
-      val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit = {
-          println(s&quot;$name.doTheThing()&quot;)
-        }
-      }
-      val changer: Foo.Changer = new Foo.Changer {
-        override def changeName(name: String): Foo.this.type = {
-          Foo.this.name = name
-          Foo.this
-        }
-      }
-    }
+  final class Document(private[this] var name: String) {
+    def changeName(newName: String): Unit = name = newName
+    override def toString: String = s&quot;Document($name)&quot;
   }
 
-  object Foo {
+  def main(args: Array[String]): Unit = {
+    val document = new Document(&quot;will&quot;)
+    document.changeName(&quot;steve&quot;)
+    println(s&quot;Before: result = $document&quot;)
+  }
+}</code></pre>
+<p>Single Abstract Method (SAM) traits, such as <code>java.lang.Runnable</code> and <code>FunctionN</code> are natural capabilities. </p>
+<p>However, anonymous functions typically don&rsquo;t expose the domain, and don&rsquo;t indicate sensitivity &ndash; one <code>() =&gt; String</code> looks much the same as another, so it&rsquo;s harder to track where a capability is exposed. You can extend these to provided named traits that expose your domain functionality.</p>
+<p>For example, we don&rsquo;t want just anyone to be able to change the name, so we set up a <code>NameChanger</code> capability, which extends <code>Function0</code>.</p>
+<p>Note that these are &ldquo;root level&rdquo; capabilities &ndash; they are non-revocable, &ldquo;private key&rdquo; object references, so you typically want to wrap these in <code>ocap.Revocable</code> and hand out the revocable capability instead.</p>
+<h2><a href="#construction-through-access" name="construction-through-access" class="anchor"><span class="anchor-link"></span></a>Construction Through Access</h2>
+<p>Here&rsquo;s what the code looks like after refactoring.</p>
+<pre class="prettyprint"><code class="language-scala">object AfterAmplification {
 
-    sealed trait Doer {
-      def doTheThing(): Unit
+  final class Document(private var name: String) {
+    private object capabilities {
+      val nameChanger = new Document.NameChanger {
+        override def changeName(newName: String): Unit = {
+          name = newName
+        }
+      }
+    }
+    override def toString: String = s&quot;Document($name)&quot;
+  }
+
+  object Document {
+    sealed trait NameChanger {
+      def changeName(name: String): Unit
     }
 
-    sealed trait Changer {
-      def changeName(name: String): Foo
+    class Access private {
+      def nameChanger(doc: Document): NameChanger = {
+        doc.capabilities.nameChanger
+      }
     }
 
-    trait Derper {
-      def derp(): Unit
-    }
-
-    class Access {
-      def doer(foo: Foo): Doer = foo.capabilities.doer
-      def changer(foo: Foo): Changer = foo.capabilities.changer
+    object Access {
+      def apply(): Access = new Access
     }
   }
 
   def main(args: Array[String]): Unit = {
-    import Foo._
-
-    val access = new Access()
-    val foo = new Foo(&quot;foo&quot;)
-
-    val doer: Doer = access.doer(foo)
-    val changer: Changer = access.changer(foo)
-    val derper: Derper = () =&gt; println(&quot;derp!&quot;)
-    val doerChangerDerper =
-      compose[Doer with Changer with Derper](doer, changer, derper)
-
-    // We want an attenuation that makes only Doer available
-    val castDoer: Doer = doerChangerDerper.asInstanceOf[Doer]
-    // But we can recover Derper capability here!
-    val doerAsDerper: Derper = castDoer.asInstanceOf[Derper]
-    // whoops :-(
-    doerAsDerper.derp()
-
-    // Attenuation doesn&#39;t use downcasting, is safe!
-    val attenuatedDoer: Doer = attenuate[Doer](doerChangerDerper)
-    try {
-      val downcastAttenuatedDerper = attenuatedDoer.asInstanceOf[Derper]
-      attenuatedDoer.doTheThing()
-    } catch {
-      case e: ClassCastException =&gt;
-        println(&quot;Can&#39;t downcast to a different type using the macro!&quot;)
-    }
+    val document = new Document(&quot;will&quot;)
+    val access = Document.Access()
+    val nameChanger = access.nameChanger(document)
+    nameChanger.changeName(&quot;steve&quot;)
+    println(s&quot;AfterAmplification: result = $document&quot;)
   }
 }</code></pre>
+<p>You&rsquo;ll note that access modifiers are used heavily here, and there&rsquo;s an <code>Access</code> class which is involved in exposing the capability. When two (or more) objects are required to expose some extra functionality, it&rsquo;s called <a href="amplification.html">amplification</a>.</p>
+<p>This <code>Access</code> class constructor is public here, but obviously anyone who has both <code>Access</code> and a resource will be able to expose capabilities, so you should protect your access appropriately. You can use dynamic sealing or Scala access modifiers to ensure access is tightly controlled.</p>
+<h3><a href="#effects" name="effects" class="anchor"><span class="anchor-link"></span></a>Effects</h3>
+<p>The <code>Access</code> class also makes a good place to provide <a href="https://www.youtube.com/watch?v=po3wmq4S15A">functional programming effects</a> on capabilities. Please see the <a href="effects.html">construction with effects</a> example for more details.</p>
+<h3><a href="#subtypes" name="subtypes" class="anchor"><span class="anchor-link"></span></a>Subtypes</h3>
+<p>You can create capabilities on abstract parent classes, and be able to use subtypes appropriately. Please see the <a href="subtypes.html">construction with subtypes</a> example for more details.</p>
+<h2><a href="#construction-through-composition" name="construction-through-composition" class="anchor"><span class="anchor-link"></span></a>Construction Through Composition</h2>
+<p>There is another way to construct capabilities, which is through <em>composition</em>.</p>
+<pre class="prettyprint"><code class="language-scala">object AfterAttenuation {
+
+  final class Document(private var name: String) extends Document.NameChanger {
+    override def changeName(newName: String): Unit = {
+      name = newName
+    }
+    override def toString: String = s&quot;Document($name)&quot;
+  }
+
+  object Document {
+    trait NameChanger {
+      def changeName(name: String): Unit
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val document = new Document(&quot;will&quot;)
+
+    // expose a single facet through attenuation
+    val nameChanger = new Document.NameChanger {
+      override def changeName(name: String): Unit = document.changeName(name)
+    }
+    nameChanger.changeName(&quot;steve&quot;)
+    println(s&quot;AfterAttenuation: result = $document&quot;)
+  }
+}</code></pre>
+<p>In this construction, having access to the resource means having access to all of its capabilities, because the resource implements the capabilities directly as traits.</p>
+<p>I don&rsquo;t like this construction, because you need to keep access to the resource itself tightly constrained. </p>
+<p>If you want to expose a capability by itself, then you do so by exposing a single capability through <a href="attenuation.html">attenuation</a>.</p>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/attenuation.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/construction.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -247,7 +283,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/composition.html" title="Composition" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/index.html" title="Examples" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -256,17 +292,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Composition
+Examples
 </span>
 </div>
 </a>
-<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/effects.html" title="Construction with Effects" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Modulation
+Construction with Effects
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

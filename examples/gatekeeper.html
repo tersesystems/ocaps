@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Gatekeeper · Introduction</title>
+<title>Gatekeeper · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="Introduction" class="md-header-nav__button md-logo">
+<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -51,7 +51,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
 <span class="md-header-nav__topic">
-Introduction
+ocaps
 </span>
 <span class="md-header-nav__topic">
 Gatekeeper
@@ -97,15 +97,17 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="Introduction">
-Introduction
+<a href="../index.html" title="ocaps">
+ocaps
 </a>
 </label>
 <ul>
   <li><a href="../running.html" class="page">Running</a></li>
   <li><a href="../examples/index.html" class="page">Examples</a>
   <ul>
-    <li><a href="../examples/overview.html" class="page">Overview</a></li>
+    <li><a href="../examples/construction.html" class="page">Construction</a></li>
+    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
+    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
@@ -119,7 +121,7 @@ Introduction
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/creation.html" class="page">Creating Capabilities</a></li>
+    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
     <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
     <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
     <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
@@ -129,7 +131,7 @@ Introduction
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -141,30 +143,27 @@ Introduction
 <div class="md-content__searchable">
 <h1><a href="#gatekeeper" name="gatekeeper" class="anchor"><span class="anchor-link"></span></a>Gatekeeper</h1>
 <pre class="prettyprint"><code class="language-scala">/*
- * Copyright (C) 2018 Will Sargent. &lt;http://www.tersesystems.com&gt;
+ * Copyright 2018 Will Sargent
  *
- *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-package ocaps.example
 
 import java.io.{BufferedReader, BufferedWriter, InputStream, OutputStream}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, _}
 
-import ocaps._
-
 import scala.util._
+import ocaps._
 
 object Gatekeeper {
   import Document._
@@ -197,15 +196,16 @@ object Gatekeeper {
   }
 
   /**
-   * AdminActivity operations use admin&#39;s security context
-   */
+    * AdminActivity operations use admin&#39;s security context
+    */
   class AdminActivity(gatekeeper: DocumentGatekeeper) {
     private val admin = new User(&quot;admin&quot;)
     private implicit val ctx: SecurityContext = new SecurityContext(admin)
 
     def createDocuments(users: Seq[User]): Seq[Document] = {
       for (owner &lt;- users) yield {
-        val doc = Document(owner = owner.name, Files.createTempFile(null, &quot;.txt&quot;))
+        val doc =
+          Document(owner = owner.name, Files.createTempFile(null, &quot;.txt&quot;))
         val writer = gatekeeper.writer(doc).get
 
         writer.bufferedWriter() { bw: java.io.BufferedWriter =&gt;
@@ -223,9 +223,13 @@ object Gatekeeper {
   }
 
   /**
-   * UserActivity operations are not guaranteed to have full access to capabilities.
-   */
-  class UserActivity(user: User, maybeReader: Option[Reader], maybeWriter: Option[Writer]) {
+    * UserActivity operations are not guaranteed to have full access to capabilities.
+    */
+  class UserActivity(
+    user: User,
+    maybeReader: Option[Reader],
+    maybeWriter: Option[Writer]
+  ) {
 
     def attemptDocument(doc: Document): Unit = {
       maybeWriter match {
@@ -255,8 +259,8 @@ object Gatekeeper {
   }
 
   /**
-   * Gatekeeper controls who has access to capabilities.
-   */
+    * Gatekeeper controls who has access to capabilities.
+    */
   class DocumentGatekeeper(access: Access) {
 
     private val policy = new DocumentPolicy
@@ -265,7 +269,11 @@ object Gatekeeper {
       if (policy.canRead(ctx.user, doc)) {
         Success(access.reader(doc))
       } else {
-        Failure(new CapabilityException(s&quot;Cannot authorize ${ctx.user} for writer to doc $doc&quot;))
+        Failure(
+          new CapabilityException(
+            s&quot;Cannot authorize ${ctx.user} for writer to doc $doc&quot;
+          )
+        )
       }
     }
 
@@ -273,7 +281,11 @@ object Gatekeeper {
       if (policy.canWrite(ctx.user, doc)) {
         Success(access.writer(doc))
       } else {
-        Failure(new CapabilityException(s&quot;Cannot authorize ${ctx.user} for writer to doc $doc&quot;))
+        Failure(
+          new CapabilityException(
+            s&quot;Cannot authorize ${ctx.user} for writer to doc $doc&quot;
+          )
+        )
       }
     }
 
@@ -281,15 +293,19 @@ object Gatekeeper {
       if (policy.canDelete(ctx.user, doc)) {
         Success(access.deleter(doc))
       } else {
-        Failure(new CapabilityException(s&quot;Cannot authorize ${ctx.user} for deleter to doc $doc&quot;))
+        Failure(
+          new CapabilityException(
+            s&quot;Cannot authorize ${ctx.user} for deleter to doc $doc&quot;
+          )
+        )
       }
     }
 
     /**
-     * Define the operational contract between users and documents
-     *
-     * https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf
-     */
+      * Define the operational contract between users and documents
+      *
+      * https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf
+      */
     // Normal users can read anything, but only write to document they own.
     class DocumentPolicy {
       def canRead(user: User, doc: Document): Boolean = true
@@ -314,21 +330,24 @@ object Gatekeeper {
   }
 
   /**
-   *  Implicit security context authorizes a particular user for a particular doc against a gatekeeper.
-   */
+    *  Implicit security context authorizes a particular user for a particular doc against a gatekeeper.
+    */
   class SecurityContext(val user: User)
 
   /**
-   * A document resource.  The path is private, and no operations are possible without
-   * an associated capability.
-   */
-  final class Document private(val owner: String,
-                               private[this] val path: Path) {
+    * A document resource.  The path is private, and no operations are possible without
+    * an associated capability.
+    */
+  final class Document private (
+    val owner: String,
+    private[this] val path: Path
+  ) {
 
     private object capabilities {
       val reader: Document.Reader = new Document.Reader {
         override def bufferedReader[T](block: BufferedReader =&gt; T): T = {
-          val reader = Files.newBufferedReader(Document.this.path, StandardCharsets.UTF_8)
+          val reader =
+            Files.newBufferedReader(Document.this.path, StandardCharsets.UTF_8)
           try {
             block(reader)
           } finally {
@@ -347,8 +366,14 @@ object Gatekeeper {
       }
 
       val writer: Document.Writer = new Document.Writer {
-        override def bufferedWriter[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: BufferedWriter =&gt; T): T = {
-          val bufWriter = Files.newBufferedWriter(Document.this.path, StandardCharsets.UTF_8, options: _*)
+        override def bufferedWriter[T](
+          options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+        )(block: BufferedWriter =&gt; T): T = {
+          val bufWriter = Files.newBufferedWriter(
+            Document.this.path,
+            StandardCharsets.UTF_8,
+            options: _*
+          )
           try {
             block(bufWriter)
           } finally {
@@ -356,7 +381,9 @@ object Gatekeeper {
           }
         }
 
-        override def outputStream[T](options: Seq[OpenOption])(block: OutputStream =&gt; T): T = {
+        override def outputStream[T](
+          options: Seq[OpenOption]
+        )(block: OutputStream =&gt; T): T = {
           val os = Files.newOutputStream(Document.this.path, options: _*)
           try {
             block(os)
@@ -380,8 +407,12 @@ object Gatekeeper {
     }
 
     trait Writer {
-      def bufferedWriter[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: BufferedWriter =&gt; T): T
-      def outputStream[T](options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC))(block: OutputStream =&gt; T): T
+      def bufferedWriter[T](
+        options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+      )(block: BufferedWriter =&gt; T): T
+      def outputStream[T](
+        options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+      )(block: OutputStream =&gt; T): T
     }
 
     trait Deleter {
@@ -391,7 +422,7 @@ object Gatekeeper {
     final class Access private {
       def reader(document: Document): Reader = document.capabilities.reader
       def writer(document: Document): Writer = document.capabilities.writer
-      def deleter(document: Document): Deleter  = document.capabilities.deleter
+      def deleter(document: Document): Deleter = document.capabilities.deleter
     }
 
     object Access {
@@ -413,7 +444,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>

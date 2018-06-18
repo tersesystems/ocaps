@@ -110,7 +110,7 @@ README
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0*
+<i class="md-icon">label_outline</i> 0.0.3*
 </div>
 </nav>
 
@@ -168,7 +168,7 @@ README
   }
 }
 </code></pre>
-<p>And now we have a capability. We can expose the capabilities of Foo through a Powerbox that has access.</p>
+<p>And now we have a capability. We can expose the capabilities of Foo through Access.</p>
 <pre class="prettyprint"><code class="language-scala">import scala.util.{Success, Try}
 
 final class Foo(name: String) {
@@ -189,21 +189,20 @@ object Foo {
     def doTheThing(): Unit
   }
 
-  class Powerbox {
-    def askForDoer(foo: Foo): Try[Doer] = Success(foo.capabilities.doer)
+  class Access {
+    def doer(foo: Foo) = foo.capabilities.doer
   }
 }
 </code></pre>
 <p>And then try it out:</p>
 <pre class="prettyprint"><code class="language-scala">object Main {
   def main(args: Array[String]): Unit = {
-    val powerbox = new Foo.Powerbox()
+    val access = new Foo.Access()
 
     val foo = new Foo(&quot;foo&quot;)
 
-    powerbox.askForDoer(foo).map { doer =&gt;
-      doer.doTheThing()
-    }
+    val doer = access.doer(foo)
+    doer.doTheThing()
   }
 }
 </code></pre>
@@ -274,24 +273,23 @@ val converter = FooBarConverter(foo =&gt; bar)
 <p>This is a bit abstract, so it&rsquo;s worth giving an example.</p>
 <pre class="prettyprint"><code class="language-scala">class Force {
   private object capabilities {}
-  
 }
 
 object Force {
-    sealed trait JediCapability {
-      def cleanRoom(): CleanRoomResults = ???
-    }
+  sealed trait JediCapability {
+    def cleanRoom(): CleanRoomResults = ???
+  }
     
-    sealed trait SithCapability {
-      def forcePush(): ForcePushResults = ???
-      def choke(): ChokeResults = ???
-    }
+  sealed trait SithCapability {
+    def forcePush(): ForcePushResults = ???
+    def choke(): ChokeResults = ???
+  }
     
-    trait ForceCapability extends JediCapability with SithCapability
+  trait ForceCapability extends JediCapability with SithCapability
     
-    trait Jedi {
-      def useTheForceWisely(jediPowers: JediCapability): Unit
-    }
+  trait Jedi {
+    def useTheForceWisely(jediPowers: JediCapability): Unit
+  }
 }
 </code></pre>
 <p>Okay, let&rsquo;s try it out.</p>
@@ -378,15 +376,15 @@ public class EverythingIsTrue {
   def revoke(): Unit
 }
 </code></pre>
-<p>Providing a capability with a <code>revoker</code> is done through a <code>Caretaker</code> pattern, which exposes the caretaker with the capability.</p>
-<pre class="prettyprint"><code class="language-scala">trait Caretaker[C] {
+<p>Providing a capability with a <code>revoker</code> is done through a <code>Revocable</code> pattern, which exposes the caretaker with the capability.</p>
+<pre class="prettyprint"><code class="language-scala">trait Revocable[C] {
   def capability: C
   def revoker: revoker
 }
 </code></pre>
 <p>The caretaker provides a capability which closes over the previous one, but which can be revoked at any time, causing an exception to be thrown. Using <code>Try</code> is a good practice to incorporate, since capabilities are fungible:</p>
 <p>The <code>Caretaker</code> has a <code>provider</code> function which will call out to the underlying <code>doer</code> on every method invocation.</p>
-<pre class="prettyprint"><code class="language-scala">val caretaker: CareTaker[Foo.Doer] = Foo.Doer.caretaker(doer)
+<pre class="prettyprint"><code class="language-scala">val revocable: Revocable[Foo.Doer] = Foo.Doer.caretaker(doer)
 val revokerDoer: Foo.Doer = caretaker.get
 val revoker = caretaker.revoker
 
@@ -418,7 +416,7 @@ yoda.cleanYourRoom(luke)
 <pre class="prettyprint"><code class="language-scala">object Foo {
   object Doer {
     // Note there&#39;s no external reference to the external FooCapability here
-    def logger(provider: Foo.Doer): Foo.Doer = new Foo.Doer {
+    def logger(provider: =&gt; Foo.Doer): Foo.Doer = new Foo.Doer {
       override def doTheThing(): Unit = {
         println(&quot;about to do the thing&quot;)
         provider.doTheThing()
@@ -440,15 +438,6 @@ val loggingDoer = Foo.Doer.logger(doer)
 <h3><a href="#combination" name="combination" class="anchor"><span class="anchor-link"></span></a>Combination</h3>
 <p>Uses two or more capabilities together to create a new capability to some specific joint functionality, or create something truly new Example: In a Cap OS for mobile smartphones, having a combined capability composed of  the authority to capture images with camera,  the authority to obtain position with GPS,  the authority to read system clock.</p>
 <h3><a href="#sealer-unsealer" name="sealer-unsealer" class="anchor"><span class="anchor-link"></span></a>Sealer/Unsealer</h3>
-<h3><a href="#powerbox" name="powerbox" class="anchor"><span class="anchor-link"></span></a>Powerbox</h3>
-<p>A powerbox is the opposite of a sandbox. Rather than isolating the system, it selectively grants short-lived authority by providing capabilities.</p>
-<ul>
-  <li><a href="http://wiki.c2.com/?PowerBox">http://wiki.c2.com/?PowerBox</a></li>
-  <li><a href="http://www.combex.com/papers/darpa-report/html/">http://www.combex.com/papers/darpa-report/html/</a> (from DarpaBrowser)</li>
-  <li><a href="http://www.skyhunter.com/marcs/ewalnut.html">http://www.skyhunter.com/marcs/ewalnut.html</a> (Powerbox Capability Manager section)</li>
-  <li><a href="https://docs.sandstorm.io/en/latest/developing/powerbox/">https://docs.sandstorm.io/en/latest/developing/powerbox/</a></li>
-  <li><a href="https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/powerbox.capnp">https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/powerbox.capnp</a></li>
-</ul>
 <p>So <code>bob.foo(carol)</code> means that <code>bob</code> has the reference to carol now. In a membrane, we&rsquo;re not only wrapping access to carol, but also to bob???</p>
 <pre><code>bob.foo(carol) =&gt; membrane(bob).foo(membrane(carol))
 </code></pre>
@@ -457,37 +446,6 @@ val loggingDoer = Foo.Doer.logger(doer)
 </code></pre>
 <p>Even if Kylo attempts to hand his Jedi powers off to everyone else, we can revoke them.</p>
 <p>Every single parameter has to be wrapped in in something that is revoker. So Int =&gt; Membrane[Int] etc. This may be not workable in Scala, and I don&rsquo;t doubt you could bypass it.</p>
-<h2><a href="#affine-types" name="affine-types" class="anchor"><span class="anchor-link"></span></a>Affine Types</h2>
-<p>Affine Types are &ldquo;use-once&rdquo; types that You can simulate affine types in Scala through isolated actors, but revoking a capability after first use will also do.</p>
-<p><a href="http://materials.dagstuhl.de/files/17/17051/17051.PhilippHaller.Slides1.pdf">http://materials.dagstuhl.de/files/17/17051/17051.PhilippHaller.Slides1.pdf</a> </p>
-<p>&ldquo;object capability discipline&rdquo; &ndash; we can restrict types to match what we expect (is this part of membrane?) </p>
-<h2><a href="#loader-isolation" name="loader-isolation" class="anchor"><span class="anchor-link"></span></a>Loader Isolation</h2>
-<p>Loader isolation figures into the original <a href="http://www.erights.org/talks/thesis/markm-thesis.pdf">Object Capability thesis</a>, but is at the level of the JVM rather than Scala. The Java ClassLoader is discussed extensively in section 10. The <a href="https://en.wikipedia.org/wiki/Object-capability_model">Wikipedia article</a> says &ldquo;A loader obeys <em>loader isolation</em> if the new object&rsquo;s only initial references are from the explicitly provided state, with no implicit grants by the loader itself. The Java ClassLoader violates loader isolation, making confinement of unexamined loaded code impossible.&rdquo; but does not provide citation. </p>
-<p>That&rsquo;s technically true, but isolation in Java is still possible, even if it may not be complete.</p>
-<p>This is important in Java, because if everything uses the same classloader, a new instance can be brought up through reflection. Additionally, if a security loader is not enabled on the system, then private variables can be made accessible on the system and swapped out. For an example, see <a href="https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/">Monkeypatching Java Classes</a>. You can enable the security manager, but it&rsquo;s very easy to disable unless you are <a href="https://tersesystems.com/blog/2015/12/29/sandbox-experiment/">very careful about the sandbox</a>. And when you combine all of the above with the many gadgets available through <a href="https://tersesystems.com/blog/2015/11/08/closing-the-open-door-of-java-object-serialization/">Java Deserialization</a>, it&rsquo;s pretty clear that a dedicated attacker can circumvent the JVM.</p>
-<p>Instantiating a new instance through reflection does not automatically put it in the chain of references, but it does allow a bypass of the Scala access modifier logic. However, if the classloader doesn&rsquo;t have those classes at all, they can&rsquo;t be instantiated.</p>
-<p>You break apart your public API classes and your data transfer objects from your implementation code. Then you create another classloader, and register the SPI from there, enabling public access through the API without access to the underlying implementation. In Java 9, you can use the module system, but that&rsquo;s still incredibly new and untried.</p>
-<h3><a href="#custom-class-loader" name="custom-class-loader" class="anchor"><span class="anchor-link"></span></a>Custom class loader</h3>
-<p>You load in projects through URLClassLoader, and use SBT BuildInfo.</p>
-<pre class="prettyprint"><code class="language-scala">lazy val core = project enablePlugins BuildInfoPlugin settings (
-  buildInfoKeys := Seq(BuildInfoKey.map(exportedProducts in (`third-party`, Runtime)) {
-    case (_, classFiles) ⇒ (&quot;thirdParty&quot;, classFiles.map(_.data.toURI.toURL)) 
-  })
-</code></pre>
-<pre class="prettyprint"><code class="language-scala">def createInstance(): foo.bar.API = {
-  val loader = new java.net.URLClassLoader(buildinfo.BuildInfo.thirdParty.toArray, parent)
-  loader.loadClass(&quot;foo.bar.Impl&quot;).asSubclass(classOf[foo.bar.API]).newInstance()
-}
-</code></pre>
-<p><a href="https://stackoverflow.com/questions/29578808/using-a-custom-class-loader-for-a-module-dependency-in-sbt">https://stackoverflow.com/questions/29578808/using-a-custom-class-loader-for-a-module-dependency-in-sbt</a></p>
-<h3><a href="#osgi" name="osgi" class="anchor"><span class="anchor-link"></span></a>OSGI</h3>
-<p>If you&rsquo;re going down this route, you probably want an OSGI container like Apache Karaf, which can run bundles with strict container isolation. OSGI lets you put the API into one bundle, and the implementation into another bundle. Then use the OSGI service registry to construct the instance, by adding a ServiceFactory implementation and an instance of the API interface. </p>
-<p>It is really hard to find anything that uses both OSGI and sbt. Phil Andrews has two projects which work, but almost everything else is set up to build an OSGI package externally and does not make use of the end product.</p>
-<ul>
-  <li><a href="https://github.com/PhilAndrew/JumpMicro">https://github.com/PhilAndrew/JumpMicro</a></li>
-  <li><a href="https://github.com/PhilAndrew/sbt-osgi-felix-akka-blueprint-camel">https://github.com/PhilAndrew/sbt-osgi-felix-akka-blueprint-camel</a></li>
-</ul>
-<p>Realistically speaking, it&rsquo;s probably OSGI in Java, or you set up a Manifest.MF file directly. The simplest possible OSGI module is by <a href="https://michaelrice.com/2015/04/the-simplest-osgi-karaf-hello-world-demo-i-could-come-up-with/">Michael Rice</a> with <a href="https://github.com/mrice/osgi-demo">https://github.com/mrice/osgi-demo</a> which can be used as a model.</p>
 <p>// <a href="https://gist.github.com/mbedward/6e3dbb232bafec0792ba">https://gist.github.com/mbedward/6e3dbb232bafec0792ba</a> // <a href="https://github.com/adamw/quicklens/blob/master/quicklens/src/main/scala/com/softwaremill/quicklens/QuicklensMacros.scala">https://github.com/adamw/quicklens/blob/master/quicklens/src/main/scala/com/softwaremill/quicklens/QuicklensMacros.scala</a> // <a href="https://github.com/wix/accord/blob/master/core/src/main/scala/com/wix/accord/transform/ValidationTransform.scala">https://github.com/wix/accord/blob/master/core/src/main/scala/com/wix/accord/transform/ValidationTransform.scala</a> // <a href="http://www.strongtyped.io/blog/2014/05/23/case-class-related-macros/">http://www.strongtyped.io/blog/2014/05/23/case-class-related-macros/</a> // <a href="http://blog.scottlogic.com/2013/06/07/scala-macros-part-3.html">http://blog.scottlogic.com/2013/06/07/scala-macros-part-3.html</a> // <a href="http://blog.echo.sh/2013/11/04/exploring-scala-macros-map-to-case-class-conversion.html">http://blog.echo.sh/2013/11/04/exploring-scala-macros-map-to-case-class-conversion.html</a> // <a href="https://github.com/echojc/scala-macro-template">https://github.com/echojc/scala-macro-template</a> // <a href="https://blog.scalac.io/2016/05/26/simple-types-in-play.html">https://blog.scalac.io/2016/05/26/simple-types-in-play.html</a> // <a href="https://stackoverflow.com/questions/25188440/applying-type-constructors-to-generated-type-parameters-with-scala-macros">https://stackoverflow.com/questions/25188440/applying-type-constructors-to-generated-type-parameters-with-scala-macros</a></p>
 <h1><a href="#other-works" name="other-works" class="anchor"><span class="anchor-link"></span></a>Other works</h1>
 <h2><a href="#capability-patterns-papers" name="capability-patterns-papers" class="anchor"><span class="anchor-link"></span></a>Capability Patterns Papers</h2>
@@ -553,7 +511,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0*
+0.0.3*
 </span>
 </div>
 </article>
