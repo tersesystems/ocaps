@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Awesome Presentation</title>
+<title>Security in Scala: Refined Typed and Object Capabilities</title>
 <meta charset="utf-8">
-<style>
+<style type="text/css">
   @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
   @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
   @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
@@ -13,7 +13,106 @@
     font-family: 'Yanone Kaffeesatz', 'Gill Sans';
     font-weight: normal;
   }
-  .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+  .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+
+      //.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
 </style>
 <!-- https://github.com/gnab/remark/wiki/Adding-graphs-via-Mermaid -->
 <!-- note https://github.com/knsv/mermaid/issues/360 -->
@@ -21,37 +120,48 @@
 </head>
 <body>
 <textarea id="source">
-
 class: center, middle
 
-# Security In Scala: Refined Types and Object Capabilities
+# Security In Scala
+### Refined Types and Object Capabilities
 Will Sargent • `@will_sargent`
 
-.footnote[Go directly to [project site](https://github.com/wsargent/ocaps)]
 ???
 - notes here
 - see https://remarkjs.com/#1
 
 ---
-#### Content Warning
+class: center, middle
 
-* There is a lot of stuff in this talk!
+## Lots to cover, so this will be high level and fast!
+
+.footnote[(There will room for questions at the end)]
+---
+class: center, middle, inverse
+
+# What is Security in Scala?
 
 ---
-#### What do we mean by "security"?
+class: center, middle
 
-* Validation
-* Abstraction
-* Encapsulation
-* Access Control
+   Reject harmful input.
+
+   Isolate resources.
+
+   Deny functionality to attackers.
 
 ---
-#### What do we mean by "security"?
+### Security In Scala
 
-* Validation - deciding what is valid
-* Abstraction - deciding what should be visible
-* Encapsulation - deciding what should be hidden
-* Access Control - deciding what is allowed
+#### Security Decisions
+
+  - Validation - deciding what is valid
+
+  - Abstraction - deciding what should be visible
+
+  - Encapsulation - deciding what should be hidden
+
+  - Access Control - deciding what is forbidden
 
 ???
 If something is invalid, it can't be used.
@@ -59,50 +169,85 @@ If something is visible, then why?
 If something is hidden, then it can't be exposed.
 Access Control is obvious.
 
-Abstraction, Encapsulation, and Information Hiding By Edward V. Berard
-http://www.tonymarston.co.uk/php-mysql/abstraction.txt
+---
+### Security In Scala
+
+#### Security Decisions
+
+  - Validation - deciding what is valid
+
+  - Abstraction - deciding what should be visible
+
+  - Encapsulation - deciding what should be hidden
+
+  - Access Control - deciding what is forbidden
+
+#### Security Tools
+
+  - Refinement Types - validates raw input
+
+  - Capabilities - tight abstraction & encapsulation & revocable access
+
+  - Dynamic Sealing - flexible information hiding
+
+  - Membranes - operational isolation
 
 ---
-#### Tools for Security
-
-* Refinement Types
-* Capabilities
-* Dynamic Sealing
-* Membranes
-
----
+class: center, middle, inverse
 # What are Refinement Types?
 
 ---
-#### What are Refinement Types?
+class: center, middle
 
-* "In type theory, a refinement type is a type endowed with a predicate which is assumed to hold for any element of the refined type" -- Wikipedia
-
----
-#### Refinement Types?
-
-* Type `ZipCode` is a `String` with predicate "5 numeric characters"
-* Refinement types can be used for validation
-* Isolation of types -- you *only* get `ZipCode` if you validated for it.
+Refinement Types are raw types that obey predicates.
 
 ---
-#### Refinement Types in Scala?
+### Refinement Types
 
-* refined: simple refinement types for Scala
-* `libraryDependencies += "eu.timepit" %% "refined" % "0.9.0"`
-* [https://github.com/fthomas/refined](https://github.com/fthomas/refined)
+#### Description
+
+  - Examples of raw types: `String`, `Boolean`, `Character`, `Int`, Collection API.
+
+  - Raw types are unconstrained, and could contain invalid or harmful input.
+
+  - In particular, String can contain **anything**.
+
+  - Type `ZipCode` is a `String` with predicate "5 numeric characters".
+
+  - Isolation of types -- you *only* get `ZipCode` if you validated for it.
+
+---
+### Refinement Types
+
+#### Description
+
+  - Examples of raw types: `String`, `Boolean`, `Character`, `Int`, Collection API.
+
+  - Raw types are unconstrained, and could contain invalid or harmful input.
+
+  - In particular, String can contain **anything**.
+
+  - Type `ZipCode` is a `String` with predicate "5 numeric characters".
+
+  - Isolation of types -- you *only* get `ZipCode` if you validated for it.
+
+#### Refined Library
+
+  - refined: simple refinement types for Scala
+
+  - `libraryDependencies += "eu.timepit" %% "refined" % "0.9.0"`
+
+  - [https://github.com/fthomas/refined](https://github.com/fthomas/refined)
 
 ---
 #### Refinement Types Example
 
-```tut:invisible
+```tut
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string._
 import eu.timepit.refined.auto._
-```
 
-```tut
 type ZipCode = String Refined MatchesRegex[W.`"""\\d{5}"""`.T]
 
 val x = "94111"
@@ -110,26 +255,39 @@ val v: Either[String, ZipCode] = refineV(x)
 ```
 
 ---
+class: center, middle, inverse
+
 # What are Capabilities?
 
 ---
-* A capability is a security token that gives authority by reference.
-* Authority is sufficient justification to affect a resource.
+class: center, middle
+
+A capability is a security primitive that gives authority by reference.
+
+Authority is sufficient justification to affect a resource.
 
 ---
 
-## Defining Capabilities in Scala
+### Defining Capabilities in Scala
 
-* In Scala, a resource is an object, and a capability is an object reference.
-* Distinct from OOP!
-  * OOP is all about **accessibility** through abstraction.
-  * Capabilities are all about **inaccessability** through encapsulation.
+- In Scala:
+
+  - A resource is an object with some sensitive fields and/or methods.
+
+  - A capability is a reference to an object that can affect the resource.
+
+- Distinct from OOP!
+
+    - OOP is all about accessibility through abstraction.
+
+    - Capabilities are all about inaccessability through encapsulation.
 
 ---
-## Example
+### Capability Example
 
-* We have a `Document` object, which has a `name` field any one can change
-* We want expose the ability to change the name as a capability.
+- We have a `Document` object, which has a `name` field anyone can change.
+
+- We want expose the ability to change the name as a capability.
 
 ---
 
@@ -144,7 +302,7 @@ final class Document(var name: String) {
 ---
 ### Document
 
-```c
+```scala
 final class Document(private var name: String) {
   private object capabilities {
     val nameChanger = new Document.NameChanger {
