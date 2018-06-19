@@ -174,14 +174,13 @@ ocaps
 <p>We&rsquo;ll start by showing a class that has methods that we want to capabilities. Here&rsquo;s a <code>Document</code> class that lets you change the name.</p>
 <pre class="prettyprint"><code class="language-scala">object Before {
 
-  final class Document(private[this] var name: String) {
-    def changeName(newName: String): Unit = name = newName
+  final class Document(var name: String) {
     override def toString: String = s&quot;Document($name)&quot;
   }
 
   def main(args: Array[String]): Unit = {
     val document = new Document(&quot;will&quot;)
-    document.changeName(&quot;steve&quot;)
+    document.name = &quot;steve&quot;
     println(s&quot;Before: result = $document&quot;)
   }
 }</code></pre>
@@ -214,18 +213,16 @@ ocaps
         doc.capabilities.nameChanger
       }
     }
-
-    object Access {
-      def apply(): Access = new Access
-    }
   }
 
   def main(args: Array[String]): Unit = {
     val document = new Document(&quot;will&quot;)
-    val access = Document.Access()
+    val access = new Document.Access()
     val nameChanger = access.nameChanger(document)
     nameChanger.changeName(&quot;steve&quot;)
     println(s&quot;AfterAmplification: result = $document&quot;)
+
+    val Revocable(nameChanger, revoker) = ocaps
   }
 }</code></pre>
 <p>You&rsquo;ll note that access modifiers are used heavily here, and there&rsquo;s an <code>Access</code> class which is involved in exposing the capability. When two (or more) objects are required to expose some extra functionality, it&rsquo;s called <a href="amplification.html">amplification</a>.</p>

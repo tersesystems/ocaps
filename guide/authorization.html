@@ -132,8 +132,9 @@ ocaps
 <ul>
   <li><a href="../guide/authorization.html#authorizing-capabilities" class="header">Authorizing Capabilities</a>
   <ul>
-    <li><a href="../guide/authorization.html#a-brief-history-of-authorization" class="header">A Brief History of Authorization</a></li>
+    <li><a href="../guide/authorization.html#authorization-and-ambient-authority" class="header">Authorization and Ambient Authority</a></li>
     <li><a href="../guide/authorization.html#authorizating-capabilities-with-gatekeeper" class="header">Authorizating Capabilities with Gatekeeper</a></li>
+    <li><a href="../guide/authorization.html#dispensing-capabilities-with-composition" class="header">Dispensing Capabilities with Composition</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -154,8 +155,9 @@ ocaps
 <ul>
   <li><a href="../guide/authorization.html#authorizing-capabilities" class="header">Authorizing Capabilities</a>
   <ul>
-    <li><a href="../guide/authorization.html#a-brief-history-of-authorization" class="header">A Brief History of Authorization</a></li>
+    <li><a href="../guide/authorization.html#authorization-and-ambient-authority" class="header">Authorization and Ambient Authority</a></li>
     <li><a href="../guide/authorization.html#authorizating-capabilities-with-gatekeeper" class="header">Authorizating Capabilities with Gatekeeper</a></li>
+    <li><a href="../guide/authorization.html#dispensing-capabilities-with-composition" class="header">Dispensing Capabilities with Composition</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -167,8 +169,11 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#authorizing-capabilities" name="authorizing-capabilities" class="anchor"><span class="anchor-link"></span></a>Authorizing Capabilities</h1>
-<h2><a href="#a-brief-history-of-authorization" name="a-brief-history-of-authorization" class="anchor"><span class="anchor-link"></span></a>A Brief History of Authorization</h2>
-<p>TODO</p>
+<h2><a href="#authorization-and-ambient-authority" name="authorization-and-ambient-authority" class="anchor"><span class="anchor-link"></span></a>Authorization and Ambient Authority</h2>
+<p>One of the issues that the capability model neatly sidesteps is the issue of <a href="https://en.wikipedia.org/wiki/Ambient_authority">ambient authority</a>. </p>
+<p>Broadly speaking, ambient authority is when a user or a security context (also known as a &ldquo;Principal&rdquo;) is assumed to exist when making sensitive calls, and the credentials of the &ldquo;current user&rdquo; are applied every time.</p>
+<p>In Java, ambient authority would typically come in the form of a thread-local user context that would be accessible from every method. In Scala, it typically takes the form of an implicit <code>User</code> or <code>SecurityContext</code> that is always accessible.</p>
+<p>In a capability model, authorization is used only and solely to dispense the capability. After that point, the capability is passed around without an implicit <code>SecurityContext</code> and without ambient authority. If the user logs out at any point, then the capability is revoked.</p>
 <h2><a href="#authorizating-capabilities-with-gatekeeper" name="authorizating-capabilities-with-gatekeeper" class="anchor"><span class="anchor-link"></span></a>Authorizating Capabilities with Gatekeeper</h2>
 <p>Handing out a capability to an object gives the object authority over the resource. The question of whether that object should have authority or not is an authorization decision. The question of authorization (&ldquo;what authority&rdquo;) is usually accompanied by the question of authentication (&ldquo;who should have this authority?&rdquo;).</p>
 <p>In capability based systems, there are four stages before a capability is handed out. <a href="https://youtu.be/XQWY9_BcSGI?t=8m40s">Alan Karp</a> defines four stages:</p>
@@ -176,10 +181,13 @@ ocaps
   <li>Identification (grant privs)</li>
   <li>Authentication (let a process running on behalf use priv associated with identity)</li>
   <li>Authorization (grant token, etc)</li>
-  <li>Access Decision (in the service )</li>
+  <li>Access Decision (in the service)</li>
 </ol>
 <p>Capability-based authorization systems identify a policy that says who is authorized for an operation on a resource, and then hand out a capability for that operation. That capability is then used directly. This is in contrast to role based access control (RBAC), which ties in the identity directly. Examples include <a href="https://en.wikipedia.org/wiki/OAuth#OAuth_2.0">OAuth 2 Bearer Token</a> and <a href="https://en.wikipedia.org/wiki/XACML">XACML</a>, but it&rsquo;s quite simple to create your own.</p>
 <p>This may not mean much in isolation, so let&rsquo;s run through an example with Scala code, implementing a Gatekeeper class for documents.</p>
+<blockquote>
+  <p>You can see the full class in <a href="../examples/gatekeeper.md">Gatekeeper example</a> page.</p>
+</blockquote>
 <p>First, we need authentication. Let&rsquo;s posit a <code>User</code> class that serves as the <a href="https://stackoverflow.com/a/5025140">principal</a>, and an implicit <code>SecurityContext</code> that serves as an <a href="http://www.lihaoyi.com/post/ImplicitDesignPatternsinScala.html#implicit-contexts">implicit context</a>. </p>
 <pre class="prettyprint"><code class="language-scala">case class User(name: String)
 class SecurityContext(val user: User)
@@ -236,6 +244,41 @@ val userActivity = new DocumentActivity(reader)
 </code></pre>
 <p>From the time the capability is accessible, it is &ldquo;in scope&rdquo; of the application code, and may be not tied to the lifecycle of the user session. That is, there may be a job or a process which can run with the reader well after the user has logged out. The <code>SecurityContext</code> is only required by the gatekeeper, and is not required by any following activity. There is no ambient authority.</p>
 <p>The discussion around capabilities and their lifecycles, and how capabilities can be passed around and delegated to other classes is the biggest point of difference between permission based access control (which always requires an identity context) and capability based access control (which depends on an object reference). In short, once you have assigned capabilities, you must then manage them.</p>
+<h2><a href="#dispensing-capabilities-with-composition" name="dispensing-capabilities-with-composition" class="anchor"><span class="anchor-link"></span></a>Dispensing Capabilities with Composition</h2>
+<p>When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.</p>
+<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: Set[AnyRef]) {
+ ...
+}
+
+val capabilitySet = Set(reader, writer)
+val caller = new Caller(capabilitySet)
+</code></pre>
+<p>Note that <code>Caller</code> does not know what capabilities may be presented to it, and so must iterate to see if it has access. This is fine as far as it goes, but it does inherently provide collection mechanics on top of managing capabilities, and loses some type information.</p>
+<p>Another option is to use <em>composition</em> to return an object that directly incorporates all the capabilities.</p>
+<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: AnyRef) {
+ ...
+}
+
+val capabilities = ocap.macros.compose[Reader with Writer](reader, writer)
+val caller = new Caller(capabilities)
+</code></pre>
+<p>Now the caller can pattern match directly against the capability:</p>
+<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: AnyRef) {
+  private def reader: Option[Reader] = {
+    capabilities match {
+      case reader: Reader =&gt;
+        Some(reader)
+      case _ =&gt;
+        None
+    }
+  }
+}
+</code></pre>
+<p>Composition is not the only way of arranging capabilities, of course. Joe Duffy has a great <a href="http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/">post</a> where he discusses the practical aspects of capabilities:</p>
+<blockquote>
+  <p>I’ll be the first to admit, there was a maturity process that developers went through, as they learned about the design patterns in an object capability system. It was common for “big bags” of capabilities to grow over time, and/or for capabilities to be requested at an inopportune time. For example, imagine a Stopwatch API. It probably needs the Clock. Do you pass the Clock to every operation that needs to access the current time, like Start and Stop? Or do you construct the Stopwatch with a Clock instance up-front, thereby encapsulating the Stopwatch’s use of the time, making it easier to pass to others (recognizing, importantly, that this essentially grants the capability to read the time to the recipient). Another example, if your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier.</p>
+</blockquote>
+<p>As in all things, choose the solution that works best for your context.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/authorization.md" title="Edit this page" class="md-source-file md-edit">
