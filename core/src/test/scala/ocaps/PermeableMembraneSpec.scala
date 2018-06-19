@@ -68,11 +68,11 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
 
     "work" in {
       val m = RevokerMembrane()
-      val user = new Location(Locale.US, TimeZone.getTimeZone("PST"))
+      val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
       val access = new Location.MembraneAccess(m)
 
-      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(user)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(user)
+      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
+      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       val program: IO[String] = IO {
         val format: access.Wrapper[String] = for {
@@ -90,11 +90,11 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
 
     "not work" in {
       val m = RevokerMembrane()
-      val user = new Location(Locale.US, TimeZone.getTimeZone("PST"))
+      val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
       val access = new Location.MembraneAccess(m)
 
-      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(user)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(user)
+      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
+      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       m.revoke()
       val program: IO[String] = IO {
@@ -127,11 +127,11 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
           }
         }
       })
-      val user = new Location(Locale.US, TimeZone.getTimeZone("PST"))
+      val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
       val access = new Location.MembraneAccess(m)
 
-      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(user)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(user)
+      val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
+      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       val program: IO[String] = IO {
         val format: access.Wrapper[String] = for {

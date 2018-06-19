@@ -66,7 +66,6 @@ lazy val site = (project in file("site"))
   ).dependsOn(core)
 
 // Slides for Scaladays
-// https://github.com/julien-truffaut/presentation.g8
 // sbt "slides/tut"
 lazy val slides = (project in file("slides"))
   .enablePlugins(TutPlugin)
@@ -74,8 +73,14 @@ lazy val slides = (project in file("slides"))
   .settings(moduleName := "slides")
   .settings(
     tutSourceDirectory := baseDirectory.value / "tut",
-    //tutTargetDirectory := baseDirectory.value / "../docs",
-    watchSources ++= (tutSourceDirectory.value ** "*.html").get
+    tutTargetDirectory := baseDirectory.value / "target" / "docs",
+    watchSources ++= (tutSourceDirectory.value ** "*.html").get,
+
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9",
+    libraryDependencies += "eu.timepit" %% "refined"            % "0.9.0",
+    libraryDependencies += "eu.timepit" %% "refined-cats"       % "0.9.0", // optional
   ).dependsOn(core)
 
 lazy val root = (project in file(".")).settings(disablePublishing)

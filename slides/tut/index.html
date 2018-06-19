@@ -1,87 +1,448 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Awesome Presentation</title>
-    <meta charset="utf-8">
-    <style>
-      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+<head>
+<title>Awesome Presentation</title>
+<meta charset="utf-8">
+<style>
+  @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+  @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+  @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-      body { font-family: 'Droid Serif', 'Helvetica'; }
-      h1, h2, h3 {
-        font-family: 'Yanone Kaffeesatz', 'Gill Sans';
-        font-weight: normal;
-      }
-      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
-    </style>
-    <!-- https://github.com/gnab/remark/wiki/Adding-graphs-via-Mermaid -->
-    <!-- note https://github.com/knsv/mermaid/issues/360 -->
-    <link rel="stylesheet" href="mermaid.min.css">
-  </head>
-  <body>
-    <textarea id="source">
-
-```tut:invisible
-
-```
+  body { font-family: 'Droid Serif', 'Helvetica'; }
+  h1, h2, h3 {
+    font-family: 'Yanone Kaffeesatz', 'Gill Sans';
+    font-weight: normal;
+  }
+  .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+</style>
+<!-- https://github.com/gnab/remark/wiki/Adding-graphs-via-Mermaid -->
+<!-- note https://github.com/knsv/mermaid/issues/360 -->
+<link rel="stylesheet" href="mermaid.min.css">
+</head>
+<body>
+<textarea id="source">
 
 class: center, middle
 
-# Security In Scala
+# Security In Scala: Refined Types and Object Capabilities
 Will Sargent • `@will_sargent`
 
+.footnote[Go directly to [project site](https://github.com/wsargent/ocaps)]
 ???
 - notes here
 - see https://remarkjs.com/#1
 
 ---
-# Inline Scala examples
+#### Content Warning
 
-```tut:silent
-case class Person(name: String, age: Int)
-```
-
-```tut:book
-val john = Person("John", 23)
-
-john.age
-
-john.copy(age = 30)
-```
-
-???
-- see https://github.com/wsargent/ocaps
+* There is a lot of stuff in this talk!
 
 ---
-# Scala examples from core module
+#### What do we mean by "security"?
 
-```tut:silent
-import ocaps._
+* Validation
+* Abstraction
+* Encapsulation
+* Access Control
+
+---
+#### What do we mean by "security"?
+
+* Validation - deciding what is valid
+* Abstraction - deciding what should be visible
+* Encapsulation - deciding what should be hidden
+* Access Control - deciding what is allowed
+
+???
+If something is invalid, it can't be used.
+If something is visible, then why?
+If something is hidden, then it can't be exposed.
+Access Control is obvious.
+
+Abstraction, Encapsulation, and Information Hiding By Edward V. Berard
+http://www.tonymarston.co.uk/php-mysql/abstraction.txt
+
+---
+#### Tools for Security
+
+* Refinement Types
+* Capabilities
+* Dynamic Sealing
+* Membranes
+
+---
+# What are Refinement Types?
+
+---
+#### What are Refinement Types?
+
+* "In type theory, a refinement type is a type endowed with a predicate which is assumed to hold for any element of the refined type" -- Wikipedia
+
+---
+#### Refinement Types?
+
+* Type `ZipCode` is a `String` with predicate "5 numeric characters"
+* Refinement types can be used for validation
+* Isolation of types -- you *only* get `ZipCode` if you validated for it.
+
+---
+#### Refinement Types in Scala?
+
+* refined: simple refinement types for Scala
+* `libraryDependencies += "eu.timepit" %% "refined" % "0.9.0"`
+* [https://github.com/fthomas/refined](https://github.com/fthomas/refined)
+
+---
+#### Refinement Types Example
+
+```tut:invisible
+import eu.timepit.refined._
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.string._
+import eu.timepit.refined.auto._
 ```
 
-```tut:book
-case class Food(name: String)
+```tut
+type ZipCode = String Refined MatchesRegex[W.`"""\\d{5}"""`.T]
 
-case class Can(food: Brand.Box[Food])
+val x = "94111"
+val v: Either[String, ZipCode] = refineV(x)
+```
 
-class CanOpener(unsealer: Brand.Unsealer[Food]) {
-  def open(can: Can): Food = {
-    unsealer(can.food).get
+---
+# What are Capabilities?
+
+---
+* A capability is a security token that gives authority by reference.
+* Authority is sufficient justification to affect a resource.
+
+---
+
+## Defining Capabilities in Scala
+
+* In Scala, a resource is an object, and a capability is an object reference.
+* Distinct from OOP!
+  * OOP is all about **accessibility** through abstraction.
+  * Capabilities are all about **inaccessability** through encapsulation.
+
+---
+## Example
+
+* We have a `Document` object, which has a `name` field any one can change
+* We want expose the ability to change the name as a capability.
+
+---
+
+### Before
+
+```scala
+final class Document(var name: String) {
+  override def toString: String = s"Document($name)"
+}
+```
+
+---
+### Document
+
+```c
+final class Document(private var name: String) {
+  private object capabilities {
+    val nameChanger = new Document.NameChanger {
+      override def changeName(newName: String): Unit = {
+        name = newName
+      }
+    }
+  }
+  override def toString: String = s"Document($name)"
+}
+```
+
+---
+### Define NameChanger
+
+```scala
+object Document {
+  sealed trait NameChanger {
+    def changeName(name: String): Unit
+  }
+
+  class Access private {
+    def nameChanger(doc: Document): NameChanger = {
+      doc.capabilities.nameChanger
+    }
   }
 }
 ```
 
 ---
+### Usage
+
+```scala
+val document = new Document("will")
+val access = new Document.Access()
+val nameChanger = access.nameChanger(document)
+nameChanger.changeName("steve")
+println(s"result = $document")
+```
+
+---
+# Isolation of Objects
+
+* `nameChanger` has authority to change the name of Document object (resource)
+* The only way to reach `nameChanger` is through `Access`
+* This is a "root level" capability!  Normally you wrap this in revocable.
+
+---
+# More Realistic Example
+
+* We've got a standard CRUD `ItemRepository` object as the resource.
+* By definition, everyone has access to create, read, update, and delete!
+* Principal of Least Authority says "be careful when dispensing power"
+* Through capabilities, we can have fine grained access control.
+
+---
+# ItemRepository Capabilities
+
+```scala
+object ItemRepository {
+  trait Finder[F[_]] {
+    def find(id: UUID): F[Option[Item]]
+  }
+
+  trait Updater[F[_]] {
+    def update(item: Item): F[UpdateResult]
+  }
+
+  case class UpdateResult(message: String)
+
+  class Access {
+    def finder(repo: ItemRepository): Finder[Id] = repo.capabilities.finder
+    def updater(repo: ItemRepository): Updater[Id] = repo.capabilities.updater
+  }
+}
+```
+
+---
+# ItemRepository Capabilities
+
+```scala
+class ItemRepository {
+  import ItemRepository._
+  private def find(id: UUID): Option[Item] = items.find(_.id == id)
+  private def update(u: Item): UpdateResult = UpdateResult(s"item $u updated")
+  private object capabilities {
+    val finder: Finder[Id] = new Finder[Id]() {
+      override def find(id: UUID) = ItemRepository.this.find(id)
+    }
+    val updater: Updater[Id] = new Updater[Id]() {
+      override def update(item: Item) = ItemRepository.this.update(item)
+    }
+  }
+}
+```
+
+---
+### Revocation
+
+* Access to a capability can be through a delegate with conditional access
+* `ocaps` implements macros and utility classes for revocation
+* `Revoker`: `revoker.revoke()` destroys access
+* `Revocable`: contains delegate and `Revoker`
+
+---
+# Revocable
+
+```scala
+import ocaps._
+import ocaps.macros._
+import ItemRepository._
+
+val Revocable(revocableFinder, revoker) = revocable[Finder](finder)
+revoker.revoke()
+revocableFinder.find(ID) // throws RevokedException!
+```
+
+---
+### Too Much To Talk About!
+
+* *Composition*: compose two capabilities together
+* *Attenuation*: tear out a capability from a composed one
+* *Modulation*: set up before/after hooks on capability
+* *Expiration*: use modulation/revocation for time/use based capabilities.
+
+.footnote[Please see https://wsargent.github.io/ocaps/guide/index.html for all the above]
+---
+class: center, middle
+
+# What is Dynamic Sealing?
+
+---
+## Dynamic Sealing
+
+* Java gives you `private`, `protected` access modifiers
+* Scala gives you `private[Outer]` access modifiers
+* Dynamic Sealing allows you to have `private` between unrelated objects
+* Extremely useful in capability context!
+
+.footnote[Protection in programming languages Morris Jr., CACM 1973]
+---
+## Dynamic Sealing
+
+* Brand consists of `sealer` and `unsealer` functions.
+* Using a sealer produces a `Brand.Box` which is sealed
+* Item is only accessible through `unsealer` function
+
+---
+# Dynamic Sealing Example
+
+```scala
+import ocaps.Brand
+case class Food(name: String)
+case class Can(food: Brand.Box[Food])
+
+class CanOpener(unsealer: Brand.Unsealer[Food]) {
+  def open(can: Can): Food = {
+    unsealer(can.food).get // throws exception if we did not seal this
+  }
+}
+```
+
+---
+# Dynamic Sealing Example
+
+```scala
+val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
+val canOfSpam: Can = Can(sealer(Food("spam")))
+
+val cannedFood: Brand.Box[Food] = canOfSpam.food
+println(s"food = ${canOfSpam.food.toString}") // DOES NOT WORK
+val canOpener = new CanOpener(unsealer)
+
+// We need both Can and CanOpener to unseal.
+def openCan(can: Can, canOpener: CanOpener) = {
+  val food: Food = canOpener.open(can)
+  println(s"food = $food") // WORKS
+}
+
+openCan(canOfSpam, canOpener)
+```
+
+---
+# Why use dynamic sealing?
+
+* Isolation in potentially public scope, i.e. DI frameworks / Messages
+* Great for sealing capabilities, `Access`, DBConnection objects
+* Signing/Attestation (make the unsealer publically available)
+* Encryption (make the sealer pubically available)
+
+---
+class: center, middle
+
+# Membranes
+
+---
+# What are Membranes?
+
+* Transitively enforce a policy on all commmunication
+* All arguments and methods are "wrapped" with membrane and cannot escape
+* Commonly used in sandboxes for "uncooperative revocation"
+* Tough to do in JVM, using ByteBuddy interceptors is best avenue
+* HOWEVER...
+
+.footnote[Edward Z. Yang, [What Is A Membrane?](http://blog.ezyang.com/2013/03/what-is-a-membran/)]
+
+---
+# Permeable Membrane
+
+* ...if you are willing to assume "cooperative revocation", then `PermeableMembrane` is for you.
+* `ocaps` provides `PermeableMembrane` and `RevokerMembrane` out of the box
+* You use a dependently typed effect on the membrane, and can functionally compose <it class=""></it>
+
+---
+# Membrane Definition
+
+```scala
+object Location {
+  trait LocaleReader[F[_]] {
+    def locale: F[Locale]
+  }
+
+  trait TimeZoneReader[F[_]] {
+    def timeZone: F[TimeZone]
+  }
+
+  class MembraneAccess(membrane: PermeableMembrane) {
+    type Wrapper[+A] = membrane.Wrapper[A]
+
+    def localeReader(location: Location): LocaleReader[Wrapper] = {
+      new LocaleReader[Wrapper] {
+        override def locale: Wrapper[Locale] = {
+          membrane.wrap(location.capabilities.localeReader.locale)
+        }
+      }
+    }
+
+    def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
+      new TimeZoneReader[Wrapper] {
+        override def timeZone: Wrapper[TimeZone] = {
+          membrane.wrap(location.capabilities.timeZoneReader.timeZone)
+        }
+      }
+    }
+  }
+}
+```
+
+???
+import java.util._
+
+class Location(locale: Locale, timeZone: TimeZone) {
+  private object capabilities {
+    def localeReader: Location.LocaleReader[Id] = new Location.LocaleReader[Id] {
+      override def locale: Locale = Location.this.locale
+    }
+
+    def timeZoneReader: Location.TimeZoneReader[Id] = new Location.TimeZoneReader[Id] {
+      override def timeZone: TimeZone = Location.this.timeZone
+    }
+  }
+}
+
+---
+# PermeableMembrane Usage
+
+```scala
+val m = RevokerMembrane()
+val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
+val access = new Location.MembraneAccess(m)
+
+val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
+val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
+
+val format: access.Wrapper[String] = for {
+  timeZone <- dryTimeZone.timeZone
+  locale <- dryLocale.locale
+} yield {
+  ZonedDateTime.now(timeZone.toZoneId)
+    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+      .withLocale(locale))
+}
+
+// Uncomment
+// m.revoke()
+
+// Break out the membrane
+format.get
+```
+
+---
+## Questions!
+
+---
 class: center, middle
 
 # Thanks!
-Code and slides at `john-doe/awesome` on GitHub
-
-## Questions?
-
-
-
+Code and guide at [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)
 
 
  </textarea>

@@ -18,8 +18,7 @@
 object Before {
 
   // #definition
-  final class Document(private[this] var name: String) {
-    def changeName(newName: String): Unit = name = newName
+  final class Document(var name: String) {
     override def toString: String = s"Document($name)"
   }
   // #definition
@@ -27,7 +26,7 @@ object Before {
   // #usage
   def main(args: Array[String]): Unit = {
     val document = new Document("will")
-    document.changeName("steve")
+    document.name = "steve"
     println(s"Before: result = $document")
   }
   // #usage
@@ -96,20 +95,18 @@ object AfterAmplification {
         doc.capabilities.nameChanger
       }
     }
-
-    object Access {
-      def apply(): Access = new Access
-    }
   }
   // #access
 
   // #usage
   def main(args: Array[String]): Unit = {
     val document = new Document("will")
-    val access = Document.Access()
+    val access = new Document.Access()
     val nameChanger = access.nameChanger(document)
     nameChanger.changeName("steve")
     println(s"AfterAmplification: result = $document")
+
+    val Revocable(nameChanger, revoker) = ocaps
   }
   // #usage
 }

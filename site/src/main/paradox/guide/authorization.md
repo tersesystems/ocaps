@@ -1,8 +1,14 @@
 # Authorizing Capabilities
 
-## A Brief History of Authorization
+## Authorization and Ambient Authority
 
-TODO
+One of the issues that the capability model neatly sidesteps is the issue of [ambient authority](https://en.wikipedia.org/wiki/Ambient_authority).  
+
+Broadly speaking, ambient authority is when a user or a security context (also known as a "Principal") is assumed to exist when making sensitive calls, and the credentials of the "current user" are applied every time.
+
+In Java, ambient authority would typically come in the form of a thread-local user context that would be accessible from every method.  In Scala, it typically takes the form of an implicit `User` or `SecurityContext` that is always accessible.
+
+In a capability model, authorization is used only and solely to dispense the capability.  After that point, the capability is passed around without an implicit `SecurityContext` and without ambient authority.  If the user logs out at any point, then the capability is revoked.
 
 ## Authorizating Capabilities with Gatekeeper
 
@@ -13,11 +19,13 @@ In capability based systems, there are four stages before a capability is handed
 1. Identification (grant privs)
 2. Authentication (let a process running on behalf use priv associated with identity)
 3. Authorization (grant token, etc)
-4. Access Decision (in the service )
+4. Access Decision (in the service)
 
 Capability-based authorization systems identify a policy that says who is authorized for an operation on a resource, and then hand out a capability for that operation.  That capability is then used directly.  This is in contrast to role based access control (RBAC), which ties in the identity directly.  Examples include [OAuth 2 Bearer Token](https://en.wikipedia.org/wiki/OAuth#OAuth_2.0) and [XACML](https://en.wikipedia.org/wiki/XACML), but it's quite simple to create your own.
 
 This may not mean much in isolation, so let's run through an example with Scala code, implementing a Gatekeeper class for documents.
+
+> You can see the full class in [Gatekeeper example](../examples/gatekeeper.md) page.
 
 First, we need authentication.  Let's posit a `User` class that serves as the [principal](https://stackoverflow.com/a/5025140), and an implicit `SecurityContext` that serves as an [implicit context](http://www.lihaoyi.com/post/ImplicitDesignPatternsinScala.html#implicit-contexts). 
 
@@ -88,3 +96,50 @@ val userActivity = new DocumentActivity(reader)
 From the time the capability is accessible, it is "in scope" of the application code, and may be not tied to the lifecycle of the user session.  That is, there may be a job or a process which can run with the reader well after the user has logged out.  The `SecurityContext` is only required by the gatekeeper, and is not required by any following activity.  There is no ambient authority.
 
 The discussion around capabilities and their lifecycles, and how capabilities can be passed around and delegated to other classes is the biggest point of difference between permission based access control (which always requires an identity context) and capability based access control (which depends on an object reference).  In short, once you have assigned capabilities, you must then manage them.
+
+## Dispensing Capabilities with Composition
+
+When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.
+
+```scala
+class Caller(capabilities: Set[AnyRef]) {
+ ...
+}
+
+val capabilitySet = Set(reader, writer)
+val caller = new Caller(capabilitySet)
+```
+
+Note that `Caller` does not know what capabilities may be presented to it, and so must iterate to see if it has access.  This is fine as far as it goes, but it does inherently provide collection mechanics on top of managing capabilities, and loses some type information.
+ 
+Another option is to use *composition* to return an object that directly incorporates all the capabilities.
+
+```scala
+class Caller(capabilities: AnyRef) {
+ ...
+}
+
+val capabilities = ocap.macros.compose[Reader with Writer](reader, writer)
+val caller = new Caller(capabilities)
+```
+
+Now the caller can pattern match directly against the capability:
+
+```scala
+class Caller(capabilities: AnyRef) {
+  private def reader: Option[Reader] = {
+    capabilities match {
+      case reader: Reader =>
+        Some(reader)
+      case _ =>
+        None
+    }
+  }
+}
+```
+
+Composition is not the only way of arranging capabilities, of course.  Joe Duffy has a great [post](http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/) where he discusses the practical aspects of capabilities:
+
+> I’ll be the first to admit, there was a maturity process that developers went through, as they learned about the design patterns in an object capability system. It was common for “big bags” of capabilities to grow over time, and/or for capabilities to be requested at an inopportune time. For example, imagine a Stopwatch API. It probably needs the Clock. Do you pass the Clock to every operation that needs to access the current time, like Start and Stop? Or do you construct the Stopwatch with a Clock instance up-front, thereby encapsulating the Stopwatch’s use of the time, making it easier to pass to others (recognizing, importantly, that this essentially grants the capability to read the time to the recipient). Another example, if your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier.
+
+As in all things, choose the solution that works best for your context.
