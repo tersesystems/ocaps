@@ -18,12 +18,10 @@ import java.time.ZonedDateTime
 import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.util.{Locale, TimeZone}
 
-import cats._
+import cats.Id
 import cats.effect.IO
 
 import ocaps._
-
-import scala.language.reflectiveCalls
 
 // http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns#Membranes
 // http://blog.ezyang.com/2013/03/what-is-a-membran/
@@ -34,14 +32,14 @@ object Membrane {
   // #location
   class Location(locale: Locale, timeZone: TimeZone) {
     private object capabilities {
-      def localeReader: Location.LocaleReader[Id] =
+      val localeReader: Location.LocaleReader[Id] =
         new Location.LocaleReader[Id] {
-          override def locale: Locale = Location.this.locale
+          override val locale: Locale = Location.this.locale
         }
 
-      def timeZoneReader: Location.TimeZoneReader[Id] =
+      val timeZoneReader: Location.TimeZoneReader[Id] =
         new Location.TimeZoneReader[Id] {
-          override def timeZone: TimeZone = Location.this.timeZone
+          override val timeZone: TimeZone = Location.this.timeZone
         }
     }
   }
@@ -55,7 +53,7 @@ object Membrane {
       def timeZone: F[TimeZone]
     }
 
-    class IdAccess {
+    class Access {
       def localeReader(location: Location): LocaleReader[Id] = {
         location.capabilities.localeReader
       }
@@ -64,14 +62,18 @@ object Membrane {
         location.capabilities.timeZoneReader
       }
     }
+  }
+  // #user
 
-    class MembraneAccess(val membrane: PermeableMembrane) {
+  def main(args: Array[String]): Unit = {
+
+    class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
       type Wrapper[+A] = membrane.Wrapper[A]
 
       def localeReader(location: Location): LocaleReader[Wrapper] = {
         new LocaleReader[Wrapper] {
           override def locale: Wrapper[Locale] = {
-            membrane.wrap(location.capabilities.localeReader.locale)
+            membrane.wrap(access.localeReader(location).locale)
           }
         }
       }
@@ -79,19 +81,16 @@ object Membrane {
       def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
         new TimeZoneReader[Wrapper] {
           override def timeZone: Wrapper[TimeZone] = {
-            membrane.wrap(location.capabilities.timeZoneReader.timeZone)
+            membrane.wrap(access.timeZoneReader(location).timeZone)
           }
         }
       }
     }
-  }
-  // #user
 
-  def main(args: Array[String]): Unit = {
     // #membrane-setup
     val m = RevokerMembrane()
     val user = new Location(Locale.US, TimeZone.getTimeZone("PST"))
-    val access = new Location.MembraneAccess(m)
+    val access = new MembraneAccess(new Location.Access(), m)
 
     val dryLocale: LocaleReader[access.Wrapper] = access.localeReader(user)
     val dryTimeZone: TimeZoneReader[access.Wrapper] =

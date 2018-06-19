@@ -133,9 +133,10 @@ Will Sargent • `@will_sargent`
 ---
 class: center, middle
 
-## Lots to cover, so this will be high level and fast!
+## Lots to cover!
+## This will be high level!
+## There will room for questions at the end!
 
-.footnote[(There will room for questions at the end)]
 ---
 class: center, middle, inverse
 
@@ -151,17 +152,15 @@ class: center, middle
    Deny functionality to attackers.
 
 ---
-### Security In Scala
+## Security Decisions
 
-#### Security Decisions
+  - Validation - deciding what is valid.
 
-  - Validation - deciding what is valid
+  - Abstraction - deciding what should be visible.
 
-  - Abstraction - deciding what should be visible
+  - Encapsulation - deciding what should be isolated.
 
-  - Encapsulation - deciding what should be hidden
-
-  - Access Control - deciding what is forbidden
+  - Access Control - deciding what is denied.
 
 ???
 If something is invalid, it can't be used.
@@ -170,27 +169,15 @@ If something is hidden, then it can't be exposed.
 Access Control is obvious.
 
 ---
-### Security In Scala
+## Security Tools
 
-#### Security Decisions
+  - Refinement Types - validates raw input.
 
-  - Validation - deciding what is valid
+  - Capabilities - tight abstraction & encapsulation & revocable access.
 
-  - Abstraction - deciding what should be visible
+  - Dynamic Sealing - flexible information hiding.
 
-  - Encapsulation - deciding what should be hidden
-
-  - Access Control - deciding what is forbidden
-
-#### Security Tools
-
-  - Refinement Types - validates raw input
-
-  - Capabilities - tight abstraction & encapsulation & revocable access
-
-  - Dynamic Sealing - flexible information hiding
-
-  - Membranes - operational isolation
+  - Membranes - operational isolation.
 
 ---
 class: center, middle, inverse
@@ -202,36 +189,16 @@ class: center, middle
 Refinement Types are raw types that obey predicates.
 
 ---
-### Refinement Types
-
-#### Description
+## Refinement Types
 
   - Examples of raw types: `String`, `Boolean`, `Character`, `Int`, Collection API.
 
   - Raw types are unconstrained, and could contain invalid or harmful input.
 
   - In particular, String can contain **anything**.
-
-  - Type `ZipCode` is a `String` with predicate "5 numeric characters".
-
-  - Isolation of types -- you *only* get `ZipCode` if you validated for it.
 
 ---
-### Refinement Types
-
-#### Description
-
-  - Examples of raw types: `String`, `Boolean`, `Character`, `Int`, Collection API.
-
-  - Raw types are unconstrained, and could contain invalid or harmful input.
-
-  - In particular, String can contain **anything**.
-
-  - Type `ZipCode` is a `String` with predicate "5 numeric characters".
-
-  - Isolation of types -- you *only* get `ZipCode` if you validated for it.
-
-#### Refined Library
+## Refined Library
 
   - refined: simple refinement types for Scala
 
@@ -240,7 +207,17 @@ Refinement Types are raw types that obey predicates.
   - [https://github.com/fthomas/refined](https://github.com/fthomas/refined)
 
 ---
-#### Refinement Types Example
+## Before
+
+```scala
+val requestParameter: String = "94111"
+
+// XXX How do we know this is a zip code?
+val zipCode: String = requestParameter
+```
+
+---
+## After
 
 ```tut
 import eu.timepit.refined._
@@ -250,9 +227,18 @@ import eu.timepit.refined.auto._
 
 type ZipCode = String Refined MatchesRegex[W.`"""\\d{5}"""`.T]
 
-val x = "94111"
-val v: Either[String, ZipCode] = refineV(x)
+val requestParameter: String = "94111"
+val v: Either[String, ZipCode] = refineV(requestParameter)
 ```
+
+---
+## Refinement Types Advantages
+
+  - You can't get a `ZipCode` without going through `refineV`.
+
+  - You can pass a `ZipCode` around anywhere you would use a `String`.
+
+  - Move from "Stringly Typed" code to "Strongly Typed" code!
 
 ---
 class: center, middle, inverse
@@ -262,13 +248,14 @@ class: center, middle, inverse
 ---
 class: center, middle
 
-A capability is a security primitive that gives authority by reference.
+  A capability is a security primitive that confers authority by reference.
 
-Authority is sufficient justification to affect a resource.
+  Authority is sufficient justification to affect a resource.
 
+???
+.footnote[.red[*] [Permission and Authority Revisited: towards a formalization](https://ai.google/research/pubs/pub45570)]
 ---
-
-### Defining Capabilities in Scala
+## Defining Capabilities in Scala
 
 - In Scala:
 
@@ -283,7 +270,7 @@ Authority is sufficient justification to affect a resource.
     - Capabilities are all about inaccessability through encapsulation.
 
 ---
-### Capability Example
+## Capability Example
 
 - We have a `Document` object, which has a `name` field anyone can change.
 
@@ -291,16 +278,19 @@ Authority is sufficient justification to affect a resource.
 
 ---
 
-### Before
+## Document Before
 
 ```scala
 final class Document(var name: String) {
   override def toString: String = s"Document($name)"
 }
+
+val document = new Document("Steve")
+document.name = "Will"
 ```
 
 ---
-### Document
+## Isolate Name as NameChanger
 
 ```scala
 final class Document(private var name: String) {
@@ -316,15 +306,15 @@ final class Document(private var name: String) {
 ```
 
 ---
-### Define NameChanger
+## Define NameChanger
 
 ```scala
 object Document {
-  sealed trait NameChanger {
+  trait NameChanger {
     def changeName(name: String): Unit
   }
 
-  class Access private {
+  class Access {
     def nameChanger(doc: Document): NameChanger = {
       doc.capabilities.nameChanger
     }
@@ -333,33 +323,42 @@ object Document {
 ```
 
 ---
-### Usage
+## Usage
 
 ```scala
-val document = new Document("will")
+val document = new Document("Steve")
 val access = new Document.Access()
 val nameChanger = access.nameChanger(document)
-nameChanger.changeName("steve")
+nameChanger.changeName("Will")
 println(s"result = $document")
 ```
 
 ---
-# Isolation of Objects
+## Isolation of Objects
 
-* `nameChanger` has authority to change the name of Document object (resource)
-* The only way to reach `nameChanger` is through `Access`
-* This is a "root level" capability!  Normally you wrap this in revocable.
+  - The `nameChanger` capability has authority to change the name of the `Document` object (resource).
 
----
-# More Realistic Example
+  - Access to the resource (`Document` object) does not mean you have a capability on that resource.
 
-* We've got a standard CRUD `ItemRepository` object as the resource.
-* By definition, everyone has access to create, read, update, and delete!
-* Principal of Least Authority says "be careful when dispensing power"
-* Through capabilities, we can have fine grained access control.
+  - The only way to get `nameChanger` is through `Document.Access`.
+
+  - This is a "root level" capability!  Normally you wrap this in `Revocable`.
 
 ---
-# ItemRepository Capabilities
+## More Advanced Example
+
+  - We've got a standard CRUD `ItemRepository` object as the resource.
+
+  - By definition, everyone has access to create, read, update, and delete!
+
+  - Principal of Least Authority (POLA) says "only give people the power they need"
+
+  - If an operation has no need of delete functionality, then don't hand it out.
+
+  - Also, let's make effects part of the API.
+
+---
+## ItemRepository Capabilities
 
 ```scala
 object ItemRepository {
@@ -381,17 +380,21 @@ object ItemRepository {
 ```
 
 ---
-# ItemRepository Capabilities
+## ItemRepository Capabilities
 
 ```scala
 class ItemRepository {
   import ItemRepository._
+
   private def find(id: UUID): Option[Item] = items.find(_.id == id)
+
   private def update(u: Item): UpdateResult = UpdateResult(s"item $u updated")
+
   private object capabilities {
     val finder: Finder[Id] = new Finder[Id]() {
       override def find(id: UUID) = ItemRepository.this.find(id)
     }
+
     val updater: Updater[Id] = new Updater[Id]() {
       override def update(item: Item) = ItemRepository.this.update(item)
     }
@@ -400,124 +403,198 @@ class ItemRepository {
 ```
 
 ---
-### Revocation
+## ItemRepository Usage
 
-* Access to a capability can be through a delegate with conditional access
-* `ocaps` implements macros and utility classes for revocation
-* `Revoker`: `revoker.revoke()` destroys access
-* `Revocable`: contains delegate and `Revoker`
+```scala
+val repo: ItemRepository = new ItemRepository {}
+val access = new ItemRepository.Access()
+val finder = access.finder(repo)
+
+// Pass only the finder capability, not the repository!
+val maybeItem: Option[Item] = finder.find(id)
+```
 
 ---
-# Revocable
+## ItemRepository Usage with Effects
+
+```scala
+class TryAccess(access: Access) {
+  def finder(repo: ItemRepository): Finder[Try] = (id: UUID) => {
+    Try(access.finder(repo).find(id))
+  }
+  def updater(repo: ItemRepository): Updater[Try] = (item: Item) => {
+    Try(access.updater(repo).update(item))
+  }
+}
+val tryAccess = new TryAccess(access)
+
+// Create a finder which uses `Try` as an effect
+val tryFinder = tryAccess.finder(repo)
+
+// Now we know it won't throw exceptions :-)
+val maybeItem: Try[Option[Item]] = tryFinder.find(id)
+```
+
+---
+## Revocation
+
+  *Revocation* takes back the ability to use a capability.
+
+  - `ocaps`.red[*] implements macros and utility classes for revocation.
+
+  - `ocaps.Revocable` - contains proxy that forwards to real capability and `Revoker`.
+
+  - `ocaps.Revoker` - Signals to proxy that capability is revoked when `revoke()` is called.
+
+.footnote[.red[*] [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)]
+
+---
+## Revocable Example
 
 ```scala
 import ocaps._
 import ocaps.macros._
 import ItemRepository._
 
+// Create proxy finder that will forward "find" method to `finder`
+// revocableFinder is also called a "caretaker"
 val Revocable(revocableFinder, revoker) = revocable[Finder](finder)
+
+// Call the revoker, which causes forwarding to stop...
 revoker.revoke()
+
+// Call find as usual...
 revocableFinder.find(ID) // throws RevokedException!
 ```
 
 ---
-### Too Much To Talk About!
+## Too Much To Talk About!
 
-* *Composition*: compose two capabilities together
-* *Attenuation*: tear out a capability from a composed one
-* *Modulation*: set up before/after hooks on capability
-* *Expiration*: use modulation/revocation for time/use based capabilities.
+  * *[Composition](https://wsargent.github.io/ocaps/guide/authorization.html#dispensing-capabilities-with-composition)*: compose two capabilities together.
 
-.footnote[Please see https://wsargent.github.io/ocaps/guide/index.html for all the above]
+  * *[Attenuation](https://wsargent.github.io/ocaps/examples/attenuation.html)*: extract a capability from a composed one.
+
+  * *[Modulation](https://wsargent.github.io/ocaps/guide/management.html#managing-behavior-with-modulation)*: set up before/after hooks on capability.
+
+  * *[Expiration](https://wsargent.github.io/ocaps/guide/management.html#managing-lifecycle-with-expiration)*: use modulation/revocation for time/use based capabilities.
+
+  * [A Guide To Capabilities](https://wsargent.github.io/ocaps/guide/index.html): https://wsargent.github.io/ocaps/guide/index.html
+
 ---
-class: center, middle
+class: center, middle, inverse
 
 # What is Dynamic Sealing?
 
 ---
-## Dynamic Sealing
+class: center, middle
 
-* Java gives you `private`, `protected` access modifiers
-* Scala gives you `private[Outer]` access modifiers
-* Dynamic Sealing allows you to have `private` between unrelated objects
-* Extremely useful in capability context!
+Wrapping an object in another class so that it cannot be seen or tampered with until it is unsealed.
 
-.footnote[Protection in programming languages Morris Jr., CACM 1973]
 ---
 ## Dynamic Sealing
 
-* Brand consists of `sealer` and `unsealer` functions.
-* Using a sealer produces a `Brand.Box` which is sealed
-* Item is only accessible through `unsealer` function
+  * Dynamic sealing is a very old idea.red[*] that has a number of interesting uses.
+
+  * *The Morning Paper* has a [great writeup](https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/) with a better explanation of sealing than the paper itself.
+
+  * Two functions: `sealer` and `unsealer`, which wrap and unwrap a `Box`.
+
+  * Like opaque data types or `default scope` but if you got to pick your friends / packages.
+
+.footnote[.red[*] [Protection in programming languages, Morris Jr., CACM 1973](http://www.erights.org/history/morris73.pdf)]
+---
+## Dynamic Sealing
+
+```tut
+import ocaps._
+
+val (sealer, unsealer) = Brand.create[String]("string hint").tuple
+
+val sealedBox = sealer("foo")
+
+val stringIsFoo = unsealer(sealedBox)
+```
 
 ---
-# Dynamic Sealing Example
+## Dynamic Sealing Uses
 
-```scala
-import ocaps.Brand
+  * Seal credentials to avoid accidental leakage through logging.
+
+  * Safely transport capabilities, `Access`, database connections in Akka messages!
+
+  * Signing / Trademarks - make the unsealer publicly available.
+
+  * Encryption - make the sealer publicly available.
+
+---
+# Dynamic Sealing Advanced Examaple
+
+```tut
 case class Food(name: String)
 case class Can(food: Brand.Box[Food])
-
 class CanOpener(unsealer: Brand.Unsealer[Food]) {
-  def open(can: Can): Food = {
-    unsealer(can.food).get // throws exception if we did not seal this
-  }
+  def open(can: Can): Food = unsealer(can.food).get
 }
-```
 
----
-# Dynamic Sealing Example
-
-```scala
 val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
-val canOfSpam: Can = Can(sealer(Food("spam")))
-
-val cannedFood: Brand.Box[Food] = canOfSpam.food
-println(s"food = ${canOfSpam.food.toString}") // DOES NOT WORK
 val canOpener = new CanOpener(unsealer)
 
-// We need both Can and CanOpener to unseal.
-def openCan(can: Can, canOpener: CanOpener) = {
-  val food: Food = canOpener.open(can)
-  println(s"food = $food") // WORKS
-}
+val canOfSpam: Can = Can(sealer(Food("spam")))
 
-openCan(canOfSpam, canOpener)
+canOpener.open(canOfSpam)
 ```
 
 ---
-# Why use dynamic sealing?
+class: center, middle, inverse
 
-* Isolation in potentially public scope, i.e. DI frameworks / Messages
-* Great for sealing capabilities, `Access`, DBConnection objects
-* Signing/Attestation (make the unsealer publically available)
-* Encryption (make the sealer pubically available)
+# What are Membranes?
 
 ---
 class: center, middle
 
-# Membranes
+An extension of a "forwarder" that transitively imposes a "policy" on all
+references exchanged via the membrane.
+
+???
+.footnote[[Trustworthy Proxies: Virtualizing Objects with Invariants](https://ai.google/research/pubs/pub40736) with alterations based on [Security Policies as Membranes
+in Systems for Global Computing](https://www.sciencedirect.com/science/article/pii/S1571066105051091/pdf?md5=7e42b14d1452cae3275d5d07fb260752&pid=1-s2.0-S1571066105051091-main.pdf&_valck=1)]
+---
+## Wait, what?
+
+* Okay, imagine you've got `Future[A]`, and you want a `Future[B]`.
+
+* `flatMap`, right?
+
+* A membrane provides `Future` and `flatMap` under the hood, so you think you're working with `A`, but you're really working with `Future[A]`.
+
+* Origins in E, Javascript, literally a footnote in PhD thesis.
 
 ---
-# What are Membranes?
+## Membrane Background
 
-* Transitively enforce a policy on all commmunication
-* All arguments and methods are "wrapped" with membrane and cannot escape
-* Commonly used in sandboxes for "uncooperative revocation"
-* Tough to do in JVM, using ByteBuddy interceptors is best avenue
-* HOWEVER...
+* All arguments and methods are "wrapped" with membrane and cannot escape.
 
-.footnote[Edward Z. Yang, [What Is A Membrane?](http://blog.ezyang.com/2013/03/what-is-a-membran/)]
+* Commonly used in sandboxes for "uncooperative revocation".
 
----
-# Permeable Membrane
+* Tough to do directly in JVM, using ByteBuddy interceptors may be possible.
 
-* ...if you are willing to assume "cooperative revocation", then `PermeableMembrane` is for you.
-* `ocaps` provides `PermeableMembrane` and `RevokerMembrane` out of the box
-* You use a dependently typed effect on the membrane, and can functionally compose <it class=""></it>
+* Type safety doesn't mix well with message passing.
+
+* Probably possible to do using Akka actors, if you got rid of actor selection.
 
 ---
-# Membrane Definition
+## Permeable Membrane
+
+* **However.** If you squint, a membrane wrapper is totally a dependently typed monad.
+
+* if you are willing to deal with the effect up front, assume "cooperative revocation"...
+
+* ...then `PermeableMembrane` is for you.
+
+* `ocaps` provides `PermeableMembrane` and `RevokerMembrane` out of the box.
+
+---
+## Singleton Object Definition
 
 ```scala
 object Location {
@@ -528,73 +605,172 @@ object Location {
   trait TimeZoneReader[F[_]] {
     def timeZone: F[TimeZone]
   }
+}
+```
 
-  class MembraneAccess(membrane: PermeableMembrane) {
-    type Wrapper[+A] = membrane.Wrapper[A]
+---
+## Class Definition
 
-    def localeReader(location: Location): LocaleReader[Wrapper] = {
-      new LocaleReader[Wrapper] {
-        override def locale: Wrapper[Locale] = {
-          membrane.wrap(location.capabilities.localeReader.locale)
-        }
+```scala
+class Location(locale: Locale, timeZone: TimeZone) {
+  import Location._
+  private object capabilities {
+    val localeReader: LocaleReader[Id] =
+      new LocaleReader[Id] {
+        override val locale: Locale = Location.this.locale
       }
-    }
 
-    def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
-      new TimeZoneReader[Wrapper] {
-        override def timeZone: Wrapper[TimeZone] = {
-          membrane.wrap(location.capabilities.timeZoneReader.timeZone)
-        }
+    val timeZoneReader: TimeZoneReader[Id] =
+      new TimeZoneReader[Id] {
+        override val timeZone: TimeZone = Location.this.timeZone
       }
-    }
   }
 }
 ```
 
-???
-import java.util._
+---
+## PermeableMembrane continued
 
-class Location(locale: Locale, timeZone: TimeZone) {
-  private object capabilities {
-    def localeReader: Location.LocaleReader[Id] = new Location.LocaleReader[Id] {
-      override def locale: Locale = Location.this.locale
+```scala
+class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
+  type Wrapper[+A] = membrane.Wrapper[A]
+
+  def localeReader(location: Location): LocaleReader[Wrapper] = {
+    new LocaleReader[Wrapper] {
+      override def locale: Wrapper[Locale] = {
+        membrane.wrap(access.localeReader(location).locale)
+      }
     }
+  }
 
-    def timeZoneReader: Location.TimeZoneReader[Id] = new Location.TimeZoneReader[Id] {
-      override def timeZone: TimeZone = Location.this.timeZone
+  def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
+    new TimeZoneReader[Wrapper] {
+      override def timeZone: Wrapper[TimeZone] = {
+        membrane.wrap(access.timeZoneReader(location).timeZone)
+      }
     }
   }
 }
 
+```
+
 ---
 # PermeableMembrane Usage
 
-```scala
+```tut:invisible
+import java.util._
+import java.time._
+import java.time.format._
+
+object TutIsDerpy {
+  type Id[A] = A
+
+class Location(locale: Locale, timeZone: TimeZone) {
+  import Location._
+  private object capabilities {
+    val localeReader: LocaleReader[Id] =
+      new LocaleReader[Id] {
+        override val locale: Locale = Location.this.locale
+      }
+
+    val timeZoneReader: TimeZoneReader[Id] =
+      new TimeZoneReader[Id] {
+        override val timeZone: TimeZone = Location.this.timeZone
+      }
+  }
+}
+
+object Location {
+  trait LocaleReader[F[_]] {
+    def locale: F[Locale]
+  }
+
+  trait TimeZoneReader[F[_]] {
+    def timeZone: F[TimeZone]
+  }
+
+  class Access {
+    def localeReader(location: Location): LocaleReader[Id] = {
+      location.capabilities.localeReader
+    }
+
+    def timeZoneReader(location: Location): TimeZoneReader[Id] = {
+      location.capabilities.timeZoneReader
+    }
+  }
+}
+
+
+class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
+  import Location._
+  type Wrapper[+A] = membrane.Wrapper[A]
+
+  def localeReader(location: Location): LocaleReader[Wrapper] = {
+    new LocaleReader[Wrapper] {
+      override def locale: Wrapper[Locale] = {
+        membrane.wrap(access.localeReader(location).locale)
+      }
+    }
+  }
+
+  def timeZoneReader(location: Location): TimeZoneReader[Wrapper] = {
+    new TimeZoneReader[Wrapper] {
+      override def timeZone: Wrapper[TimeZone] = {
+        membrane.wrap(access.timeZoneReader(location).timeZone)
+      }
+    }
+  }
+}
+
+}
+
+import TutIsDerpy._
+import Location._
+```
+
+```tut:book
 val m = RevokerMembrane()
 val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
-val access = new Location.MembraneAccess(m)
+val access = new MembraneAccess(new Location.Access(), m)
 
-val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
-val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
-
-val format: access.Wrapper[String] = for {
-  timeZone <- dryTimeZone.timeZone
-  locale <- dryLocale.locale
+val format = for {
+  timeZone <- access.timeZoneReader(location).timeZone
+  locale <-  access.localeReader(location).locale
 } yield {
   ZonedDateTime.now(timeZone.toZoneId)
     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
       .withLocale(locale))
 }
 
-// Uncomment
-// m.revoke()
-
-// Break out the membrane
 format.get
 ```
 
 ---
-## Questions!
+## Failure is always an option
+
+```tut:book
+val m2 = RevokerMembrane()
+val access2 = new MembraneAccess(new Location.Access(), m2)
+
+val format2 = for {
+  timeZone <- access2.timeZoneReader(location).timeZone
+  locale <-  access2.localeReader(location).locale
+} yield {
+  ZonedDateTime.now(timeZone.toZoneId)
+    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+      .withLocale(locale))
+}
+
+m2.revoke()
+```
+
+```tut:book:fail
+format2.get
+```
+
+---
+class: center, middle
+# Questions!
 
 ---
 class: center, middle

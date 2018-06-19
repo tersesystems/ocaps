@@ -72,7 +72,7 @@ object Effects {
     val document = new Document("will")
     val access = new Document.Access()
 
-    val nameChanger: Document.NameChanger[Try] = access.nameChanger(document)
+    val nameChanger = access.nameChanger[Try](document)
     // or...
     // val nameChanger: NameChanger[Id] = access.nameChanger(document)
 

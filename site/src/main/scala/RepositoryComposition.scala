@@ -131,6 +131,11 @@ object RepositoryComposition {
       def finder(repo: ItemRepository): Finder[Id] = repo.capabilities.finder
       def updater(repo: ItemRepository): Updater[Id] = repo.capabilities.updater
     }
+
+    class TryAccess(access: Access) {
+      def finder(repo: ItemRepository): Finder[Try] = (id: UUID) => Try(access.finder(repo).find(id))
+      def updater(repo: ItemRepository): Updater[Try] = (item: Item) => Try(access.updater(repo).update(item))
+    }
   }
   // #repository
 

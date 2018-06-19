@@ -90,7 +90,7 @@ object AfterAmplification {
       def changeName(name: String): Unit
     }
 
-    class Access private {
+    class Access {
       def nameChanger(doc: Document): NameChanger = {
         doc.capabilities.nameChanger
       }
@@ -105,8 +105,6 @@ object AfterAmplification {
     val nameChanger = access.nameChanger(document)
     nameChanger.changeName("steve")
     println(s"AfterAmplification: result = $document")
-
-    val Revocable(nameChanger, revoker) = ocaps
   }
   // #usage
 }
