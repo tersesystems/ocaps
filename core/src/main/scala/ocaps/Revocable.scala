@@ -17,11 +17,11 @@
 package ocaps
 
 /**
+  * Contains a value and revoker.
   *
-  * @tparam A
+  * @tparam A the type of value
   */
 sealed abstract class Revocable[+A] {
-  self =>
 
   @inline final def getOrElse[B >: A](default: => B): B = {
     if (revoked) default else this.get

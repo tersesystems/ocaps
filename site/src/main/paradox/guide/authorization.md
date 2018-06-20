@@ -25,7 +25,7 @@ Capability-based authorization systems identify a policy that says who is author
 
 This may not mean much in isolation, so let's run through an example with Scala code, implementing a Gatekeeper class for documents.
 
-> You can see the full class in [Gatekeeper example](../examples/gatekeeper.md) page.
+> You can see the full class in @ref:[Gatekeeper example](../examples/gatekeeper.md) page.
 
 First, we need authentication.  Let's posit a `User` class that serves as the [principal](https://stackoverflow.com/a/5025140), and an implicit `SecurityContext` that serves as an [implicit context](http://www.lihaoyi.com/post/ImplicitDesignPatternsinScala.html#implicit-contexts). 
 
@@ -137,6 +137,15 @@ class Caller(capabilities: AnyRef) {
   }
 }
 ```
+
+Or the caller can decompose through *attenuation*:
+
+```scala
+val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
+val writer: Writer = ocaps.macros.attenuate[Writer](capabilities)
+```
+
+You can see a complete @ref:[attenuation example](../examples/attenuation.md) for more details.
 
 Composition is not the only way of arranging capabilities, of course.  Joe Duffy has a great [post](http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/) where he discusses the practical aspects of capabilities:
 

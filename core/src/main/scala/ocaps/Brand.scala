@@ -18,6 +18,12 @@ package ocaps
 
 import java.util.concurrent.locks.StampedLock
 
+/**
+  * Brand contains a sealer and unsealer.
+  *
+  * @param hint hint shown in boxes.
+  * @tparam T the type to be sealed
+  */
 final class Brand[T] private (val hint: String) {
   import Brand._
 
