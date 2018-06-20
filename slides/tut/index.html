@@ -126,16 +126,16 @@ class: center, middle
 ### Refined Types and Object Capabilities
 Will Sargent • `@will_sargent`
 
+https://tersesystems.com/
+
 ???
-- notes here
-- see https://remarkjs.com/#1
 
 ---
 class: center, middle
 
-## Lots to cover!
-## This will be high level!
 ## There will room for questions at the end!
+
+.footnote[(51 slides, 50 minutes, 5m questions, so 45s per slide?)]
 
 ---
 class: center, middle, inverse
@@ -147,7 +147,7 @@ class: center, middle
 
    Reject harmful input.
 
-   Isolate resources.
+   Hide internal state and data.
 
    Deny functionality to attackers.
 
@@ -158,7 +158,7 @@ class: center, middle
 
   - Abstraction - deciding what should be visible.
 
-  - Encapsulation - deciding what should be isolated.
+  - Encapsulation - deciding what should be hidden.
 
   - Access Control - deciding what is denied.
 
@@ -171,13 +171,13 @@ Access Control is obvious.
 ---
 ## Security Tools
 
-  - Refinement Types - validates raw input.
+  - Refinement Types - validation.
 
-  - Capabilities - tight abstraction & encapsulation & revocable access.
+  - Capabilities - abstraction & encapsulation & revocable access.
 
-  - Dynamic Sealing - flexible information hiding.
+  - Dynamic Sealing - encapsulation & information hiding.
 
-  - Membranes - operational isolation.
+  - Membranes - operational isolation & access control.
 
 ---
 class: center, middle, inverse
@@ -274,7 +274,7 @@ class: center, middle
 
 - We have a `Document` object, which has a `name` field anyone can change.
 
-- We want expose the ability to change the name as a capability.
+- We want to expose the ability to change the name as a capability.
 
 ---
 
@@ -325,7 +325,34 @@ object Document {
 ---
 ## Usage
 
-```scala
+```tut:invisible
+object CapExample {
+  final class Document(private var name: String) {
+    private object capabilities {
+      val nameChanger = new Document.NameChanger {
+        override def changeName(newName: String): Unit = {
+          name = newName
+        }
+      }
+    }
+    override def toString: String = s"Document($name)"
+  }
+  object Document {
+    trait NameChanger {
+      def changeName(name: String): Unit
+    }
+
+    class Access {
+      def nameChanger(doc: Document): NameChanger = {
+        doc.capabilities.nameChanger
+      }
+    }
+  }
+}
+import CapExample._
+```
+
+```tut:book
 val document = new Document("Steve")
 val access = new Document.Access()
 val nameChanger = access.nameChanger(document)
@@ -336,13 +363,16 @@ println(s"result = $document")
 ---
 ## Isolation of Objects
 
-  - The `nameChanger` capability has authority to change the name of the `Document` object (resource).
+  - The `nameChanger` capability can affect the resource (`Document` object) by changing its name.
 
   - Access to the resource (`Document` object) does not mean you have a capability on that resource.
 
-  - The only way to get `nameChanger` is through `Document.Access`.
+  - The only way to get access to a `NameChanger` instance is through `Document.Access`, which is usually sealed.
 
-  - This is a "root level" capability!  Normally you wrap this in `Revocable`.
+  - Note that `nameChanger` is a "root level" capability!  For delegation, you would use `Revocable`.
+
+???
+We'll get to what "sealed" and "revocable" means in a bit.
 
 ---
 ## More Advanced Example
@@ -351,11 +381,11 @@ println(s"result = $document")
 
   - By definition, everyone has access to create, read, update, and delete!
 
-  - Principal of Least Authority (POLA) says "only give people the power they need"
+  - [Principle of Least Authority]() (POLA) says "only give people the power they need"
 
   - If an operation has no need of delete functionality, then don't hand it out.
 
-  - Also, let's make effects part of the API.
+  - Also, let's make functional effects part of the API, because we are `Try`-hard progammer.
 
 ---
 ## ItemRepository Capabilities
@@ -402,27 +432,79 @@ class ItemRepository {
 }
 ```
 
+```tut:invisible
+import java.util._
+
+object RevokeExample {
+
+  case class Item(id: UUID, name: String)
+
+  val ID = UUID.fromString("c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7")
+
+  type Id[A] = A
+
+  private var items = Seq(Item(ID, "item name"))
+
+class ItemRepository {
+  import ItemRepository._
+
+  private def find(id: UUID): Option[Item] = items.find(_.id == id)
+
+  private def update(u: Item): UpdateResult = UpdateResult(s"item $u updated")
+
+  private object capabilities {
+    val finder: Finder[Id] = new Finder[Id]() {
+      override def find(id: UUID) = ItemRepository.this.find(id)
+    }
+
+    val updater: Updater[Id] = new Updater[Id]() {
+      override def update(item: Item) = ItemRepository.this.update(item)
+    }
+  }
+}
+
+  object ItemRepository {
+
+  trait Finder[F[_]] {
+    def find(id: UUID): F[Option[Item]]
+  }
+
+  trait Updater[F[_]] {
+    def update(item: Item): F[UpdateResult]
+  }
+
+  case class UpdateResult(message: String)
+
+  class Access {
+    def finder(repo: ItemRepository): Finder[Id] = repo.capabilities.finder
+    def updater(repo: ItemRepository): Updater[Id] = repo.capabilities.updater
+  }
+}
+}
+import RevokeExample._
+```
+
 ---
 ## ItemRepository Usage
 
-```scala
+```tut
 val repo: ItemRepository = new ItemRepository {}
 val access = new ItemRepository.Access()
 val finder = access.finder(repo)
 
-// Pass only the finder capability, not the repository!
-val maybeItem: Option[Item] = finder.find(id)
+val maybeItem: Option[Item] = finder.find(ID)
 ```
 
 ---
 ## ItemRepository Usage with Effects
 
-```scala
-class TryAccess(access: Access) {
-  def finder(repo: ItemRepository): Finder[Try] = (id: UUID) => {
+```tut
+import scala.util._
+class TryAccess(access: ItemRepository.Access) {
+  def finder(repo: ItemRepository): ItemRepository.Finder[Try] = (id: UUID) => {
     Try(access.finder(repo).find(id))
   }
-  def updater(repo: ItemRepository): Updater[Try] = (item: Item) => {
+  def updater(repo: ItemRepository): ItemRepository.Updater[Try] = (item: Item) => {
     Try(access.updater(repo).update(item))
   }
 }
@@ -432,7 +514,7 @@ val tryAccess = new TryAccess(access)
 val tryFinder = tryAccess.finder(repo)
 
 // Now we know it won't throw exceptions :-)
-val maybeItem: Try[Option[Item]] = tryFinder.find(id)
+val tryMaybeItem: Try[Option[Item]] = tryFinder.find(ID)
 ```
 
 ---
@@ -451,18 +533,19 @@ val maybeItem: Try[Option[Item]] = tryFinder.find(id)
 ---
 ## Revocable Example
 
-```scala
+```tut
 import ocaps._
 import ocaps.macros._
-import ItemRepository._
 
 // Create proxy finder that will forward "find" method to `finder`
 // revocableFinder is also called a "caretaker"
-val Revocable(revocableFinder, revoker) = revocable[Finder](finder)
+val Revocable(revocableFinder, revoker) = revocable[ItemRepository.Finder[Id]](finder)
 
 // Call the revoker, which causes forwarding to stop...
 revoker.revoke()
+```
 
+```tut:fail
 // Call find as usual...
 revocableFinder.find(ID) // throws RevokedException!
 ```
@@ -499,7 +582,7 @@ Wrapping an object in another class so that it cannot be seen or tampered with u
 
   * Two functions: `sealer` and `unsealer`, which wrap and unwrap a `Box`.
 
-  * Like opaque data types or `default scope` but if you got to pick your friends / packages.
+  * Like `default` scope, but if you got to pick your siblings.
 
 .footnote[.red[*] [Protection in programming languages, Morris Jr., CACM 1973](http://www.erights.org/history/morris73.pdf)]
 ---
