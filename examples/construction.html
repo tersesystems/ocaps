@@ -204,11 +204,11 @@ ocaps
   }
 
   object Document {
-    sealed trait NameChanger {
+    trait NameChanger {
       def changeName(name: String): Unit
     }
 
-    class Access private {
+    class Access {
       def nameChanger(doc: Document): NameChanger = {
         doc.capabilities.nameChanger
       }
@@ -221,8 +221,6 @@ ocaps
     val nameChanger = access.nameChanger(document)
     nameChanger.changeName(&quot;steve&quot;)
     println(s&quot;AfterAmplification: result = $document&quot;)
-
-    val Revocable(nameChanger, revoker) = ocaps
   }
 }</code></pre>
 <p>You&rsquo;ll note that access modifiers are used heavily here, and there&rsquo;s an <code>Access</code> class which is involved in exposing the capability. When two (or more) objects are required to expose some extra functionality, it&rsquo;s called <a href="amplification.html">amplification</a>.</p>

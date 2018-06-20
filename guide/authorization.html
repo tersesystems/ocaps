@@ -186,7 +186,7 @@ ocaps
 <p>Capability-based authorization systems identify a policy that says who is authorized for an operation on a resource, and then hand out a capability for that operation. That capability is then used directly. This is in contrast to role based access control (RBAC), which ties in the identity directly. Examples include <a href="https://en.wikipedia.org/wiki/OAuth#OAuth_2.0">OAuth 2 Bearer Token</a> and <a href="https://en.wikipedia.org/wiki/XACML">XACML</a>, but it&rsquo;s quite simple to create your own.</p>
 <p>This may not mean much in isolation, so let&rsquo;s run through an example with Scala code, implementing a Gatekeeper class for documents.</p>
 <blockquote>
-  <p>You can see the full class in <a href="../examples/gatekeeper.md">Gatekeeper example</a> page.</p>
+  <p>You can see the full class in <a href="../examples/gatekeeper.html">Gatekeeper example</a> page.</p>
 </blockquote>
 <p>First, we need authentication. Let&rsquo;s posit a <code>User</code> class that serves as the <a href="https://stackoverflow.com/a/5025140">principal</a>, and an implicit <code>SecurityContext</code> that serves as an <a href="http://www.lihaoyi.com/post/ImplicitDesignPatternsinScala.html#implicit-contexts">implicit context</a>. </p>
 <pre class="prettyprint"><code class="language-scala">case class User(name: String)
@@ -274,6 +274,11 @@ val caller = new Caller(capabilities)
   }
 }
 </code></pre>
+<p>Or the caller can decompose through <em>attenuation</em>:</p>
+<pre class="prettyprint"><code class="language-scala">val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
+val writer: Writer = ocaps.macros.attenuate[Writer](capabilities)
+</code></pre>
+<p>You can see a complete <a href="../examples/attenuation.html">attenuation example</a> for more details.</p>
 <p>Composition is not the only way of arranging capabilities, of course. Joe Duffy has a great <a href="http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/">post</a> where he discusses the practical aspects of capabilities:</p>
 <blockquote>
   <p>I’ll be the first to admit, there was a maturity process that developers went through, as they learned about the design patterns in an object capability system. It was common for “big bags” of capabilities to grow over time, and/or for capabilities to be requested at an inopportune time. For example, imagine a Stopwatch API. It probably needs the Clock. Do you pass the Clock to every operation that needs to access the current time, like Start and Stop? Or do you construct the Stopwatch with a Clock instance up-front, thereby encapsulating the Stopwatch’s use of the time, making it easier to pass to others (recognizing, importantly, that this essentially grants the capability to read the time to the recipient). Another example, if your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier.</p>

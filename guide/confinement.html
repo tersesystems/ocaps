@@ -220,7 +220,7 @@ class Module extends ScalaModule {
 }
 </code></pre>
 <p>This can also be used to pass around &ldquo;root level&rdquo; objects such as database connections and JSSE key managers that you may want to restrict access to generally. Anyone using the database connection will have to unseal it, and you can provide the unsealer capability to use revocation or logging to flush it out.</p>
-<p>Please see the <a href="../examples/dynamic_seal.md">Dynamic Sealing example</a> for a demonstration.</p>
+<p>Please see the <a href="../examples/dynamic_seal.html">Dynamic Sealing example</a> for a demonstration.</p>
 <p>Dynamic sealing has an independent lineage from capabilities programming. The original paper, <a href="http://www.erights.org/history/morris73.pdf">Protection in Programming Languages</a> was written in 1973, However, the morning paper <a href="https://blog.acolyer.org/2016/10/19/protection-in-programming-languages/">summary on the paper</a> is actually clearer and better written than the paper itself.</p>
 <p><a href="https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf">Robust and Compositional Verification of Object  Capability Patterns</a> has a section on dynamic sealing.</p>
 <p>The discussion on the use of dynamic sealing in communication channels is from <a href="https://www.cl.cam.ac.uk/~pes20/versions-popl.pdf">Modules, Abstract Types, and Distributed Versioning</a>.</p>
