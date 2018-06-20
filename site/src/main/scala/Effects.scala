@@ -43,15 +43,15 @@ object Effects {
       def changeName(name: String): F[Unit]
     }
 
-    trait Effect[F[_]] {
-      def wrap(nameChanger: NameChanger[Id]): NameChanger[F]
+    trait Effect[F[_], C[_[_]]] {
+      def wrap(capability: C[Id]): C[F]
     }
 
     // The default "no effect" type Id[A] = A
-    implicit val idEffect: Effect[Id] = nameChanger => identity(nameChanger)
+    implicit val idEffect: Effect[Id, NameChanger] = nameChanger => identity(nameChanger)
 
     // Apply a "Try" effect to the capability
-    implicit val tryEffect: Effect[Try] = nameChanger => {
+    implicit val tryEffect: Effect[Try, NameChanger] = nameChanger => {
       new NameChanger[Try] {
         override def changeName(name: String): Try[Unit] =
           Try(nameChanger.changeName(name))
@@ -59,8 +59,8 @@ object Effects {
     }
 
     class Access {
-      def nameChanger[F[_]: Effect](doc: Document): NameChanger[F] = {
-        val effect = implicitly[Effect[F]]
+      def nameChanger[F[_]](doc: Document)(implicit ev: Effect[F, NameChanger]): NameChanger[F] = {
+        val effect = implicitly[Effect[F, NameChanger]]
         effect.wrap(doc.capabilities.nameChanger)
       }
     }
@@ -74,7 +74,7 @@ object Effects {
 
     val nameChanger = access.nameChanger[Try](document)
     // or...
-    // val nameChanger: NameChanger[Id] = access.nameChanger(document)
+    val idNameChanger = access.nameChanger[Id](document)
 
     nameChanger.changeName("steve") match {
       case Success(_) =>
