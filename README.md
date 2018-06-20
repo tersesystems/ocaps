@@ -1,6 +1,6 @@
 # ocaps
 
-[<img src="https://img.shields.io/travis/wsargent/ocaps.svg"/>](https://travis-ci.org/wsargent/ocaps) [![Bintray](https://img.shields.io/bintray/v/ocaps/maven/ocaps-core_2.12.svg)](https://bintray.com/wsargent/maven/ocaps-core)
+[<img src="https://img.shields.io/travis/wsargent/ocaps.svg"/>](https://travis-ci.org/wsargent/ocaps) [![Bintray](https://api.bintray.com/packages/wsargent/maven/ocaps-core/images/download.svg)](https://bintray.com/wsargent/maven/ocaps-core/_latestVersion)
 
 *ocaps* is a library for assembling capabilities in Scala.
 
