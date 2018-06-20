@@ -86,7 +86,7 @@ object AfterAmplification {
 
   // #access
   object Document {
-    sealed trait NameChanger {
+    trait NameChanger {
       def changeName(name: String): Unit
     }
 

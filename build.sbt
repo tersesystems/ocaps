@@ -28,6 +28,9 @@ lazy val scalaMacroDependencies: Seq[Setting[_]] = Seq(
   }
 )
 
+val catsVersion = "1.1.0"
+val catsEffectVersion = "1.0.0-RC2"
+
 // Actual code for ocaps
 lazy val core = (project in file("core"))
   .settings(scalaMacroDependencies)
@@ -35,8 +38,8 @@ lazy val core = (project in file("core"))
     name := "ocaps-core",
     // https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
     //libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.12.6",
-    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"  % Test,
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9" % Test,
+    libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion  % Test,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % catsEffectVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
   )
 
@@ -61,8 +64,8 @@ lazy val site = (project in file("site"))
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
-    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9"
+    libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % catsEffectVersion
   ).dependsOn(core)
 
 // Slides for Scaladays
@@ -77,8 +80,8 @@ lazy val slides = (project in file("slides"))
     watchSources ++= (tutSourceDirectory.value ** "*.html").get,
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
-    libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "0.9",
+    libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % catsEffectVersion,
     libraryDependencies += "eu.timepit" %% "refined"            % "0.9.0",
     libraryDependencies += "eu.timepit" %% "refined-cats"       % "0.9.0", // optional
   ).dependsOn(core)
