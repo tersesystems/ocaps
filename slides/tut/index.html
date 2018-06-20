@@ -133,9 +133,7 @@ https://tersesystems.com/
 ---
 class: center, middle
 
-## There will room for questions at the end!
-
-.footnote[(51 slides, 50 minutes, 5m questions, so 45s per slide?)]
+# Many New Things!
 
 ---
 class: center, middle, inverse
@@ -145,9 +143,9 @@ class: center, middle, inverse
 ---
 class: center, middle
 
-   Reject harmful input.
+   Validate untrusted input.
 
-   Hide internal state and data.
+   Hide internal state and behavior.
 
    Deny functionality to attackers.
 
@@ -196,6 +194,11 @@ Refinement Types are raw types that obey predicates.
   - Raw types are unconstrained, and could contain invalid or harmful input.
 
   - In particular, String can contain **anything**.
+
+---
+## String Fail
+
+.center[![string.png](string.png)]
 
 ---
 ## Refined Library
@@ -265,9 +268,13 @@ class: center, middle
 
 - Distinct from OOP!
 
-    - OOP is all about accessibility through abstraction.
+    * OOP is all about accessibility through abstraction.
 
-    - Capabilities are all about inaccessability through encapsulation.
+        * "Here is a `Cake` with an `eat` method!"
+
+    * Capabilities are all about inaccessability through encapsulation.
+
+        * "If you don't have access to the `Cake`, you can't `eat` the cake."
 
 ---
 ## Capability Example
@@ -551,17 +558,40 @@ revocableFinder.find(ID) // throws RevokedException!
 ```
 
 ---
-## Too Much To Talk About!
+## ocaps macros for working with capabilities
+
+  * Deals with the boilerplate of creating proxies with well-known semantics.
+
+  * `import ocaps.macros._`
 
   * *[Composition](https://wsargent.github.io/ocaps/guide/authorization.html#dispensing-capabilities-with-composition)*: compose two capabilities together.
 
+      * `val fooWithBar: Foo with Bar = compose[Foo with Bar](foo, bar)`
+
   * *[Attenuation](https://wsargent.github.io/ocaps/examples/attenuation.html)*: extract a capability from a composed one.
+
+      * `val foo: Foo = attenuate[Foo](fooWithBar)`
 
   * *[Modulation](https://wsargent.github.io/ocaps/guide/management.html#managing-behavior-with-modulation)*: set up before/after hooks on capability.
 
-  * *[Expiration](https://wsargent.github.io/ocaps/guide/management.html#managing-lifecycle-with-expiration)*: use modulation/revocation for time/use based capabilities.
+      * `val modulated: Foo = modulate[Foo](revocableDoer, beforeFunc, afterFunc)`
 
-  * [A Guide To Capabilities](https://wsargent.github.io/ocaps/guide/index.html): https://wsargent.github.io/ocaps/guide/index.html
+  *[Expiration](https://wsargent.github.io/ocaps/guide/management.html#managing-lifecycle-with-expiration)*: use modulation/revocation for time/use based capabilities.
+
+---
+## Expiration Examaple
+
+```scala
+val deadline = duration.fromNow
+val Revocable(revocableDoer, revoker) = revocable[Doer](doer)
+val before: String => Unit = { _ =>
+  if (deadline.isOverdue()) {
+    revoker.revoke()
+  }
+}
+val after: (String, Any) => Unit = { (_, _) =>() }
+val expiringDoer: Doer = modulate[Doer](revocableDoer, before, after)
+```
 
 ---
 class: center, middle, inverse
@@ -745,7 +775,7 @@ import java.util._
 import java.time._
 import java.time.format._
 
-object TutIsDerpy {
+object MembraneExample {
   type Id[A] = A
 
 class Location(locale: Locale, timeZone: TimeZone) {
@@ -807,7 +837,7 @@ class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
 
 }
 
-import TutIsDerpy._
+import MembraneExample._
 import Location._
 ```
 
@@ -859,7 +889,10 @@ class: center, middle
 class: center, middle
 
 # Thanks!
-Code and guide at [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)
+
+Documentation at [https://wsargent.github.io/ocaps/](https://wsargent.github.io/ocaps/)
+
+Guide at [https://wsargent.github.io/ocaps/guide/index.html](https://wsargent.github.io/ocaps/guide/index.html)
 
 
  </textarea>
