@@ -2,7 +2,7 @@
 
 [<img src="https://img.shields.io/travis/wsargent/ocaps.svg"/>](https://travis-ci.org/wsargent/ocaps) [![Bintray](https://api.bintray.com/packages/wsargent/maven/ocaps-core/images/download.svg)](https://bintray.com/wsargent/maven/ocaps-core/_latestVersion)
 
-*ocaps* is a library for assembling capabilities in Scala.
+*ocaps* is a library for working with [object capabilities](https://en.wikipedia.org/wiki/Object-capability_model) in Scala.
 
 - *Revoker* / *Revocable* classes for revoking capabilities.
 - *Brand* for sealing and unsealing capabilities
