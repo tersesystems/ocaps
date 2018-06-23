@@ -131,7 +131,7 @@ ocaps
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0
+<i class="md-icon">label_outline</i> 0.1.1*
 </div>
 </nav>
 
@@ -161,15 +161,15 @@ ocaps
       def changeName(name: String): F[Unit]
     }
 
-    trait Effect[F[_]] {
-      def wrap(nameChanger: NameChanger[Id]): NameChanger[F]
+    trait Effect[F[_], C[_[_]]] {
+      def wrap(capability: C[Id]): C[F]
     }
 
     // The default &quot;no effect&quot; type Id[A] = A
-    implicit val idEffect: Effect[Id] = nameChanger =&gt; identity(nameChanger)
+    implicit val idEffect: Effect[Id, NameChanger] = nameChanger =&gt; identity(nameChanger)
 
     // Apply a &quot;Try&quot; effect to the capability
-    implicit val tryEffect: Effect[Try] = nameChanger =&gt; {
+    implicit val tryEffect: Effect[Try, NameChanger] = nameChanger =&gt; {
       new NameChanger[Try] {
         override def changeName(name: String): Try[Unit] =
           Try(nameChanger.changeName(name))
@@ -177,8 +177,8 @@ ocaps
     }
 
     class Access {
-      def nameChanger[F[_]: Effect](doc: Document): NameChanger[F] = {
-        val effect = implicitly[Effect[F]]
+      def nameChanger[F[_]](doc: Document)(implicit ev: Effect[F, NameChanger]): NameChanger[F] = {
+        val effect = implicitly[Effect[F, NameChanger]]
         effect.wrap(doc.capabilities.nameChanger)
       }
     }
@@ -190,7 +190,7 @@ ocaps
 
     val nameChanger = access.nameChanger[Try](document)
     // or...
-    // val nameChanger: NameChanger[Id] = access.nameChanger(document)
+    val idNameChanger = access.nameChanger[Id](document)
 
     nameChanger.changeName(&quot;steve&quot;) match {
       case Success(_) =&gt;
@@ -208,7 +208,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0
+0.1.1*
 </span>
 </div>
 </article>
