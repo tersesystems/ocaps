@@ -18,7 +18,7 @@
 
 <meta name="description" content="site">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Attenuation · ocaps</title>
+<title>Designing with Capabilities</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
+<a href="../guide/designing.html" title="Designing with Capabilities" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -50,12 +50,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 </div>
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-<span class="md-header-nav__topic">
-ocaps
-</span>
-<span class="md-header-nav__topic">
-Attenuation
-</span>
+Designing with Capabilities
 </div>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
@@ -97,35 +92,11 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="ocaps">
-ocaps
+<a href="../guide/designing.html" title="Designing with Capabilities">
+Designing with Capabilities
 </a>
 </label>
 <ul>
-  <li><a href="../running.html" class="page">Running</a></li>
-  <li><a href="../examples/index.html" class="page">Examples</a>
-  <ul>
-    <li><a href="../examples/construction.html" class="page">Construction</a></li>
-    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
-    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
-    <li><a href="../examples/composition.html" class="page">Composition</a></li>
-    <li><a href="../examples/attenuation.html" class="active page">Attenuation</a></li>
-    <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
-    <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
-    <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
-    <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
-    <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
-    <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
-    <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
-  </ul></li>
-  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
-  <ul>
-    <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
-    <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
-    <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
-    <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
-  </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 </nav>
@@ -141,81 +112,19 @@ ocaps
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#attenuation" name="attenuation" class="anchor"><span class="anchor-link"></span></a>Attenuation</h1>
-<p>Attenuation is when a capability is exposed from a composed.</p>
-<pre class="prettyprint"><code class="language-scala">import ocaps.macros._
-
-object Attenuation {
-
-  final class Foo(private var name: String) {
-    private object capabilities {
-      val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit = {
-          println(s&quot;$name.doTheThing()&quot;)
-        }
-      }
-      val changer: Foo.Changer = new Foo.Changer {
-        override def changeName(name: String): Foo.this.type = {
-          Foo.this.name = name
-          Foo.this
-        }
-      }
-    }
-  }
-
-  object Foo {
-
-    sealed trait Doer {
-      def doTheThing(): Unit
-    }
-
-    sealed trait Changer {
-      def changeName(name: String): Foo
-    }
-
-    trait Derper {
-      def derp(): Unit
-    }
-
-    class Access {
-      def doer(foo: Foo): Doer = foo.capabilities.doer
-      def changer(foo: Foo): Changer = foo.capabilities.changer
-    }
-  }
-
-  def main(args: Array[String]): Unit = {
-    import Foo._
-
-    val access = new Access()
-    val foo = new Foo(&quot;foo&quot;)
-
-    val doer: Doer = access.doer(foo)
-    val changer: Changer = access.changer(foo)
-    val derper: Derper = () =&gt; println(&quot;derp!&quot;)
-    val doerChangerDerper =
-      compose[Doer with Changer with Derper](doer, changer, derper)
-
-    // We want an attenuation that makes only Doer available
-    val castDoer: Doer = doerChangerDerper.asInstanceOf[Doer]
-    // But we can recover Derper capability here!
-    val doerAsDerper: Derper = castDoer.asInstanceOf[Derper]
-    // whoops :-(
-    doerAsDerper.derp()
-
-    // Attenuation doesn&#39;t use downcasting, is safe!
-    val attenuatedDoer: Doer = attenuate[Doer](doerChangerDerper)
-    try {
-      val downcastAttenuatedDerper = attenuatedDoer.asInstanceOf[Derper]
-      attenuatedDoer.doTheThing()
-    } catch {
-      case e: ClassCastException =&gt;
-        println(&quot;Can&#39;t downcast to a different type using the macro!&quot;)
-    }
-  }
-}</code></pre>
+<h1><a href="#designing-with-capabilities" name="designing-with-capabilities" class="anchor"><span class="anchor-link"></span></a>Designing with Capabilities</h1>
+<ul>
+  <li>Building up to higher level capabilities</li>
+  <li>Capabilities with Domain Driven Design</li>
+  <li>Capabilities and Aggregate Roots</li>
+  <li>When to use Capabilities</li>
+  <li>Capabilities and Side Effects</li>
+  <li>Capabilities and Akka Actors</li>
+  <li>Attestation (HORTON) through signed (public unsealers)</li>
+</ul>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/attenuation.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/guide/designing.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -229,36 +138,6 @@ Edit this page
 </div>
 </main>
 <footer class="md-footer">
-<div class="md-footer-nav">
-<nav class="md-footer-nav__inner md-grid">
-<a href="../examples/composition.html" title="Composition" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-<div class="md-flex__cell md-flex__cell--shrink">
-<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-</div>
-<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-<span class="md-flex__ellipsis">
-<span class="md-footer-nav__direction">
-Previous
-</span>
-Composition
-</span>
-</div>
-</a>
-<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-<span class="md-flex__ellipsis">
-<span class="md-footer-nav__direction">
-Next
-</span>
-Modulation
-</span>
-</div>
-<div class="md-flex__cell md-flex__cell--shrink">
-<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-</div>
-</a>
-</nav>
-</div>
 <div class="md-footer-meta md-typeset">
 <div class="md-footer-meta__inner md-grid">
 <div class="md-footer-copyright">
