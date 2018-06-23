@@ -10,7 +10,11 @@ addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
 addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.6.4")
 
 // documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.3")
+// I am futzing with diagrams, so if you want to build something then uncomment the
+// following
+//addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.5")
+// and then comment out the line below:
+dependsOn(ProjectRef(file("/home/wsargent/work/paradox"), "plugin"))
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2")
 
