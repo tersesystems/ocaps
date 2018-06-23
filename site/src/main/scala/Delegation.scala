@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+// #delegation
 import ocaps._
 
-import scala.util.{Success, Try}
+import scala.util.Try
 
 object Delegation {
   import Foo._
@@ -87,3 +88,4 @@ object Delegation {
     println(s"bob result: $result")
   }
 }
+// #delegation

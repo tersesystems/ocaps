@@ -1,3 +1,3 @@
 # Gatekeeper
 
-@@snip [Gatekeeper.scala](../../scala/Gatekeeper.scala)
+@@snip [Gatekeeper.scala](../../scala/Gatekeeper.scala) { #gatekeeper }

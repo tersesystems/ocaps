@@ -1,3 +1,3 @@
 # Dynamic Sealing
 
-@@snip [DynamicSeal.scala](../../scala/DynamicSeal.scala)
+@@snip [DynamicSeal.scala](../../scala/DynamicSeal.scala) { #dynamic-seal }

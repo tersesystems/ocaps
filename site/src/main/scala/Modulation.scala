@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// #modulation
 import java.util.concurrent.CountDownLatch
 
 import org.slf4j.Logger
@@ -112,3 +113,4 @@ object Modulation {
     println(s"result after second call: $result2")
   }
 }
+// #modulation

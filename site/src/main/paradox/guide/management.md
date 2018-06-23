@@ -5,7 +5,7 @@ Management of capabilities is based around the concepts of *revocation* and *mod
 
 ### Managing Accessiblity with Revocation
 
-This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout.  This is done using *revocation*, but more importantly, this is done using a whole series of constructs based around *revocation*, the most important being the `Revocable` pattern, also known as the Caretaker.
+This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout.  This is done using *revocation*, but more importantly, this is done using a whole series of constructs based around *revocation*, the most important being the `Revocable` pattern, also known as the [Caretaker](http://www.dtic.mil/docs/citations/ADA001721).
 
 We've shown an example of *revocation* in the bakery above, but revocation as a concept is important enough that it has a specific trait associated with it -- a `Revoker`:
 

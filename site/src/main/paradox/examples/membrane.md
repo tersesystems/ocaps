@@ -1,3 +1,3 @@
 # Membrane
 
-@@snip [Membrane.scala](../../scala/Membrane.scala)
+@@snip [Membrane.scala](../../scala/Membrane.scala) { #membrane }
