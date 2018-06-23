@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
+// #amplification
 import ocaps._
 
-// Amplification is when two object references
-// put together result in an ability to do something
-// not possible if you don't have references to both.
 object Amplification {
 
   case class Food(name: String)
@@ -55,3 +53,4 @@ object Amplification {
     openCan(canOfSpam, canOpener)
   }
 }
+// #amplification

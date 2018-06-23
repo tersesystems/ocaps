@@ -21,6 +21,7 @@ import cats.{Id, _}
 
 import scala.util._
 
+//#repository-composition
 /**
   * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
   *
@@ -140,3 +141,4 @@ object RepositoryComposition {
   // #repository
 
 }
+//#repository-composition

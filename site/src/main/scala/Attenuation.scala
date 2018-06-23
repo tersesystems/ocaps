@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ocaps._
+// #attenuation
 import ocaps.macros._
 
 object Attenuation {
@@ -89,3 +89,4 @@ object Attenuation {
     // #safe
   }
 }
+// #attenuation

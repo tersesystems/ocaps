@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ocaps._
+// #composition
 import ocaps.macros._
 
 object Composition {
@@ -49,8 +49,8 @@ object Composition {
     }
 
     class Access private {
-      def doer(foo: Foo): Doer = (foo.capabilities.doer)
-      def changer(foo: Foo): Changer = (foo.capabilities.changer)
+      def doer(foo: Foo): Doer = foo.capabilities.doer
+      def changer(foo: Foo): Changer = foo.capabilities.changer
     }
 
     object Access {
@@ -86,3 +86,4 @@ object Composition {
   }
   // #usage
 }
+// #composition

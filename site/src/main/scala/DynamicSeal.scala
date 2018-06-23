@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// #dynamic-seal
 import ocaps._
 
 // Brands allow for "flexible private fields" where
@@ -87,3 +88,4 @@ object DynamicSeal {
   }
 
 }
+// #dynamic-seal
