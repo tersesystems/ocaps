@@ -9,7 +9,6 @@ import org.scalatest._
 
 class PermeableMembraneSpec extends WordSpec with Matchers  {
 
-  // #location
   class Location(locale: Locale, timeZone: TimeZone) {
     private object capabilities {
       def localeReader: Location.LocaleReader[Id] = new Location.LocaleReader[Id] {
@@ -61,7 +60,6 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       }
     }
   }
-  // #user
 
   "RevokerMembrane" should {
 
@@ -73,7 +71,7 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
       val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
-      val format: access.Wrapper[String] = for {
+      val formatWrapper: access.Wrapper[String] = for {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
@@ -81,7 +79,7 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
           .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
             .withLocale(locale))
       }
-      format.get should not be(null)
+      formatWrapper.get should not be(null)
     }
 
     "not work" in {
@@ -92,7 +90,7 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
       val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
-      val format: access.Wrapper[String] = for {
+      val formatWrapper: access.Wrapper[String] = for {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
@@ -104,7 +102,7 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       m.revoke()
 
       assertThrows[RevokedException] {
-        format.get
+        formatWrapper.get
       }
     }
   }
@@ -127,18 +125,15 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
       val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
-      val program: IO[String] = IO {
-        val format: access.Wrapper[String] = for {
-          timeZone <- dryTimeZone.timeZone
-          locale <- dryLocale.locale
-        } yield {
-          ZonedDateTime.now(timeZone.toZoneId)
-            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-              .withLocale(locale))
-        }
-        format.get
+      val formatWrapper: access.Wrapper[String] = for {
+        timeZone <- dryTimeZone.timeZone
+        locale <- dryLocale.locale
+      } yield {
+        ZonedDateTime.now(timeZone.toZoneId)
+          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+            .withLocale(locale))
       }
-      program.unsafeRunSync() should not be null
+      formatWrapper.get should not be null
     }
   }
 
