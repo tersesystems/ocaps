@@ -35,6 +35,8 @@ sealed abstract class Revocable[+A] {
   @inline final def revoked: Boolean = revoker.revoked
 
   def revoker: Revoker
+
+  def tuple: (A, Revoker) = (get, revoker)
 }
 
 object Revocable {
@@ -57,7 +59,7 @@ object Revocable {
     * }}}
     */
   def apply[C](capability: C)(cblock: Thunk[C] => C): Revocable[C] = {
-    val (thunk, r) = Revoker.pair(capability)
+    val (thunk, r) = Revoker.tuple(capability)
     Revocable(cblock(thunk), r)
   }
 

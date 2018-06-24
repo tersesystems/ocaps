@@ -80,7 +80,7 @@ object Revoker {
     * @tparam C the type of the capability.
     * @return a thunk of a capability and a revoker as a tuple.
     */
-  def pair[C](capability: => C): (Thunk[C], Revoker) = {
+  def tuple[C](capability: => C): (Thunk[C], Revoker) = {
     val revoker = new LatchRevoker()
     (revoker.thunk(capability), revoker)
   }
