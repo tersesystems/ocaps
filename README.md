@@ -31,3 +31,9 @@ libraryDependencies += "ocaps" %% "ocaps-core" % latestVersion
 ```
 sbt release
 ```
+
+## Updating Website
+
+```
+sbt ghpagesPushSite
+```
