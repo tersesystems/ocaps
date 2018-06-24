@@ -37,7 +37,7 @@ object Modulation {
   }
 
   object Foo {
-    sealed trait Doer {
+    trait Doer {
       def doTheThing(): Int
     }
 

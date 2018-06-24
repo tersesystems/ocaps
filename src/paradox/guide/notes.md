@@ -63,7 +63,7 @@ final class Foo(name: String) {
 
 object Foo {
 
-  sealed trait Doer {
+  trait Doer {
     def doTheThing(): Unit
   }
 
@@ -185,11 +185,11 @@ class Force {
 }
 
 object Force {
-  sealed trait JediCapability {
+  trait JediCapability {
     def cleanRoom(): CleanRoomResults = ???
   }
     
-  sealed trait SithCapability {
+  trait SithCapability {
     def forcePush(): ForcePushResults = ???
     def choke(): ChokeResults = ???
   }

@@ -41,7 +41,7 @@ object Effects {
 
   // #access
   object Document {
-    sealed trait NameChanger[F[_]] {
+    trait NameChanger[F[_]] {
       def changeName(name: String): F[Unit]
     }
 

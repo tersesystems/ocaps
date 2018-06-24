@@ -90,7 +90,6 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
-    libraryDependencies += "eu.timepit" %% "refined"            % "0.9.0" % "tut",
 
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",
 
@@ -109,8 +108,9 @@ lazy val root = (project in file("."))
     tutTargetDirectory := baseDirectory.value / "target" / tutPath.value,
     watchSources ++= (tutSourceDirectory.value ** "*.html").get,
     addMappingsToSiteDir(tut, tutPath),
+    libraryDependencies += "eu.timepit" %% "refined" % "0.9.0" % "tut",
 
-      // https://github.com/sbt/sbt-header
+    // https://github.com/sbt/sbt-header
     organizationName := "Will Sargent",
     startYear := Some(2018),
     licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),

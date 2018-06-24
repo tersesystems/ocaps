@@ -23,14 +23,14 @@ object Subtypes {
 
   import Fruit._
 
-  sealed trait FruitState
+  trait FruitState
 
   object FruitState {
     case object Uneaten extends FruitState
     case object Eaten extends FruitState
   }
 
-  sealed trait Fruit {
+  trait Fruit {
     import Fruit._
 
     private[this] var state: FruitState = FruitState.Uneaten
@@ -55,7 +55,7 @@ object Subtypes {
 
   object Fruit {
 
-    sealed trait Eater[+F <: Fruit] {
+    trait Eater[+F <: Fruit] {
       def eat(): F
     }
 

@@ -16,6 +16,7 @@ Examples can be found at [http://wsargent.github.io/ocaps/examples/](http://wsar
 
 A guide to object capabilities can be found at [http://wsargent.github.io/ocaps/guide/](http://wsargent.github.io/ocaps/guide/)
 
+Slides from Scaladays NYC 2018 are available [here](https://wsargent.github.io/ocaps/slides/).
 
 ## Usage
 
