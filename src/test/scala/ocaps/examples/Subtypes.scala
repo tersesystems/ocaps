@@ -23,7 +23,7 @@ object Subtypes {
 
   import Fruit._
 
-  trait FruitState
+  sealed trait FruitState
 
   object FruitState {
     case object Uneaten extends FruitState
