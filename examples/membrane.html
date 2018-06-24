@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="description" content="site">
+<meta name="description" content="ocaps">
 <meta name="generator" content="Paradox, paradox-material-theme=0.4.0, mkdocs-material=2.2.2">
 
 <meta name="lang:clipboard.copy" content="Copy to clipboard">
@@ -16,7 +16,7 @@
 <meta name="lang:search.tokenizer" content="[\s\-]+">
 
 
-<meta name="description" content="site">
+<meta name="description" content="ocaps">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
 <title>Membrane · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
@@ -147,16 +147,16 @@ import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.util.{Locale, TimeZone}
 
 import cats.Id
-import cats.effect.IO
-
 import ocaps._
 
 // http://blog.ezyang.com/2013/03/what-is-a-membran/
 
 object Membrane {
+
   import Location.{LocaleReader, TimeZoneReader}
 
   class Location(locale: Locale, timeZone: TimeZone) {
+
     private object capabilities {
       val localeReader: Location.LocaleReader[Id] =
         new Location.LocaleReader[Id] {
@@ -168,9 +168,11 @@ object Membrane {
           override val timeZone: TimeZone = Location.this.timeZone
         }
     }
+
   }
 
   object Location {
+
     trait LocaleReader[F[_]] {
       def locale: F[Locale]
     }
@@ -225,33 +227,26 @@ object Membrane {
     // Uncommment this to see the operation fail...
     //m.revoke()
 
-    val program: IO[String] = IO {
-      val format: access.Wrapper[String] = for {
-        timeZone &lt;- dryTimeZone.timeZone
-        locale &lt;- dryLocale.locale
-      } yield {
-        ZonedDateTime
-          .now(timeZone.toZoneId)
-          .format(
-            DateTimeFormatter
-              .ofLocalizedDateTime(FormatStyle.FULL)
-              .withLocale(locale)
-          )
-      }
-      format.get
+    val format: access.Wrapper[String] = for {
+      timeZone &lt;- dryTimeZone.timeZone
+      locale &lt;- dryLocale.locale
+    } yield {
+      ZonedDateTime
+        .now(timeZone.toZoneId)
+        .format(
+          DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.FULL)
+            .withLocale(locale)
+        )
     }
-    program.unsafeRunAsync {
-      case Left(ex) =&gt;
-        ex.printStackTrace()
-      case Right(success) =&gt;
-        println(s&quot;Using time ${success}&quot;)
-    }
+    println(format.get)
   }
 
-}</code></pre>
+}
+</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/site/src/main/paradox/examples/membrane.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/membrane.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
