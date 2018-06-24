@@ -33,8 +33,8 @@ lazy val root = (project in file("."))
     name := "ocaps",
     organization := "ocaps",
 
-    scalaVersion := "2.12.6",
-    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+    crossScalaVersions := Seq("2.12.6", "2.11.12"),
+    scalaVersion := crossScalaVersions.value.head,
 
     scalacOptions in ThisBuild ++= Seq(
       "-deprecation",
@@ -46,6 +46,7 @@ lazy val root = (project in file("."))
       "-language:higherKinds",
       "-language:implicitConversions",
       "-unchecked",
+      "-Xlint",
       "-Xfuture"
     ),
     //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
@@ -90,7 +91,7 @@ lazy val root = (project in file("."))
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
 
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",
