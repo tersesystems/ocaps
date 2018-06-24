@@ -146,8 +146,9 @@ ocaps
   type Id[A] = A
 
   final class Document(private var name: String) {
+    import Document._
     private object capabilities {
-      val nameChanger = new Document.NameChanger[Id] {
+      val nameChanger: NameChanger[Id] = new NameChanger[Id] {
         override def changeName(newName: String): Unit = {
           name = newName
         }
@@ -161,25 +162,24 @@ ocaps
       def changeName(name: String): F[Unit]
     }
 
-    trait Effect[F[_], C[_[_]]] {
-      def wrap(capability: C[Id]): C[F]
+    trait WithEffect[C[_[_]], F[_]] {
+      def apply(capability: C[Id]): C[F]
     }
 
     // The default &quot;no effect&quot; type Id[A] = A
-    implicit val idEffect: Effect[Id, NameChanger] = nameChanger =&gt; identity(nameChanger)
+    implicit val idEffect: NameChanger WithEffect Id = identity _
 
     // Apply a &quot;Try&quot; effect to the capability
-    implicit val tryEffect: Effect[Try, NameChanger] = nameChanger =&gt; {
+    implicit val tryEffect: NameChanger WithEffect Try = nameChanger =&gt;
       new NameChanger[Try] {
         override def changeName(name: String): Try[Unit] =
           Try(nameChanger.changeName(name))
       }
-    }
 
     class Access {
-      def nameChanger[F[_]](doc: Document)(implicit ev: Effect[F, NameChanger]): NameChanger[F] = {
-        val effect = implicitly[Effect[F, NameChanger]]
-        effect.wrap(doc.capabilities.nameChanger)
+      def nameChanger[F[_]](doc: Document)(implicit ev: NameChanger WithEffect F): NameChanger[F] = {
+        val effect = implicitly[NameChanger WithEffect F]
+        effect(doc.capabilities.nameChanger)
       }
     }
   }
@@ -188,16 +188,19 @@ ocaps
     val document = new Document(&quot;will&quot;)
     val access = new Document.Access()
 
-    val nameChanger = access.nameChanger[Try](document)
-    // or...
-    val idNameChanger = access.nameChanger[Id](document)
-
-    nameChanger.changeName(&quot;steve&quot;) match {
+    val tryNameChanger = access.nameChanger[Try](document)
+    tryNameChanger.changeName(&quot;steve&quot;) match {
       case Success(_) =&gt;
         println(s&quot;result = $document&quot;)
       case Failure(ex) =&gt;
         println(s&quot;exception = $ex&quot;)
     }
+
+    // or...
+
+    val idNameChanger = access.nameChanger[Id](document)
+    idNameChanger.changeName(&quot;Will&quot;)
+    println(s&quot;result = $document&quot;)
   }
 }</code></pre>
 </div>
