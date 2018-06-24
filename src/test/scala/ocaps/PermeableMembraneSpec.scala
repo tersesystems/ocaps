@@ -5,7 +5,6 @@ import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.util.{Locale, TimeZone}
 
 import cats.Id
-import cats.effect.IO
 import org.scalatest._
 
 class PermeableMembraneSpec extends WordSpec with Matchers  {
@@ -74,18 +73,15 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
       val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
-      val program: IO[String] = IO {
-        val format: access.Wrapper[String] = for {
-          timeZone <- dryTimeZone.timeZone
-          locale <- dryLocale.locale
-        } yield {
-          ZonedDateTime.now(timeZone.toZoneId)
-            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-              .withLocale(locale))
-        }
-        format.get
+      val format: access.Wrapper[String] = for {
+        timeZone <- dryTimeZone.timeZone
+        locale <- dryLocale.locale
+      } yield {
+        ZonedDateTime.now(timeZone.toZoneId)
+          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+            .withLocale(locale))
       }
-      program.unsafeRunSync() should not be null
+      format.get should not be(null)
     }
 
     "not work" in {
@@ -96,21 +92,19 @@ class PermeableMembraneSpec extends WordSpec with Matchers  {
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
       val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
-      m.revoke()
-      val program: IO[String] = IO {
-        val format: access.Wrapper[String] = for {
-          timeZone <- dryTimeZone.timeZone
-          locale <- dryLocale.locale
-        } yield {
-          ZonedDateTime.now(timeZone.toZoneId)
-            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-              .withLocale(locale))
-        }
-        format.get
+      val format: access.Wrapper[String] = for {
+        timeZone <- dryTimeZone.timeZone
+        locale <- dryLocale.locale
+      } yield {
+        ZonedDateTime.now(timeZone.toZoneId)
+          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+            .withLocale(locale))
       }
 
+      m.revoke()
+
       assertThrows[RevokedException] {
-        program.unsafeRunSync()
+        format.get
       }
     }
   }
