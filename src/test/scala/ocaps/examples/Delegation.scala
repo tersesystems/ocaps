@@ -36,7 +36,7 @@ object Delegation {
 
   object Foo {
 
-    sealed trait Doer {
+    trait Doer {
       def doTheThing(): Unit
     }
 

@@ -37,11 +37,11 @@ object Composition {
   }
 
   object Foo {
-    sealed trait Doer {
+    trait Doer {
       def doTheThing(): Unit
     }
 
-    sealed trait Changer {
+    trait Changer {
       def changeName(name: String): Foo
     }
 

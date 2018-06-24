@@ -24,13 +24,13 @@ import ocaps._
 // a containing class)
 object DynamicSeal {
 
-  sealed trait Message
+  trait Message
 
   case object Save extends Message
 
   case object Kill extends Message
 
-  sealed trait Decision
+  trait Decision
 
   case object Saved extends Decision
 
