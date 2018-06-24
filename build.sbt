@@ -34,6 +34,8 @@ lazy val root = (project in file("."))
     organization := "ocaps",
 
     scalaVersion := "2.12.6",
+    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+
     scalacOptions in ThisBuild ++= Seq(
       "-deprecation",
       "-encoding", "utf-8",
@@ -118,5 +120,6 @@ lazy val root = (project in file("."))
     homepage := Some(url("https://github.com/wsargent/ocaps")),
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     publishArtifact in Test := false,
+    releaseCrossBuild := true
 
   )
