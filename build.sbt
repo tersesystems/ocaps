@@ -15,6 +15,7 @@ lazy val scalaMacroDependencies: Seq[Setting[_]] = Seq(
     }
   }
 )
+val tutPath = settingKey[String]("Path to tut files")
 
 val catsVersion = "1.1.0"
 val catsEffectVersion = "1.0.0-RC2"
@@ -103,12 +104,11 @@ lazy val root = (project in file("."))
       ),
 
     // slides settings
-    tutSourceDirectory := baseDirectory.value / "slides",
-    tutTargetDirectory := baseDirectory.value / "target" / "site" / "slides",
+    tutPath := "slides",
+    tutSourceDirectory := baseDirectory.value / tutPath.value,
+    tutTargetDirectory := baseDirectory.value / "target" / tutPath.value,
     watchSources ++= (tutSourceDirectory.value ** "*.html").get,
-
-    //mappings in makeSite ++= Path.rebase(tutTargetDirectory.value, "target/site/slides"),
-    makeSite := makeSite.dependsOn(tut).value,
+    addMappingsToSiteDir(tut, tutPath),
 
       // https://github.com/sbt/sbt-header
     organizationName := "Will Sargent",
