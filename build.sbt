@@ -91,7 +91,7 @@ lazy val root = (project in file("."))
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
 
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",
