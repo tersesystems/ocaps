@@ -50,14 +50,16 @@ object Effects {
     }
 
     // The default "no effect" type Id[A] = A
-    implicit val idEffect: NameChanger WithEffect Id = identity _
+    implicit val idEffect: NameChanger WithEffect Id = new WithEffect[NameChanger, Id] {
+      override def apply(capability: NameChanger[Id]): NameChanger[Id] = identity(capability)
+    }
 
     // Apply a "Try" effect to the capability
-    implicit val tryEffect: NameChanger WithEffect Try = nameChanger =>
-      new NameChanger[Try] {
-        override def changeName(name: String): Try[Unit] =
-          Try(nameChanger.changeName(name))
+    implicit val tryEffect: NameChanger WithEffect Try = new WithEffect[NameChanger, Try] {
+      override def apply(capability: NameChanger[Id]): NameChanger[Try] = new NameChanger[Try] {
+        override def changeName(name: String): Try[Unit] =  Try(capability.changeName(name))
       }
+    }
 
     class Access {
       def nameChanger[F[_]](doc: Document)(implicit ev: NameChanger WithEffect F): NameChanger[F] = {

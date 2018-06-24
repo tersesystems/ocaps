@@ -106,7 +106,6 @@ object RepositoryComposition {
     private def update(u: Item): UpdateResult = UpdateResult(s"item $u updated")
 
     private object capabilities {
-      // "Id" type comes from cats, and reItem(id, ItemName("user@example.com"))turns the result itself
       val finder: Finder[Id] = new Finder[Id]() {
         override def find(id: UUID): Id[Option[Item]] =
           ItemRepository.this.find(id)
@@ -135,8 +134,12 @@ object RepositoryComposition {
     }
 
     class TryAccess(access: Access) {
-      def finder(repo: ItemRepository): Finder[Try] = (id: UUID) => Try(access.finder(repo).find(id))
-      def updater(repo: ItemRepository): Updater[Try] = (item: Item) => Try(access.updater(repo).update(item))
+      def finder(repo: ItemRepository): Finder[Try] = new Finder[Try] {
+        override def find(id: UUID): Try[Option[Item]] = Try(access.finder(repo).find(id))
+      }
+      def updater(repo: ItemRepository): Updater[Try] = new Updater[Try] {
+        override def update(item: Item): Try[UpdateResult] = Try(access.updater(repo).update(item))
+      }
     }
   }
   // #repository

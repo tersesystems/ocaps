@@ -67,8 +67,8 @@ object Revocation {
   class Guest(doer: Foo.Doer) {
     def start(): Unit = {
       // Keep doing the thing forever, every second.
-      val doTheThing: Runnable = { () =>
-        {
+      val doTheThing: Runnable = new Runnable {
+        override def run(): Unit = {
           try {
             doer.doTheThing()
           } catch {
@@ -84,7 +84,9 @@ object Revocation {
   class ScheduledRevoker(revoker: Revoker) {
     def start(): Unit = {
       // After three seconds, the admin decides to stop you doing the thing.
-      val adminRevoke: Runnable = () => revoker.revoke()
+      val adminRevoke: Runnable = new Runnable {
+        override def run(): Unit =  revoker.revoke()
+      }
       scheduler.schedule(adminRevoke, 3L, SECONDS)
     }
   }
@@ -104,7 +106,9 @@ object Revocation {
     new ScheduledRevoker(revoker).start()
 
     // After five seconds, exit program.
-    val shutdown: Runnable = () => scheduler.shutdown()
+    val shutdown: Runnable = new Runnable {
+      override def run(): Unit = scheduler.shutdown()
+    }
     scheduler.schedule(shutdown, 5L, SECONDS)
   }
 
