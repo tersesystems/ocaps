@@ -64,7 +64,9 @@ object Attenuation {
 
     val doer: Doer = access.doer(foo)
     val changer: Changer = access.changer(foo)
-    val derper: Derper = () => println("derp!")
+    val derper: Derper = new Derper {
+      override def derp(): Unit = println("derp")
+    }
     val doerChangerDerper =
       compose[Doer with Changer with Derper](doer, changer, derper)
 

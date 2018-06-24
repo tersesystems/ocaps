@@ -252,7 +252,9 @@ object Gatekeeper {
         }
       }
 
-      val deleter: Document.Deleter = () => Files.delete(Document.this.path)
+      val deleter: Document.Deleter = new Deleter {
+        override def delete(): Unit = Files.delete(Document.this.path)
+      }
     }
 
     override def toString: String = s"Document(owner = $owner)"
