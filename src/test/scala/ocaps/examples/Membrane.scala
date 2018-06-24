@@ -27,10 +27,12 @@ import ocaps._
 // http://blog.ezyang.com/2013/03/what-is-a-membran/
 
 object Membrane {
+
   import Location.{LocaleReader, TimeZoneReader}
 
   // #location
   class Location(locale: Locale, timeZone: TimeZone) {
+
     private object capabilities {
       val localeReader: Location.LocaleReader[Id] =
         new Location.LocaleReader[Id] {
@@ -42,9 +44,11 @@ object Membrane {
           override val timeZone: TimeZone = Location.this.timeZone
         }
     }
+
   }
 
   object Location {
+
     trait LocaleReader[F[_]] {
       def locale: F[Locale]
     }
@@ -63,7 +67,6 @@ object Membrane {
       }
     }
   }
-  // #user
 
   def main(args: Array[String]): Unit = {
 
@@ -103,29 +106,21 @@ object Membrane {
     // Uncommment this to see the operation fail...
     //m.revoke()
 
-    val program: IO[String] = IO {
-      val format: access.Wrapper[String] = for {
-        timeZone <- dryTimeZone.timeZone
-        locale <- dryLocale.locale
-      } yield {
-        ZonedDateTime
-          .now(timeZone.toZoneId)
-          .format(
-            DateTimeFormatter
-              .ofLocalizedDateTime(FormatStyle.FULL)
-              .withLocale(locale)
-          )
-      }
-      format.get
+    val format: access.Wrapper[String] = for {
+      timeZone <- dryTimeZone.timeZone
+      locale <- dryLocale.locale
+    } yield {
+      ZonedDateTime
+        .now(timeZone.toZoneId)
+        .format(
+          DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.FULL)
+            .withLocale(locale)
+        )
     }
-    program.unsafeRunAsync {
-      case Left(ex) =>
-        ex.printStackTrace()
-      case Right(success) =>
-        println(s"Using time ${success}")
-    }
-    // #execution
+    println(format.get)
   }
 
 }
+
 // #membrane

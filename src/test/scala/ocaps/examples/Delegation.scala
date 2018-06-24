@@ -17,6 +17,7 @@ package ocaps.examples
 
 // #delegation
 import ocaps._
+import scala.util._
 
 object Delegation {
   import Foo._

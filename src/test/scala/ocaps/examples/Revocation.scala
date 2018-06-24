@@ -18,6 +18,8 @@ package ocaps.examples
 
 import ocaps._
 
+import scala.util.control.NonFatal
+
 // #revocation
 object Revocation {
 

@@ -89,7 +89,6 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % catsEffectVersion % "tut, test",
     libraryDependencies += "eu.timepit" %% "refined"            % "0.9.0" % "tut",
 
     git.remoteRepo := "git@github.com:wsargent/ocaps.git",

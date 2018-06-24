@@ -23,6 +23,7 @@ import ocaps.macros._
 import org.slf4j.Logger
 
 import scala.concurrent.duration._
+import scala.util.Try
 
 object Modulation {
   final case class Foo(private val name: String) {
