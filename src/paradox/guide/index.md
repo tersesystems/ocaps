@@ -14,7 +14,7 @@ This is a guide to capabilities written for the general programmer, using Scala.
 
 @@@note 
 
-If you are looking for examples of using `ocaps`, please see @ref:[the examples](../examples/index.md) for an overview.
+If you are looking for examples of using `ocaps`, please see @ref:[the examples sections](../examples/index.md).
 
 @@@
 

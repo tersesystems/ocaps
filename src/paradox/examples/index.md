@@ -7,6 +7,7 @@
 * [Attenuation](attenuation.md)
 * [Modulation](modulation.md)
 * [Revocation](revocation.md)
+* [Expiration](expiration.md)
 * [Amplification](amplification.md)
 * [Abstraction](abstraction.md)
 * [Delegation](delegation.md)
@@ -57,13 +58,19 @@ This section shows patterns that change the behavior of capabilities, typically 
 
 * @ref:[Modulation](modulation.md)
 * @ref:[Revocation](revocation.md)
+* @ref:[Expiration](expiration.md)
 
 ## Operational Patterns
 
-This section shows capabilities used together or passed around.
+This section shows capabilities used together.
 
 * @ref:[Amplification](amplification.md)
 * @ref:[Abstraction](abstraction.md)
+
+## Authorization Patterns
+
+This section shows capabilities in the context of authorization and delegation.
+
 * @ref:[Delegation](delegation.md)
 * @ref:[Gatekeeper](gatekeeper.md)
 
