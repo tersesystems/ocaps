@@ -12,9 +12,13 @@
 
 This is a guide to capabilities written for the general programmer, using Scala.
 
-**If you are looking for examples of using `ocaps`, please see @ref:[the examples ](../examples/index.md) for an overview.**
+@@@note 
 
-* @ref:[Introduction](introduction.md)
+If you are looking for examples of using `ocaps`, please see @ref:[the examples](../examples/index.md) for an overview.
+
+@@@
+
+* @ref:[Introducing Capabilities](introduction.md)
 * @ref:[Constructing Capabilities](construction.md)
 * @ref:[Authorizing Capabilities](authorization.md)
 * @ref:[Managing Capabilities](management.md)

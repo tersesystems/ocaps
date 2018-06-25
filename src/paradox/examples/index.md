@@ -5,10 +5,10 @@
 * [Construction with Subtypes](subtypes.md)
 * [Composition](composition.md)
 * [Attenuation](attenuation.md)
-* [Abstraction](abstraction.md)
 * [Modulation](modulation.md)
 * [Revocation](revocation.md)
 * [Amplification](amplification.md)
+* [Abstraction](abstraction.md)
 * [Delegation](delegation.md)
 * [Gatekeeper](gatekeeper.md)
 * [Dynamic Sealing](dynamic_seal.md)
@@ -20,7 +20,12 @@
 
 This is a series of examples showing capabilities in action using `ocaps`.  
 
-**If you are not familiar with capabilities, please read through @ref:[the guide](../guide/index.md) for a more in-depth explanation.**
+@@@ note
+    
+If you are not familiar with capabilities, please read through @ref:[the guide](../guide/index.md) for a more in-depth explanation.
+
+@@@
+
 
 ## Imports
 
@@ -45,7 +50,6 @@ This section shows structural patterns that do not change behavior.
 
 * @ref:[Composition](composition.md)
 * @ref:[Attenuation](attenuation.md)
-* @ref:[Abstraction](abstraction.md)
 
 ## Behavioral Patterns
 
@@ -59,6 +63,7 @@ This section shows patterns that change the behavior of capabilities, typically 
 This section shows capabilities used together or passed around.
 
 * @ref:[Amplification](amplification.md)
+* @ref:[Abstraction](abstraction.md)
 * @ref:[Delegation](delegation.md)
 * @ref:[Gatekeeper](gatekeeper.md)
 
