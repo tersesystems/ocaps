@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="active page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="active page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -143,7 +144,8 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#abstraction" name="abstraction" class="anchor"><span class="anchor-link"></span></a>Abstraction</h1>
-<p>Packing lower level capabilities into more convenient APIs. See <a href="https://github.com/GravityNetwork/Gravity/wiki/What-are-Capabilities#abstraction">definition</a>.</p>
+<p>Packing lower level capabilities into more convenient APIs. See <a href="https://github.com/GravityNetwork/Gravity/wiki/What-are-Capabilities#abstraction">definition</a>. </p>
+<p>This is different from <a href="abstraction.html">abstraction</a> in that abstraction works to perform an operation using the lower level capabilities, but that operation could have been performed by working with the lower level capabilities individually i.e. no new functionality was revealed.</p>
 <p>Here&rsquo;s an example of a repository exposed with several facets, with a higher level <code>NameChanger</code> capability composed out of two lower level ones.</p>
 <pre class="prettyprint"><code class="language-scala">/**
   * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
@@ -283,7 +285,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/attenuation.html" title="Attenuation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/amplification.html" title="Amplification" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -292,17 +294,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Attenuation
+Amplification
 </span>
 </div>
 </a>
-<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/delegation.html" title="Delegation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Modulation
+Delegation
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

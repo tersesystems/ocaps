@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="active page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -143,6 +144,9 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#gatekeeper" name="gatekeeper" class="anchor"><span class="anchor-link"></span></a>Gatekeeper</h1>
+<p>This is an example of a gatekeeper in ocaps. </p>
+<p>A gatekeeper looks at the identity (aka security principal) and releases a set of capabilities in response. Note that the capability is not dependent on the security principal after authorization, i.e. there is no ambient authority.</p>
+<p>Please see the <a href="../guide/authorization.html">authorization</a> for more details on how authorization of capabilities is implemented.</p>
 <pre class="prettyprint"><code class="language-scala">import java.io.{BufferedReader, BufferedWriter, InputStream, OutputStream}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, _}

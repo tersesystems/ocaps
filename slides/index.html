@@ -429,7 +429,7 @@ val access = new Document.Access()
 // <console>:17: warning: Unused import
 //        import eu.timepit.refined.auto._
 //                                       ^
-// access: CapExample.Document.Access = CapExample$Document$Access@5f592de4
+// access: CapExample.Document.Access = CapExample$Document$Access@7a28d9f9
 
 val nameChanger = access.nameChanger(document)
 // <console>:10: warning: Unused import
@@ -447,7 +447,7 @@ val nameChanger = access.nameChanger(document)
 // <console>:21: warning: Unused import
 //        import CapExample._
 //                          ^
-// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@4a1f1b07
+// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@2acab7c9
 
 nameChanger.changeName("Will")
 // <console>:10: warning: Unused import
@@ -583,7 +583,7 @@ scala> val repo: ItemRepository = new ItemRepository {}
 <console>:24: warning: Unused import
        import java.util._
                         ^
-repo: RevokeExample.ItemRepository = $anon$1@56199034
+repo: RevokeExample.ItemRepository = $anon$1@283e1af5
 
 scala> val access = new ItemRepository.Access()
 <console>:10: warning: Unused import
@@ -604,7 +604,7 @@ scala> val access = new ItemRepository.Access()
 <console>:24: warning: Unused import
        import java.util._
                         ^
-access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@29b22f9d
+access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@79ec1ef9
 
 scala> val finder = access.finder(repo)
 <console>:10: warning: Unused import
@@ -628,7 +628,7 @@ scala> val finder = access.finder(repo)
 <console>:28: warning: Unused import
        import RevokeExample._
                             ^
-finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@29f294b7
+finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@2493df20
 
 scala> val maybeItem: Option[Item] = finder.find(ID)
 <console>:10: warning: Unused import
@@ -739,7 +739,7 @@ scala> val tryAccess = new TryAccess(access)
 <console>:32: warning: Unused import
        import scala.util._
                          ^
-tryAccess: TryAccess = TryAccess@1dd6b4b2
+tryAccess: TryAccess = TryAccess@5293b0c5
 
 scala> // Create a finder which uses `Try` as an effect
      | val tryFinder = tryAccess.finder(repo)
@@ -767,7 +767,7 @@ scala> // Create a finder which uses `Try` as an effect
 <console>:32: warning: Unused import
        import scala.util._
                          ^
-tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$7238/1935693130@1f2e6a2b
+tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$5285/588496351@660acd32
 
 scala> // Now we know it won't throw exceptions :-)
      | val tryMaybeItem: Try[Option[Item]] = tryFinder.find(ID)
@@ -896,8 +896,8 @@ scala> // Create proxy finder that will forward "find" method to `finder`
 <console>:32: warning: Unused import
        import scala.util._
                          ^
-revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@33c1040b
-revoker: ocaps.Revoker = ocaps.LatchRevoker@40c8670d
+revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@5019acb4
+revoker: ocaps.Revoker = ocaps.LatchRevoker@491969dc
 
 scala> // Call the revoker, which causes forwarding to stop...
      | revoker.revoke()
@@ -1125,8 +1125,8 @@ scala> val (sealer, unsealer) = Brand.create[String]("string hint").tuple
 <console>:37: warning: Unused import
        import ocaps.macros._
                            ^
-sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$7367/1403817770@75f8102d
-unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$7368/993654948@603d4861
+sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$5414/152159763@31e19233
+unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$5415/1827754967@3a0a8cf2
 
 scala> val sealedBox = sealer("foo")
 <console>:10: warning: Unused import
@@ -1360,8 +1360,8 @@ scala> val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
 <console>:43: warning: Unused import
        import unsealer
                                                                                                                     ^
-sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$7367/1403817770@723144fe
-unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$7368/993654948@2df3bb3a
+sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$5414/152159763@293a202d
+unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$5415/1827754967@30f22a3b
 
 scala> val canOpener = new CanOpener(unsealer)
 <console>:10: warning: Unused import
@@ -1397,7 +1397,7 @@ scala> val canOpener = new CanOpener(unsealer)
 <console>:40: warning: Unused import
        import ocaps._
                     ^
-canOpener: CanOpener = CanOpener@5f2e0c96
+canOpener: CanOpener = CanOpener@28a21c70
 
 scala> val canOfSpam: Can = Can(sealer(Food("spam")))
 <console>:10: warning: Unused import
@@ -1629,7 +1629,7 @@ val m = RevokerMembrane()
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@18ede519
+// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@6679701d
 
 val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
 // <console>:10: warning: Unused import
@@ -1674,7 +1674,7 @@ val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// location: MembraneExample.Location = MembraneExample$Location@68385317
+// location: MembraneExample.Location = MembraneExample$Location@36dc47f2
 
 val access = new MembraneAccess(new Location.Access(), m)
 // <console>:10: warning: Unused import
@@ -1722,7 +1722,7 @@ val access = new MembraneAccess(new Location.Access(), m)
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@b34b58a
+// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@42e304df
 
 val format = for {
   timeZone <- access.timeZoneReader(location).timeZone
@@ -1771,7 +1771,7 @@ val format = for {
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@6dda8b0a
+// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@2d461636
 
 format.get
 // <console>:10: warning: Unused import
@@ -1819,7 +1819,7 @@ format.get
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// res11: String = Sunday, June 24, 2018 7:38:02 PM PDT
+// res11: String = Monday, June 25, 2018 9:06:18 AM PDT
 ```
 
 ---
@@ -1866,7 +1866,7 @@ val m2 = RevokerMembrane()
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@35c391cc
+// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@3c2690d5
 
 val access2 = new MembraneAccess(new Location.Access(), m2)
 // <console>:10: warning: Unused import
@@ -1914,7 +1914,7 @@ val access2 = new MembraneAccess(new Location.Access(), m2)
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@4541d72e
+// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@251122ba
 
 val format2 = for {
   timeZone <- access2.timeZoneReader(location).timeZone
@@ -1963,7 +1963,7 @@ val format2 = for {
 // <console>:56: warning: Unused import
 //        import Location._
 //                        ^
-// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@633e8f25
+// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@79bd0b56
 
 m2.revoke()
 // <console>:10: warning: Unused import

@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="active page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -144,13 +145,9 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#modulation" name="modulation" class="anchor"><span class="anchor-link"></span></a>Modulation</h1>
 <p>This is an example of modulation in ocaps. You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
-<pre class="prettyprint"><code class="language-scala">import java.util.concurrent.CountDownLatch
-
-import ocaps._
-import ocaps.macros._
+<pre class="prettyprint"><code class="language-scala">import ocaps.macros._
 import org.slf4j.Logger
 
-import scala.concurrent.duration._
 import scala.util.Try
 
 object Modulation {
@@ -169,45 +166,9 @@ object Modulation {
       def doTheThing(): Int
     }
 
-    class Access private {
+    class Access {
       def doer(foo: Foo): Doer = foo.capabilities.doer
     }
-
-    object Access {
-      def apply(): Access = new Access
-    }
-  }
-
-  def manualDoer(doer: Foo.Doer): Foo.Doer = {
-    new Foo.Doer {
-      override def doTheThing(): Int = doer.doTheThing()
-    }
-  }
-
-  def countBasedExpiration(doer: Foo.Doer, count: Int): Foo.Doer = {
-    val countDownLatch = new CountDownLatch(count)
-    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
-    val before: String =&gt; Unit = _ =&gt; countDownLatch.countDown()
-    val after: (String, Any) =&gt; Unit = (_, _) =&gt;
-      if (countDownLatch.getCount == 0) {
-        revoker.revoke()
-      }
-    modulate[Foo.Doer](revocableDoer, before, after)
-  }
-
-  def timerBasedExpiration(
-    doer: Foo.Doer,
-    duration: FiniteDuration
-  ): Foo.Doer = {
-    val deadline = duration.fromNow
-    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
-    val before: String =&gt; Unit = _ =&gt; ()
-    val after: (String, Any) =&gt; Unit = { (_, _) =&gt;
-      if (deadline.isOverdue()) {
-        revoker.revoke()
-      }
-    }
-    modulate[Foo.Doer](revocableDoer, before, after)
   }
 
   def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
@@ -220,16 +181,16 @@ object Modulation {
   }
 
   def main(args: Array[String]): Unit = {
-    val access = Foo.Access()
+    val access = new Foo.Access()
     val foo = new Foo(&quot;foo&quot;)
     val doer = access.doer(foo)
 
     val logger = org.slf4j.LoggerFactory.getLogger(&quot;modulation.Foo.Doer&quot;)
-    val modulatedDoer = countBasedExpiration(loggingDoer(doer, logger), 1)
-    val result1 = Try(modulatedDoer.doTheThing())
+    val logDoer = loggingDoer(doer, logger)
+    val result1 = Try(logDoer.doTheThing())
     println(s&quot;result after first call: $result1&quot;)
 
-    val result2 = Try(modulatedDoer.doTheThing())
+    val result2 = Try(logDoer.doTheThing())
     println(s&quot;result after second call: $result2&quot;)
   }
 }</code></pre>
@@ -251,7 +212,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/abstraction.html" title="Abstraction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/attenuation.html" title="Attenuation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -260,7 +221,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Abstraction
+Attenuation
 </span>
 </div>
 </a>

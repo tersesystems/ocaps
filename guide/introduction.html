@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -173,11 +174,12 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
 <p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
-<p>Object-capability systems (OCAP) start with a single capability, and builds on it by wiring capabilities together. </p>
+<p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Object-capability systems</a> start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
 <p>So what is a capability?</p>
 <h2><a href="#definition" name="definition" class="anchor"><span class="anchor-link"></span></a>Definition</h2>
+<p>We use the following definitions for capabilities.</p>
 <p><strong>A capability is a security primitive that confers authority by reference.</strong></p>
-<p>The definition of authority used here is from <a href="https://ai.google/research/pubs/pub45570">Permission and Authority Revisited: towards a formalization</a>:</p>
+<p>We use the <a href="https://ai.google/research/pubs/pub45570">following definition of authority</a>:</p>
 <p><strong>An authority is <em>sufficient justification</em> to affect a resource.</strong></p>
 <p>In Scala, a resource is <em>an object</em> and a capability is a <em>reference</em> to an object that can affect that resource. </p>
 <p>Note that a capability may be a reference to the resource itself, or it may be a very indirect chain of forwarded calls to an inner class which can change the resource&rsquo;s internals. As long as the end result is the same, it doesn&rsquo;t matter.</p>
@@ -212,7 +214,7 @@ val name = foo.name
 <h2><a href="#caveats-and-assumptions" name="caveats-and-assumptions" class="anchor"><span class="anchor-link"></span></a>Caveats and Assumptions</h2>
 <p>The assumption in this document is that you are playing a straight game, where references are handled only through creation (you created the reference), parentage (you are a subclass and you have access to references scoped by your parent class), or through scoping (you were handed references through parameters in the class, or followed an existing reference). </p>
 <p>Basically, you&rsquo;re not setting or accessing capabilities through global state through singleton objects, static fields, or thread locals. You can use Akka and only send capabilities through messages between actors for a more accurate capability model, but it&rsquo;s not required.</p>
-<p>Likewise, we assume that you&rsquo;re not a hostile attacker &ndash; if you are hostile and can execute code in the JVM, it&rsquo;s trivial to subvert the SecurityManager, call <code>setAccessible</code> and start monkeypatching, so effectively all fields and methods are public if you scratch hard enough. Scala is not an ocap language, this is purely about capabilities as a software engineering practice.</p>
+<p>Likewise, we assume that you&rsquo;re not a hostile attacker &ndash; if you are hostile and can execute code in the JVM, it&rsquo;s trivial to subvert the SecurityManager, call <code>setAccessible</code> and start <a href="https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/">monkeypatching</a>, so effectively all fields and methods are public if you scratch hard enough. Scala is not an ocap language, so this is purely about capabilities as a software engineering practice.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/guide/introduction.md" title="Edit this page" class="md-source-file md-edit">

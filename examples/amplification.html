@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="active page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -144,6 +145,24 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#amplification" name="amplification" class="anchor"><span class="anchor-link"></span></a>Amplification</h1>
 <p>Amplification is when two object references put together result in an ability to do something not possible if you don&rsquo;t have references to both.</p>
+<p>Technically, the <code>Access</code> pattern qualifies:</p>
+<pre class="prettyprint"><code class="language-scala">object Document {
+  trait NameChanger {
+    def changeName(name: String): Unit
+  }
+}
+object Document {
+  trait NameChanger {
+    def changeName(name: String): Unit
+  }
+
+  class Access {
+    def nameChanger(doc: Document): NameChanger = {
+      doc.capabilities.nameChanger
+    }
+  }
+}</code></pre>
+<p>But amplification is more about bringing together independent objects. The canonical example is a can and can opener, brought together by <a href="dynamic_seal.html">dynamic sealing</a>:</p>
 <pre class="prettyprint"><code class="language-scala">import ocaps._
 
 object Amplification {
@@ -201,7 +220,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/revocation.html" title="Revocation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/expiration.html" title="Expiration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -210,17 +229,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Revocation
+Expiration
 </span>
 </div>
 </a>
-<a href="../examples/delegation.html" title="Delegation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/abstraction.html" title="Abstraction" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Delegation
+Abstraction
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

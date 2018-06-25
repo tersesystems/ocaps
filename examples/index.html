@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -138,6 +139,7 @@ ocaps
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
+    <li><a href="../examples/index.html#authorization-patterns" class="header">Authorization Patterns</a></li>
     <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
   </ul></li>
 </ul>
@@ -164,6 +166,7 @@ ocaps
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
+    <li><a href="../examples/index.html#authorization-patterns" class="header">Authorization Patterns</a></li>
     <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
   </ul></li>
 </ul>
@@ -176,8 +179,8 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#examples" name="examples" class="anchor"><span class="anchor-link"></span></a>Examples</h1>
-<p>This is a series of examples showing capabilities in action using <code>ocaps</code>. </p>
-<p><strong>If you are not familiar with capabilities, please read through <a href="../guide/index.html">the guide</a> for a more in-depth explanation.</strong></p>
+<p>This is a series of examples showing capabilities in action using <code>ocaps</code>. </p><div class="callout note "><div class="callout-title">Note</div>
+<p>If you are not familiar with capabilities, please read through <a href="../guide/index.html">the guide</a> for a more in-depth explanation.</p></div>
 <h2><a href="#imports" name="imports" class="anchor"><span class="anchor-link"></span></a>Imports</h2>
 <p>All the examples given rely on the following imports:</p>
 <pre><code>import ocaps._
@@ -195,18 +198,23 @@ import ocaps.macros._
 <ul>
   <li><a href="composition.html">Composition</a></li>
   <li><a href="attenuation.html">Attenuation</a></li>
-  <li><a href="abstraction.html">Abstraction</a></li>
 </ul>
 <h2><a href="#behavioral-patterns" name="behavioral-patterns" class="anchor"><span class="anchor-link"></span></a>Behavioral Patterns</h2>
 <p>This section shows patterns that change the behavior of capabilities, typically adding side effects or blocking execution completely.</p>
 <ul>
   <li><a href="modulation.html">Modulation</a></li>
   <li><a href="revocation.html">Revocation</a></li>
+  <li><a href="expiration.html">Expiration</a></li>
 </ul>
 <h2><a href="#operational-patterns" name="operational-patterns" class="anchor"><span class="anchor-link"></span></a>Operational Patterns</h2>
-<p>This section shows capabilities used together or passed around.</p>
+<p>This section shows capabilities used together.</p>
 <ul>
   <li><a href="amplification.html">Amplification</a></li>
+  <li><a href="abstraction.html">Abstraction</a></li>
+</ul>
+<h2><a href="#authorization-patterns" name="authorization-patterns" class="anchor"><span class="anchor-link"></span></a>Authorization Patterns</h2>
+<p>This section shows capabilities in the context of authorization and delegation.</p>
+<ul>
   <li><a href="delegation.html">Delegation</a></li>
   <li><a href="gatekeeper.html">Gatekeeper</a></li>
 </ul>

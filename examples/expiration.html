@@ -18,7 +18,7 @@
 
 <meta name="description" content="ocaps">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Revocation · ocaps</title>
+<title>Expiration · ocaps</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -54,7 +54,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 ocaps
 </span>
 <span class="md-header-nav__topic">
-Revocation
+Expiration
 </span>
 </div>
 </div>
@@ -111,8 +111,8 @@ ocaps
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
-    <li><a href="../examples/revocation.html" class="active page">Revocation</a></li>
-    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
+    <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="active page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
     <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
@@ -143,36 +143,28 @@ ocaps
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#revocation" name="revocation" class="anchor"><span class="anchor-link"></span></a>Revocation</h1>
-<p>This is an example of revocation in ocaps. You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
-<pre class="prettyprint"><code class="language-scala">object Revocation {
+<h1><a href="#expiration" name="expiration" class="anchor"><span class="anchor-link"></span></a>Expiration</h1>
+<p>Expiration combines <em>modulation</em> of a capability with <em>revocation</em>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p>
+<p>You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
+<pre class="prettyprint"><code class="language-scala">import ocaps.macros._
+import org.slf4j.Logger
 
-  final class Foo(name: String) {
-    private def privateDoTheThing(): Unit = {
-      println(s&quot;$name.doTheThing()&quot;)
-    }
+import scala.util.Try
 
+object Modulation {
+  final case class Foo(private val name: String) {
     private object capabilities {
-      import Foo._
-      val doer: Doer = new Doer {
-        override def doTheThing(): Unit = Foo.this.privateDoTheThing()
+      val doer: Foo.Doer = new Foo.Doer {
+        override def doTheThing(): Int = {
+          42
+        }
       }
     }
   }
 
   object Foo {
     trait Doer {
-      def doTheThing(): Unit
-    }
-
-    object Doer {
-      def revocable(doer: Doer): Revocable[Doer] = {
-        Revocable(doer) { thunk =&gt;
-          new Doer {
-            override def doTheThing(): Unit = thunk().doTheThing()
-          }
-        }
-      }
+      def doTheThing(): Int
     }
 
     class Access {
@@ -180,64 +172,32 @@ ocaps
     }
   }
 
-  import java.util.concurrent.TimeUnit._
-  import java.util.concurrent._
-
-  private val scheduler = Executors.newScheduledThreadPool(1)
-
-  // Guest has delegated authority to do the thing without having access to foo
-  class Guest(doer: Foo.Doer) {
-    def start(): Unit = {
-      // Keep doing the thing forever, every second.
-      val doTheThing: Runnable = new Runnable {
-        override def run(): Unit = {
-          try {
-            doer.doTheThing()
-          } catch {
-            case NonFatal(e) =&gt; println(&quot;Cannot do the thing!&quot;)
-          }
-        }
-      }
-      scheduler.scheduleAtFixedRate(doTheThing, 0, 1L, SECONDS)
+  def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
+    val before: String =&gt; Unit = methodName =&gt; {
+      logger.info(s&quot;$methodName: before call&quot;)
     }
-  }
-
-  // Revoker doesn&#39;t know about capability, only has kill switch
-  class ScheduledRevoker(revoker: Revoker) {
-    def start(): Unit = {
-      // After three seconds, the admin decides to stop you doing the thing.
-      val adminRevoke: Runnable = new Runnable {
-        override def run(): Unit =  revoker.revoke()
-      }
-      scheduler.schedule(adminRevoke, 3L, SECONDS)
-    }
+    val after: (String, Any) =&gt; Unit = (methodName, result) =&gt;
+      logger.info(s&quot;$methodName: after returns $result&quot;)
+    modulate[Foo.Doer](doer, before, after)
   }
 
   def main(args: Array[String]): Unit = {
-    import Foo._
+    val access = new Foo.Access()
     val foo = new Foo(&quot;foo&quot;)
-
-    val access = new Access
     val doer = access.doer(foo)
 
-    // macro generates code equivalent to the `revocable` code above
-    //val Revocable(revocableDoer, revoker) = Foo.Doer.revocable(doer)
-    val Revocable(revocableDoer, revoker) = macros.revocable[Doer](doer)
+    val logger = org.slf4j.LoggerFactory.getLogger(&quot;modulation.Foo.Doer&quot;)
+    val logDoer = loggingDoer(doer, logger)
+    val result1 = Try(logDoer.doTheThing())
+    println(s&quot;result after first call: $result1&quot;)
 
-    new Guest(revocableDoer).start()
-    new ScheduledRevoker(revoker).start()
-
-    // After five seconds, exit program.
-    val shutdown: Runnable = new Runnable {
-      override def run(): Unit = scheduler.shutdown()
-    }
-    scheduler.schedule(shutdown, 5L, SECONDS)
+    val result2 = Try(logDoer.doTheThing())
+    println(s&quot;result after second call: $result2&quot;)
   }
-
 }</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/revocation.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/expiration.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -253,7 +213,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../examples/revocation.html" title="Revocation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -262,17 +222,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Modulation
+Revocation
 </span>
 </div>
 </a>
-<a href="../examples/expiration.html" title="Expiration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../examples/amplification.html" title="Amplification" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Expiration
+Amplification
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

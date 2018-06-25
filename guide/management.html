@@ -110,10 +110,11 @@ ocaps
     <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
     <li><a href="../examples/composition.html" class="page">Composition</a></li>
     <li><a href="../examples/attenuation.html" class="page">Attenuation</a></li>
-    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
     <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
+    <li><a href="../examples/expiration.html" class="page">Expiration</a></li>
     <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
+    <li><a href="../examples/abstraction.html" class="page">Abstraction</a></li>
     <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
@@ -133,7 +134,7 @@ ocaps
 <ul>
   <li><a href="../guide/management.html#managing-capabilities" class="header">Managing Capabilities</a>
   <ul>
-    <li><a href="../guide/management.html#managing-accessiblity-with-revocation" class="header">Managing Accessiblity with Revocation</a></li>
+    <li><a href="../guide/management.html#managing-accessibility-with-revocation" class="header">Managing Accessibility with Revocation</a></li>
     <li><a href="../guide/management.html#managing-behavior-with-modulation" class="header">Managing Behavior with Modulation</a></li>
     <li><a href="../guide/management.html#managing-lifecycle-with-expiration" class="header">Managing Lifecycle with Expiration</a></li>
   </ul></li>
@@ -156,7 +157,7 @@ ocaps
 <ul>
   <li><a href="../guide/management.html#managing-capabilities" class="header">Managing Capabilities</a>
   <ul>
-    <li><a href="../guide/management.html#managing-accessiblity-with-revocation" class="header">Managing Accessiblity with Revocation</a></li>
+    <li><a href="../guide/management.html#managing-accessibility-with-revocation" class="header">Managing Accessibility with Revocation</a></li>
     <li><a href="../guide/management.html#managing-behavior-with-modulation" class="header">Managing Behavior with Modulation</a></li>
     <li><a href="../guide/management.html#managing-lifecycle-with-expiration" class="header">Managing Lifecycle with Expiration</a></li>
   </ul></li>
@@ -171,8 +172,9 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#managing-capabilities" name="managing-capabilities" class="anchor"><span class="anchor-link"></span></a>Managing Capabilities</h1>
 <p>Management of capabilities is based around the concepts of <em>revocation</em> and <em>modulation</em>: being able to stop a capability that has already been assigned, and being able to augment the behavior of capabilities for security purposes.</p>
-<h3><a href="#managing-accessiblity-with-revocation" name="managing-accessiblity-with-revocation" class="anchor"><span class="anchor-link"></span></a>Managing Accessiblity with Revocation</h3>
-<p>This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout. This is done using <em>revocation</em>, but more importantly, this is done using a whole series of constructs based around <em>revocation</em>, the most important being the <code>Revocable</code> pattern, also known as the <a href="http://www.dtic.mil/docs/citations/ADA001721">Caretaker</a>.</p>
+<h3><a href="#managing-accessibility-with-revocation" name="managing-accessibility-with-revocation" class="anchor"><span class="anchor-link"></span></a>Managing Accessibility with Revocation</h3>
+<p>This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout. This is done using <em>revocation</em>, but more importantly, this is done using a whole series of constructs based around <em>revocation</em>, the most important being the <code>Revocable</code> pattern, also known as the <a href="http://www.dtic.mil/docs/citations/ADA001721">Caretaker</a>.</p><div class="callout note "><div class="callout-title">Note</div>
+<p>Please see the <a href="../examples/revocation.html">Revocation example</a> for a complete example.</p></div>
 <p>We&rsquo;ve shown an example of <em>revocation</em> in the bakery above, but revocation as a concept is important enough that it has a specific trait associated with it &ndash; a <code>Revoker</code>:</p>
 <pre class="prettyprint"><code class="language-scala">package ocaps
 
@@ -187,7 +189,7 @@ trait Revoker {
 
 object Revocable {
   def apply[C](capability: C)(cblock: (() =&gt; C) =&gt; C): Revocable[C] = {
-    val (thunk, revoker) = Revoker.pair(capability)
+    val (thunk, revoker) = Revoker.tuple(capability)
     val revocableCapability: C = cblock(thunk)
     Revocable(revocableCapability, revoker)
   }
@@ -227,7 +229,7 @@ val Revocable(revocableDoer, revoker) = revocable[Doer](access.doer)
 <pre class="prettyprint"><code class="language-scala">val revokerABC = Revoker.compose(revokerA, revokerB, revokerC)
 revokerABC.revoke() // revoke A, B, and C all at the same time.
 </code></pre>
-<p>By using revokers, you can tie capabilities to the lifespan of a user session by revoking them on session close or timeout. Any call to the capability after revocation will result in failure. </p>
+<p>By using revokers, you can tie capabilities to the lifespan of a user session by revoking them on session close or timeout. Any call to the capability after revocation will result in failure. For this reason, revocation is sometimes called <a href="http://soft.vub.ac.be/events/mobicrant_talks/talk2_OO_security.pdf">temporal attenuation</a>.</p>
 <p>Recovery from revocation is application specific. If an operation fails, the component that owns the capability may request a fresh new capability to replace the revoked one, or may require reauthorization or reauthentication before reinstantiation. Akka Actors work extremely well in this context, as does judicious use of the IO monad.</p>
 <h3><a href="#managing-behavior-with-modulation" name="managing-behavior-with-modulation" class="anchor"><span class="anchor-link"></span></a>Managing Behavior with Modulation</h3>
 <p>Modulation is an extremely powerful technique that wraps a capability in additional behavior. The canonical example of modulation is logging:</p>
@@ -241,7 +243,8 @@ revokerABC.revoke() // revoke A, B, and C all at the same time.
     }
   }
 }
-</code></pre>
+</code></pre><div class="callout note "><div class="callout-title">Note</div>
+<p>Please see <a href="../examples/modulation.html">modulation</a> for a complete example.</p></div>
 <p>Modulation of a capability must obey behavioral subtyping &ndash; it is acceptable to throw an exception and fail in security related conditions, but it is not acceptable to add new functionality, because it violates the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov substitution principle</a>. For example, the following is extremely rude:</p>
 <pre class="prettyprint"><code class="language-scala">def badlyBehavedDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
   new Foo.Doer {
@@ -294,7 +297,8 @@ def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
 }
 </code></pre>
 <h3><a href="#managing-lifecycle-with-expiration" name="managing-lifecycle-with-expiration" class="anchor"><span class="anchor-link"></span></a>Managing Lifecycle with Expiration</h3>
-<p>Expiration combines <em>modulation</em> of a capability with <em>revocation</em>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p>
+<p>Expiration combines <em>modulation</em> of a capability with <em>revocation</em>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p><div class="callout note "><div class="callout-title">Note</div>
+<p>Please see <a href="../examples/expiration.html">Expiration example</a> for a complete example.</p></div>
 <p>Expiration can be used to create a limited use capability, which is revoked after a certain number of calls.</p>
 <pre class="prettyprint"><code class="language-scala">def countBasedExpiration(doer: Foo.Doer, count: Int): Foo.Doer = {
   val latch = new java.util.concurrent.atomic.AtomicInteger(1)
