@@ -5,6 +5,7 @@
 * [Construction with Subtypes](subtypes.md)
 * [Composition](composition.md)
 * [Attenuation](attenuation.md)
+* [Abstraction](abstraction.md)
 * [Modulation](modulation.md)
 * [Revocation](revocation.md)
 * [Amplification](amplification.md)

@@ -297,4 +297,39 @@ final class TryAccess private {
 }
 ```
 
+Or you can go for a full-on type class approach:
+
+```scala
+object Document {
+  trait NameChanger[F[_]] {
+    def changeName(name: String): F[Unit]
+  }
+
+  trait WithEffect[C[_[_]], F[_]] {
+    def apply(capability: C[Id]): C[F]
+  }
+
+  // The default "no effect" type Id[A] = A
+  implicit val idEffect: NameChanger WithEffect Id = new WithEffect[NameChanger, Id] {
+    override def apply(capability: NameChanger[Id]): NameChanger[Id] = identity(capability)
+  }
+
+  // Apply a "Try" effect to the capability
+  implicit val tryEffect: NameChanger WithEffect Try = new WithEffect[NameChanger, Try] {
+    override def apply(capability: NameChanger[Id]): NameChanger[Try] = new NameChanger[Try] {
+      override def changeName(name: String): Try[Unit] =  Try(capability.changeName(name))
+    }
+  }
+
+  class Access {
+    def nameChanger[F[_]](doc: Document)(implicit ev: NameChanger WithEffect F): NameChanger[F] = {
+      val effect = implicitly[NameChanger WithEffect F]
+      effect(doc.capabilities.nameChanger)
+    }
+  }
+}
+
+val idNameChanger = access.nameChanger[Id](document)
+```
+
 This does of course leave the question open of how you manage access to the `Access` instance, since it hands out capabilities to anyone who asks.  This leads into the next section.
