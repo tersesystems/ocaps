@@ -15,13 +15,16 @@
  */
 package ocaps.examples
 
-// #modulation
-import ocaps.macros._
-import org.slf4j.Logger
+// #expiration
+import java.util.concurrent.CountDownLatch
 
+import ocaps._
+import ocaps.macros._
+
+import scala.concurrent.duration._
 import scala.util.Try
 
-object Modulation {
+object Expiration {
   final case class Foo(private val name: String) {
     private object capabilities {
       val doer: Foo.Doer = new Foo.Doer {
@@ -42,16 +45,35 @@ object Modulation {
     }
   }
 
-  // #logging
-  def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
-    val before: String => Unit = methodName => {
-      logger.info(s"$methodName: before call")
-    }
-    val after: (String, Any) => Unit = (methodName, result) =>
-      logger.info(s"$methodName: after returns $result")
-    modulate[Foo.Doer](doer, before, after)
+  // #countable
+  def countBasedExpiration(doer: Foo.Doer, count: Int): Foo.Doer = {
+    val countDownLatch = new CountDownLatch(count)
+    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
+    val before: String => Unit = _ => countDownLatch.countDown()
+    val after: (String, Any) => Unit = (_, _) =>
+      if (countDownLatch.getCount == 0) {
+        revoker.revoke()
+      }
+    modulate[Foo.Doer](revocableDoer, before, after)
   }
-  // #logging
+  // #countable
+
+  // #timer
+  def timerBasedExpiration(
+                            doer: Foo.Doer,
+                            duration: FiniteDuration
+                          ): Foo.Doer = {
+    val deadline = duration.fromNow
+    val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
+    val before: String => Unit = _ => ()
+    val after: (String, Any) => Unit = { (_, _) =>
+      if (deadline.isOverdue()) {
+        revoker.revoke()
+      }
+    }
+    modulate[Foo.Doer](revocableDoer, before, after)
+  }
+  // #timer
 
   def main(args: Array[String]): Unit = {
     val access = new Foo.Access()
@@ -59,12 +81,12 @@ object Modulation {
     val doer = access.doer(foo)
 
     val logger = org.slf4j.LoggerFactory.getLogger("modulation.Foo.Doer")
-    val logDoer = loggingDoer(doer, logger)
-    val result1 = Try(logDoer.doTheThing())
+    val countExpiringDoer = countBasedExpiration(doer, 1)
+    val result1 = Try(countExpiringDoer.doTheThing())
     println(s"result after first call: $result1")
 
-    val result2 = Try(logDoer.doTheThing())
+    val result2 = Try(countExpiringDoer.doTheThing())
     println(s"result after second call: $result2")
   }
 }
-// #modulation
+// #expiration

@@ -3,9 +3,15 @@
 
 Management of capabilities is based around the concepts of *revocation* and *modulation*: being able to stop a capability that has already been assigned, and being able to augment the behavior of capabilities for security purposes.
 
-### Managing Accessiblity with Revocation
+### Managing Accessibility with Revocation
 
 This naturally brings up the question of how to limit access to an already granted capability, for example to limit the lifespan of a capability to the lifespan of a user session, so the capability is no longer valid after logout or timeout.  This is done using *revocation*, but more importantly, this is done using a whole series of constructs based around *revocation*, the most important being the `Revocable` pattern, also known as the [Caretaker](http://www.dtic.mil/docs/citations/ADA001721).
+
+@@@ note
+
+Please see the @ref:[Revocation example](../examples/revocation.md) for a complete example.
+
+@@@
 
 We've shown an example of *revocation* in the bakery above, but revocation as a concept is important enough that it has a specific trait associated with it -- a `Revoker`:
 
@@ -28,7 +34,7 @@ package ocaps
 
 object Revocable {
   def apply[C](capability: C)(cblock: (() => C) => C): Revocable[C] = {
-    val (thunk, revoker) = Revoker.pair(capability)
+    val (thunk, revoker) = Revoker.tuple(capability)
     val revocableCapability: C = cblock(thunk)
     Revocable(revocableCapability, revoker)
   }
@@ -81,7 +87,7 @@ val revokerABC = Revoker.compose(revokerA, revokerB, revokerC)
 revokerABC.revoke() // revoke A, B, and C all at the same time.
 ```
 
-By using revokers, you can tie capabilities to the lifespan of a user session by revoking them on session close or timeout.  Any call to the capability after revocation will result in failure.  
+By using revokers, you can tie capabilities to the lifespan of a user session by revoking them on session close or timeout.  Any call to the capability after revocation will result in failure.  For this reason, revocation is sometimes called [temporal attenuation](http://soft.vub.ac.be/events/mobicrant_talks/talk2_OO_security.pdf).
 
 Recovery from revocation is application specific.  If an operation fails, the component that owns the capability may request a fresh new capability to replace the revoked one, or may require reauthorization or reauthentication before reinstantiation.  Akka Actors work extremely well in this context, as does judicious use of the IO monad.
 
@@ -101,6 +107,12 @@ def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
   }
 }
 ```
+
+@@@ note 
+
+Please see @ref:[modulation](../examples/modulation.md) for a complete example.
+
+@@@
 
 Modulation of a capability must obey behavioral subtyping -- it is acceptable to throw an exception and fail in security related conditions, but it is not acceptable to add new functionality, because it violates the [Liskov substitution principle](https://en.wikipedia.org/wiki/Liskov_substitution_principle).  For example, the following is extremely rude:
 
@@ -169,6 +181,12 @@ def loggingDoer(doer: Foo.Doer, logger: Logger): Foo.Doer = {
 ### Managing Lifecycle with Expiration
 
 Expiration combines *modulation* of a capability with *revocation*.  Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.
+
+@@@ note 
+
+Please see @ref:[Expiration example](../examples/expiration.md) for a complete example.
+
+@@@
 
 Expiration can be used to create a limited use capability, which is revoked after a certain number of calls.
 

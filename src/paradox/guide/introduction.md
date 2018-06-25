@@ -3,15 +3,17 @@
 
 Object oriented programming starts with a single object.  Functional programming starts with a single function.  The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives.  OOP is all about wiring objects together.  FP is all about wiring functions together. 
 
-Object-capability systems (OCAP) start with a single capability, and builds on it by wiring capabilities together.  
+In the same way, [Object-capability systems](https://en.wikipedia.org/wiki/Capability-based_security) start with a single capability, and builds on it by wiring capabilities together.  Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.
 
 So what is a capability?
 
 ## Definition
+
+We use the following definitions for capabilities.
  
 **A capability is a security primitive that confers authority by reference.**
 
-The definition of authority used here is from [Permission and Authority Revisited: towards a formalization](https://ai.google/research/pubs/pub45570):
+We use the [following definition of authority](https://ai.google/research/pubs/pub45570):
 
 **An authority is *sufficient justification* to affect a resource.**
 
@@ -69,4 +71,6 @@ The assumption in this document is that you are playing a straight game, where r
 
 Basically, you're not setting or accessing capabilities through global state through singleton objects, static fields, or thread locals.  You can use Akka and only send capabilities through messages between actors for a more accurate capability model, but it's not required.
 
-Likewise, we assume that you're not a hostile attacker -- if you are hostile and can execute code in the JVM, it's trivial to subvert the SecurityManager, call `setAccessible` and start monkeypatching, so effectively all fields and methods are public if you scratch hard enough.  Scala is not an ocap language, this is purely about capabilities as a software engineering practice.
+Likewise, we assume that you're not a hostile attacker -- if you are hostile and can execute code in the JVM, it's trivial to subvert the SecurityManager, call `setAccessible` and start [monkeypatching](https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/), so effectively all fields and methods are public if you scratch hard enough.  Scala is not an ocap language, so this is purely about capabilities as a software engineering practice.
+
+
