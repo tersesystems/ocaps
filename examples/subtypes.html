@@ -142,7 +142,7 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#construction-with-subtypes" name="construction-with-subtypes" class="anchor"><span class="anchor-link"></span></a>Construction with Subtypes</h1>
-<p>This example shows how to create capabilities from an abstract base type.</p>
+<p>This example shows how to create capabilities from an abstract base type. You can read <a href="../guide/construction.html">Constructing Capabilities</a> in the guide for more information.</p>
 <pre class="prettyprint"><code class="language-scala">object Subtypes {
 
   import Fruit._
@@ -154,7 +154,7 @@ ocaps
     case object Eaten extends FruitState
   }
 
-  sealed trait Fruit {
+  trait Fruit {
     import Fruit._
 
     private[this] var state: FruitState = FruitState.Uneaten
@@ -179,7 +179,7 @@ ocaps
 
   object Fruit {
 
-    sealed trait Eater[+F &lt;: Fruit] {
+    trait Eater[+F &lt;: Fruit] {
       def eat(): F
     }
 
@@ -249,7 +249,7 @@ ocaps
     val eatenPear: Try[Option[Pear]] = mutt.eats(pear)
     println(s&quot;mutt&#39;s pear = $eatenPear&quot;)
 
-    var jeff = User(&quot;jeff&quot;)
+    val jeff = User(&quot;jeff&quot;)
     val pear2 = new Pear()
     jeff.eats(pear2)
   }

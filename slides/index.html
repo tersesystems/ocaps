@@ -224,24 +224,78 @@ val zipCode: String = requestParameter
 
 ```scala
 scala> import eu.timepit.refined._
+<console>:12: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
 import eu.timepit.refined._
 
 scala> import eu.timepit.refined.api.Refined
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:15: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
 import eu.timepit.refined.api.Refined
 
 scala> import eu.timepit.refined.string._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:16: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
 import eu.timepit.refined.string._
 
 scala> import eu.timepit.refined.auto._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:19: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
 import eu.timepit.refined.auto._
 
 scala> type ZipCode = String Refined MatchesRegex[W.`"""\\d{5}"""`.T]
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
 defined type alias ZipCode
 
 scala> val requestParameter: String = "94111"
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
 requestParameter: String = 94111
 
 scala> val v: Either[String, ZipCode] = refineV(requestParameter)
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
 v: Either[String,ZipCode] = Right(94111)
 ```
 
@@ -348,17 +402,86 @@ object Document {
 
 ```scala
 val document = new Document("Steve")
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
 // document: CapExample.Document = Document(Steve)
 
 val access = new Document.Access()
-// access: CapExample.Document.Access = CapExample$Document$Access@696263ff
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// access: CapExample.Document.Access = CapExample$Document$Access@67cb824a
 
 val nameChanger = access.nameChanger(document)
-// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@41e5abc6
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@63a75876
 
 nameChanger.changeName("Will")
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
 
 println(s"result = $document")
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
 // result = Document(Will)
 ```
 
@@ -442,15 +565,90 @@ class ItemRepository {
 
 ```scala
 scala> val repo: ItemRepository = new ItemRepository {}
-repo: RevokeExample.ItemRepository = $anon$1@11aee48f
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+repo: RevokeExample.ItemRepository = $anon$1@78778551
 
 scala> val access = new ItemRepository.Access()
-access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@56f4d78a
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@4a41cb76
 
 scala> val finder = access.finder(repo)
-finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@1339c48f
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@b0b1f59
 
 scala> val maybeItem: Option[Item] = finder.find(ID)
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
 maybeItem: Option[RevokeExample.Item] = Some(Item(c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7,item name))
 ```
 
@@ -459,6 +657,30 @@ maybeItem: Option[RevokeExample.Item] = Some(Item(c31d34e2-5892-4a2d-9fd5-3ce2e0
 
 ```scala
 scala> import scala.util._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:33: warning: Unused import
+       import scala.util._
+                         ^
 import scala.util._
 
 scala> class TryAccess(access: ItemRepository.Access) {
@@ -469,17 +691,104 @@ scala> class TryAccess(access: ItemRepository.Access) {
      |     Try(access.updater(repo).update(item))
      |   }
      | }
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:30: warning: Unused import
+       import repo
+                                                                                    ^
+<console>:31: warning: Unused import
+       import access
+                                                                                    ^
 defined class TryAccess
 
 scala> val tryAccess = new TryAccess(access)
-tryAccess: TryAccess = TryAccess@7396dc3f
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:32: warning: Unused import
+       import scala.util._
+                         ^
+tryAccess: TryAccess = TryAccess@399baba9
 
 scala> // Create a finder which uses `Try` as an effect
      | val tryFinder = tryAccess.finder(repo)
-tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$13631/1213625180@b1886de
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:32: warning: Unused import
+       import scala.util._
+                         ^
+tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$9822/2106517192@54b0d277
 
 scala> // Now we know it won't throw exceptions :-)
      | val tryMaybeItem: Try[Option[Item]] = tryFinder.find(ID)
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
 tryMaybeItem: scala.util.Try[Option[RevokeExample.Item]] = Success(Some(Item(c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7,item name)))
 ```
 
@@ -501,24 +810,189 @@ tryMaybeItem: scala.util.Try[Option[RevokeExample.Item]] = Success(Some(Item(c31
 
 ```scala
 scala> import ocaps._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:36: warning: Unused import
+       import ocaps._
+                    ^
 import ocaps._
 
 scala> import ocaps.macros._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:39: warning: Unused import
+       import ocaps.macros._
+                           ^
 import ocaps.macros._
 
 scala> // Create proxy finder that will forward "find" method to `finder`
      | // revocableFinder is also called a "caretaker"
      | val Revocable(revocableFinder, revoker) = revocable[ItemRepository.Finder[Id]](finder)
-revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@95865f2
-revoker: ocaps.Revoker = ocaps.LatchRevoker@51b04c56
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:32: warning: Unused import
+       import scala.util._
+                         ^
+revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@24f996c6
+revoker: ocaps.Revoker = ocaps.LatchRevoker@595d7011
 
 scala> // Call the revoker, which causes forwarding to stop...
      | revoker.revoke()
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
 ```
 
 ```scala
 scala> // Call find as usual...
      | revocableFinder.find(ID) // throws RevokedException!
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
 ocaps.RevokedException: Capability revoked!
 ```
 
@@ -585,16 +1059,145 @@ Wrapping an object in another class so that it cannot be seen or tampered with u
 
 ```scala
 scala> import ocaps._
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:42: warning: Unused import
+       import ocaps._
+                    ^
 import ocaps._
 
 scala> val (sealer, unsealer) = Brand.create[String]("string hint").tuple
-sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$13760/170191366@789681fc
-unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$13761/1525669092@1079cbb1
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$9951/1405785492@169ba0
+unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$9952/1771133808@630908d7
 
 scala> val sealedBox = sealer("foo")
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
 sealedBox: ocaps.Brand.Box[String] = <sealed string hint box>
 
 scala> val stringIsFoo = unsealer(sealedBox)
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
 stringIsFoo: Option[String] = Some(foo)
 ```
 
@@ -614,27 +1217,258 @@ stringIsFoo: Option[String] = Some(foo)
 
 ```scala
 scala> case class Food(name: String)
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
 defined class Food
 
 scala> case class Can(food: Brand.Box[Food])
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
 defined class Can
 
 scala> class CanOpener(unsealer: Brand.Unsealer[Food]) {
      |   def open(can: Can): Food = unsealer(can.food).get
      | }
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:42: warning: Unused import
+       import unsealer
+                                                                                                                    ^
 defined class CanOpener
 
 scala> val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
-sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$13760/170191366@262966a1
-unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$13761/1525669092@6af6f830
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:42: warning: Unused import
+       import sealer
+                                                                                                                    ^
+<console>:43: warning: Unused import
+       import unsealer
+                                                                                                                    ^
+sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$9951/1405785492@62034dbd
+unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$9952/1771133808@71339ccc
 
 scala> val canOpener = new CanOpener(unsealer)
-canOpener: CanOpener = CanOpener@2d2f0b6e
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
+canOpener: CanOpener = CanOpener@6c82dac2
 
 scala> val canOfSpam: Can = Can(sealer(Food("spam")))
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
 canOfSpam: Can = Can(<sealed canned food box>)
 
 scala> canOpener.open(canOfSpam)
+<console>:10: warning: Unused import
+       import eu.timepit.refined._
+                                 ^
+<console>:12: warning: Unused import
+       import eu.timepit.refined.api.Refined
+                                     ^
+<console>:14: warning: Unused import
+       import eu.timepit.refined.string._
+                                        ^
+<console>:17: warning: Unused import
+       import eu.timepit.refined.auto._
+                                      ^
+<console>:21: warning: Unused import
+       import CapExample._
+                         ^
+<console>:24: warning: Unused import
+       import java.util._
+                        ^
+<console>:28: warning: Unused import
+       import RevokeExample._
+                            ^
+<console>:31: warning: Unused import
+       import scala.util._
+                         ^
+<console>:34: warning: Unused import
+       import ocaps._
+                    ^
+<console>:37: warning: Unused import
+       import ocaps.macros._
+                           ^
+<console>:40: warning: Unused import
+       import ocaps._
+                    ^
 res10: Food = Food(spam)
 ```
 
@@ -756,13 +1590,139 @@ class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
 
 ```scala
 val m = RevokerMembrane()
-// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@667046df
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@7a49a66e
 
 val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
-// location: MembraneExample.Location = MembraneExample$Location@7dcaf79e
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// location: MembraneExample.Location = MembraneExample$Location@6db1a1c7
 
 val access = new MembraneAccess(new Location.Access(), m)
-// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@4cfb7780
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@1e932e3c
 
 val format = for {
   timeZone <- access.timeZoneReader(location).timeZone
@@ -772,10 +1732,94 @@ val format = for {
     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
       .withLocale(locale))
 }
-// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@3bcdc3dc
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@5c06b554
 
 format.get
-// res11: String = Saturday, June 23, 2018 7:30:23 PM PDT
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// res11: String = Sunday, June 24, 2018 7:29:12 PM PDT
 ```
 
 ---
@@ -783,10 +1827,94 @@ format.get
 
 ```scala
 val m2 = RevokerMembrane()
-// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@1d5ca3e5
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@19564267
 
 val access2 = new MembraneAccess(new Location.Access(), m2)
-// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@177434ee
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@3e8b1495
 
 val format2 = for {
   timeZone <- access2.timeZoneReader(location).timeZone
@@ -796,13 +1924,187 @@ val format2 = for {
     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
       .withLocale(locale))
 }
-// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@e162092
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@5f14add8
 
 m2.revoke()
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
 ```
 
 ```scala
 format2.get
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
+// <console>:10: warning: Unused import
+//        import eu.timepit.refined._
+//                                  ^
+// <console>:12: warning: Unused import
+//        import eu.timepit.refined.api.Refined
+//                                      ^
+// <console>:14: warning: Unused import
+//        import eu.timepit.refined.string._
+//                                         ^
+// <console>:17: warning: Unused import
+//        import eu.timepit.refined.auto._
+//                                       ^
+// <console>:21: warning: Unused import
+//        import CapExample._
+//                          ^
+// <console>:24: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:28: warning: Unused import
+//        import RevokeExample._
+//                             ^
+// <console>:31: warning: Unused import
+//        import scala.util._
+//                          ^
+// <console>:34: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:37: warning: Unused import
+//        import ocaps.macros._
+//                            ^
+// <console>:40: warning: Unused import
+//        import ocaps._
+//                     ^
+// <console>:43: warning: Unused import
+//        import java.util._
+//                         ^
+// <console>:46: warning: Unused import
+//        import java.time._
+//                         ^
+// <console>:49: warning: Unused import
+//        import java.time.format._
+//                                ^
+// <console>:56: warning: Unused import
+//        import Location._
+//                        ^
 // ocaps.RevokedException: Capability revoked!
 ```
 

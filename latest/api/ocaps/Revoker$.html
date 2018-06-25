@@ -519,23 +519,6 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="ocaps.Revoker#pair" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="pair[C](capability:=&gt;C):(ocaps.Thunk[C],ocaps.Revoker)"></a><a id="pair[C](⇒C):(Thunk[C],Revoker)"></a>
-      <span class="permalink">
-      <a href="../ocaps/Revoker$.html#pair[C](capability:=&gt;C):(ocaps.Thunk[C],ocaps.Revoker)" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">pair</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="capability">capability: ⇒ <span class="extype" name="ocaps.Revoker.pair.C">C</span></span>)</span><span class="result">: (<a href="index.html#Thunk[C]=()=&gt;C" class="extmbr" name="ocaps.Thunk">Thunk</a>[<span class="extype" name="ocaps.Revoker.pair.C">C</span>], <a href="Revoker.html" class="extype" name="ocaps.Revoker">Revoker</a>)</span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a pair with a thunk which may throw an exception when called.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a pair with a thunk which may throw an exception when called.</p><p>Commonly used with <code>ocap.Revocable</code>.
-</p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the type of the capability.</p></dd><dt class="param">capability</dt><dd class="cmt"><p>the input capability</p></dd><dt>returns</dt><dd class="cmt"><p>a thunk of a capability and a revoker as a tuple.</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -568,6 +551,23 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="ocaps.Revoker#tuple" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="tuple[C](capability:=&gt;C):(ocaps.Thunk[C],ocaps.Revoker)"></a><a id="tuple[C](⇒C):(Thunk[C],Revoker)"></a>
+      <span class="permalink">
+      <a href="../ocaps/Revoker$.html#tuple[C](capability:=&gt;C):(ocaps.Thunk[C],ocaps.Revoker)" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="capability">capability: ⇒ <span class="extype" name="ocaps.Revoker.tuple.C">C</span></span>)</span><span class="result">: (<a href="index.html#Thunk[C]=()=&gt;C" class="extmbr" name="ocaps.Thunk">Thunk</a>[<span class="extype" name="ocaps.Revoker.tuple.C">C</span>], <a href="Revoker.html" class="extype" name="ocaps.Revoker">Revoker</a>)</span>
+      </span>
+      
+      <p class="shortcomment cmt">Creates a pair with a thunk which may throw an exception when called.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a pair with a thunk which may throw an exception when called.</p><p>Commonly used with <code>ocap.Revocable</code>.
+</p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the type of the capability.</p></dd><dt class="param">capability</dt><dd class="cmt"><p>the input capability</p></dd><dt>returns</dt><dd class="cmt"><p>a thunk of a capability and a revoker as a tuple.</p></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

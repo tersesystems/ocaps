@@ -246,7 +246,7 @@ val userActivity = new DocumentActivity(reader)
 <p>The discussion around capabilities and their lifecycles, and how capabilities can be passed around and delegated to other classes is the biggest point of difference between permission based access control (which always requires an identity context) and capability based access control (which depends on an object reference). In short, once you have assigned capabilities, you must then manage them.</p>
 <h2><a href="#dispensing-capabilities-with-composition" name="dispensing-capabilities-with-composition" class="anchor"><span class="anchor-link"></span></a>Dispensing Capabilities with Composition</h2>
 <p>When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.</p>
-<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: Set[AnyRef]) {
+<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: Set[Capability]) {
  ...
 }
 
@@ -255,7 +255,7 @@ val caller = new Caller(capabilitySet)
 </code></pre>
 <p>Note that <code>Caller</code> does not know what capabilities may be presented to it, and so must iterate to see if it has access. This is fine as far as it goes, but it does inherently provide collection mechanics on top of managing capabilities, and loses some type information.</p>
 <p>Another option is to use <em>composition</em> to return an object that directly incorporates all the capabilities.</p>
-<pre class="prettyprint"><code class="language-scala">class Caller(capabilities: AnyRef) {
+<pre class="prettyprint"><code class="language-scala">class Caller(caps: Reader with Writer) {
  ...
 }
 
@@ -274,11 +274,17 @@ val caller = new Caller(capabilities)
   }
 }
 </code></pre>
-<p>Or the caller can decompose through <em>attenuation</em>:</p>
-<pre class="prettyprint"><code class="language-scala">val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
+<p>Or, if the caller has specific type information that is needed from a composed capability, the provider can extract the facets through <em>attenuation</em>:</p>
+<pre class="prettyprint"><code class="language-scala">class Caller(reader: Reader, writer: Writer) {
+  ...
+}
+
+val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
 val writer: Writer = ocaps.macros.attenuate[Writer](capabilities)
+
+val caller = new Caller(reader, writer)
 </code></pre>
-<p>You can see a complete <a href="../examples/attenuation.html">attenuation example</a> for more details.</p>
+<p>You can see a complete <a href="../examples/attenuation.html">attenuation example</a> for more details. Also see the <a href="../examples/gatekeeper.md">gatekeeper example</a>.</p>
 <p>Composition is not the only way of arranging capabilities, of course. Joe Duffy has a great <a href="http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/">post</a> where he discusses the practical aspects of capabilities:</p>
 <blockquote>
   <p>I’ll be the first to admit, there was a maturity process that developers went through, as they learned about the design patterns in an object capability system. It was common for “big bags” of capabilities to grow over time, and/or for capabilities to be requested at an inopportune time. For example, imagine a Stopwatch API. It probably needs the Clock. Do you pass the Clock to every operation that needs to access the current time, like Start and Stop? Or do you construct the Stopwatch with a Clock instance up-front, thereby encapsulating the Stopwatch’s use of the time, making it easier to pass to others (recognizing, importantly, that this essentially grants the capability to read the time to the recipient). Another example, if your abstraction requires 15 distinct capabilities to get its job done, does its constructor take a flat list of 15 objects? What an unwieldy, annoying constructor! Instead, a better approach is to logically group these capabilities into separate objects, and maybe even use contextual storage like parents and children to make fetching them easier.</p>

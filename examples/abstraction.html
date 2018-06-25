@@ -18,7 +18,7 @@
 
 <meta name="description" content="ocaps">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Attenuation · ocaps</title>
+<title>Abstraction</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -41,7 +41,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../index.html" title="ocaps" class="md-header-nav__button md-logo">
+<a href="../examples/abstraction.html" title="Abstraction" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -50,12 +50,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 </div>
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-<span class="md-header-nav__topic">
-ocaps
-</span>
-<span class="md-header-nav__topic">
-Attenuation
-</span>
+Abstraction
 </div>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
@@ -97,35 +92,11 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../index.html" title="ocaps">
-ocaps
+<a href="../examples/abstraction.html" title="Abstraction">
+Abstraction
 </a>
 </label>
 <ul>
-  <li><a href="../running.html" class="page">Running</a></li>
-  <li><a href="../examples/index.html" class="page">Examples</a>
-  <ul>
-    <li><a href="../examples/construction.html" class="page">Construction</a></li>
-    <li><a href="../examples/effects.html" class="page">Construction with Effects</a></li>
-    <li><a href="../examples/subtypes.html" class="page">Construction with Subtypes</a></li>
-    <li><a href="../examples/composition.html" class="page">Composition</a></li>
-    <li><a href="../examples/attenuation.html" class="active page">Attenuation</a></li>
-    <li><a href="../examples/modulation.html" class="page">Modulation</a></li>
-    <li><a href="../examples/revocation.html" class="page">Revocation</a></li>
-    <li><a href="../examples/amplification.html" class="page">Amplification</a></li>
-    <li><a href="../examples/delegation.html" class="page">Delegation</a></li>
-    <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
-    <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
-    <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
-  </ul></li>
-  <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
-  <ul>
-    <li><a href="../guide/introduction.html" class="page">Introducing Capabilities</a></li>
-    <li><a href="../guide/construction.html" class="page">Constructing Capabilities</a></li>
-    <li><a href="../guide/authorization.html" class="page">Authorizing Capabilities</a></li>
-    <li><a href="../guide/management.html" class="page">Managing Capabilities</a></li>
-    <li><a href="../guide/confinement.html" class="page">Confining Capabilities</a></li>
-  </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 </nav>
@@ -141,83 +112,132 @@ ocaps
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#attenuation" name="attenuation" class="anchor"><span class="anchor-link"></span></a>Attenuation</h1>
-<p>This is an example of modulation in ocaps. You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
-<pre class="prettyprint"><code class="language-scala">import ocaps.macros._
+<h1><a href="#abstraction" name="abstraction" class="anchor"><span class="anchor-link"></span></a>Abstraction</h1>
+<p>Packing lower level capabilities into more convenient APIs. See <a href="https://github.com/GravityNetwork/Gravity/wiki/What-are-Capabilities#abstraction">definition</a>.</p>
+<p>Here&rsquo;s an example of a repository exposed with several facets, with a higher level <code>NameChanger</code> capability composed out of two lower level ones.</p>
+<pre class="prettyprint"><code class="language-scala">/**
+  * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
+  *
+  * The capabilities use tagless final to show how you can use different effects with capabilities.
+  *
+  * For example, the Id effect is an identity, so a failure will cause an exception.
+  *
+  * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
+  */
+object RepositoryComposition {
+  val ID = UUID.fromString(&quot;c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7&quot;)
 
-object Attenuation {
+  import ItemRepository._
 
-  final class Foo(private var name: String) {
-    private object capabilities {
-      val doer: Foo.Doer = new Foo.Doer {
-        override def doTheThing(): Unit = {
-          println(s&quot;$name.doTheThing()&quot;)
-        }
-      }
-      val changer: Foo.Changer = new Foo.Changer {
-        override def changeName(name: String): Foo.this.type = {
-          Foo.this.name = name
-          Foo.this
-        }
-      }
-    }
-  }
-
-  object Foo {
-
-    trait Doer {
-      def doTheThing(): Unit
-    }
-
-    trait Changer {
-      def changeName(name: String): Foo
-    }
-
-    trait Derper {
-      def derp(): Unit
-    }
-
-    class Access {
-      def doer(foo: Foo): Doer = foo.capabilities.doer
-      def changer(foo: Foo): Changer = foo.capabilities.changer
-    }
-  }
+  val access = new ItemRepository.Access()
 
   def main(args: Array[String]): Unit = {
-    import Foo._
+    val itemRepository = new ItemRepository()
 
-    val access = new Access()
-    val foo = new Foo(&quot;foo&quot;)
+    changeWithId(itemRepository)
+    changeWithTry(itemRepository)
+  }
 
-    val doer: Doer = access.doer(foo)
-    val changer: Changer = access.changer(foo)
-    val derper: Derper = new Derper {
-      override def derp(): Unit = println(&quot;derp&quot;)
+  def changeWithId(itemRepository: ItemRepository): Unit = {
+    val idNameChanger = new NameChanger[Id](
+      access.finder(itemRepository),
+      access.updater(itemRepository),
+      _.map(identity)
+    )
+    val idResult = idNameChanger.changeName(ID, &quot;new name&quot;)
+    println(s&quot;id result = $idResult&quot;)
+  }
+
+  def changeWithTry(itemRepository: ItemRepository): Unit = {
+    val idFinder = access.finder(itemRepository)
+    val tryFinder = new Finder[Try] {
+      override def find(id: UUID): Try[Option[Item]] = Try(idFinder.find(id))
     }
-    val doerChangerDerper =
-      compose[Doer with Changer with Derper](doer, changer, derper)
 
-    // We want an attenuation that makes only Doer available
-    val castDoer: Doer = doerChangerDerper.asInstanceOf[Doer]
-    // But we can recover Derper capability here!
-    val doerAsDerper: Derper = castDoer.asInstanceOf[Derper]
-    // whoops :-(
-    doerAsDerper.derp()
+    val idUpdater = access.updater(itemRepository)
+    val tryUpdater = new Updater[Try] {
+      override def update(item: Item): Try[UpdateResult] =
+        Try(idUpdater.update(item))
+    }
 
-    // Attenuation doesn&#39;t use downcasting, is safe!
-    val attenuatedDoer: Doer = attenuate[Doer](doerChangerDerper)
-    try {
-      val downcastAttenuatedDerper = attenuatedDoer.asInstanceOf[Derper]
-      attenuatedDoer.doTheThing()
-    } catch {
-      case e: ClassCastException =&gt;
-        println(&quot;Can&#39;t downcast to a different type using the macro!&quot;)
+    val tryNameChanger = new NameChanger[Try](tryFinder, tryUpdater, {
+      case Success(Some(result)) =&gt; result.map(Some(_))
+      case Success(None)         =&gt; Success(None)
+      case Failure(ex)           =&gt; Failure(ex)
+    })
+    val tryResult = tryNameChanger.changeName(ID, &quot;new name&quot;)
+    println(s&quot;try result = $tryResult&quot;)
+  }
+
+  class NameChanger[G[_]: Functor](
+    finder: Finder[G],
+    updater: Updater[G],
+    transform: G[Option[G[UpdateResult]]] =&gt; G[Option[UpdateResult]]
+  ) {
+    def changeName(id: UUID, newName: String): G[Option[UpdateResult]] = {
+      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map {
+        maybeItem: Option[Item] =&gt;
+          maybeItem.map { item =&gt;
+            updater.update(item.copy(name = newName))
+          }
+      }
+      transform(saved)
     }
   }
+
+  case class Item(id: UUID, name: String)
+
+  class ItemRepository {
+    import ItemRepository._
+
+    private val items = Seq(Item(ID, &quot;item name&quot;))
+
+    private def find(id: UUID): Option[Item] = items.find(_.id == id)
+
+    private def update(u: Item): UpdateResult = UpdateResult(s&quot;item $u updated&quot;)
+
+    private object capabilities {
+      val finder: Finder[Id] = new Finder[Id]() {
+        override def find(id: UUID): Id[Option[Item]] =
+          ItemRepository.this.find(id)
+      }
+      val updater: Updater[Id] = new Updater[Id]() {
+        override def update(item: Item): Id[UpdateResult] =
+          ItemRepository.this.update(item)
+      }
+    }
+  }
+
+  object ItemRepository {
+    trait Finder[F[_]] {
+      def find(id: UUID): F[Option[Item]]
+    }
+
+    trait Updater[F[_]] {
+      def update(item: Item): F[UpdateResult]
+    }
+
+    case class UpdateResult(message: String)
+
+    class Access {
+      def finder(repo: ItemRepository): Finder[Id] = repo.capabilities.finder
+      def updater(repo: ItemRepository): Updater[Id] = repo.capabilities.updater
+    }
+
+    class TryAccess(access: Access) {
+      def finder(repo: ItemRepository): Finder[Try] = new Finder[Try] {
+        override def find(id: UUID): Try[Option[Item]] = Try(access.finder(repo).find(id))
+      }
+      def updater(repo: ItemRepository): Updater[Try] = new Updater[Try] {
+        override def update(item: Item): Try[UpdateResult] = Try(access.updater(repo).update(item))
+      }
+    }
+  }
+
 }</code></pre>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/attenuation.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/abstraction.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -231,36 +251,6 @@ Edit this page
 </div>
 </main>
 <footer class="md-footer">
-<div class="md-footer-nav">
-<nav class="md-footer-nav__inner md-grid">
-<a href="../examples/composition.html" title="Composition" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-<div class="md-flex__cell md-flex__cell--shrink">
-<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-</div>
-<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-<span class="md-flex__ellipsis">
-<span class="md-footer-nav__direction">
-Previous
-</span>
-Composition
-</span>
-</div>
-</a>
-<a href="../examples/modulation.html" title="Modulation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-<span class="md-flex__ellipsis">
-<span class="md-footer-nav__direction">
-Next
-</span>
-Modulation
-</span>
-</div>
-<div class="md-flex__cell md-flex__cell--shrink">
-<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-</div>
-</a>
-</nav>
-</div>
 <div class="md-footer-meta md-typeset">
 <div class="md-footer-meta__inner md-grid">
 <div class="md-footer-copyright">

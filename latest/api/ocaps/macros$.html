@@ -335,11 +335,11 @@
       
       <p class="shortcomment cmt">Composition merges together two capabilities into one that has the power of both.</p><div class="fullcomment"><div class="comment cmt"><p>Composition merges together two capabilities into one that has the power of both.</p><p>Use this as follows:</p><pre><span class="kw">val</span> doerChanger: Doer <span class="kw">with</span> Changer = compose[Doer <span class="kw">with</span> Changer](doer, changer)</pre><p>and it has the effect of</p><pre><span class="kw">object</span> Foo {
 
- <span class="kw">sealed</span> <span class="kw">trait</span> Doer {
+ <span class="kw">trait</span> Doer {
    <span class="kw">def</span> doTheThing(): <span class="std">Unit</span>
  }
 
- <span class="kw">sealed</span> <span class="kw">trait</span> Changer {
+ <span class="kw">trait</span> Changer {
    <span class="kw">def</span> changeName(name: <span class="std">String</span>): Foo
 }
 

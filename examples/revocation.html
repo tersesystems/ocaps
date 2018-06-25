@@ -142,6 +142,7 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#revocation" name="revocation" class="anchor"><span class="anchor-link"></span></a>Revocation</h1>
+<p>This is an example of revocation in ocaps. You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
 <pre class="prettyprint"><code class="language-scala">object Revocation {
 
   final class Foo(name: String) {
@@ -158,7 +159,7 @@ ocaps
   }
 
   object Foo {
-    sealed trait Doer {
+    trait Doer {
       def doTheThing(): Unit
     }
 
@@ -186,8 +187,8 @@ ocaps
   class Guest(doer: Foo.Doer) {
     def start(): Unit = {
       // Keep doing the thing forever, every second.
-      val doTheThing: Runnable = { () =&gt;
-        {
+      val doTheThing: Runnable = new Runnable {
+        override def run(): Unit = {
           try {
             doer.doTheThing()
           } catch {
@@ -203,7 +204,9 @@ ocaps
   class ScheduledRevoker(revoker: Revoker) {
     def start(): Unit = {
       // After three seconds, the admin decides to stop you doing the thing.
-      val adminRevoke: Runnable = () =&gt; revoker.revoke()
+      val adminRevoke: Runnable = new Runnable {
+        override def run(): Unit =  revoker.revoke()
+      }
       scheduler.schedule(adminRevoke, 3L, SECONDS)
     }
   }
@@ -223,7 +226,9 @@ ocaps
     new ScheduledRevoker(revoker).start()
 
     // After five seconds, exit program.
-    val shutdown: Runnable = () =&gt; scheduler.shutdown()
+    val shutdown: Runnable = new Runnable {
+      override def run(): Unit = scheduler.shutdown()
+    }
     scheduler.schedule(shutdown, 5L, SECONDS)
   }
 

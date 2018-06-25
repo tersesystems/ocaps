@@ -142,6 +142,7 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#modulation" name="modulation" class="anchor"><span class="anchor-link"></span></a>Modulation</h1>
+<p>This is an example of modulation in ocaps. You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
 <pre class="prettyprint"><code class="language-scala">import java.util.concurrent.CountDownLatch
 
 import ocaps._
@@ -163,7 +164,7 @@ object Modulation {
   }
 
   object Foo {
-    sealed trait Doer {
+    trait Doer {
       def doTheThing(): Int
     }
 
