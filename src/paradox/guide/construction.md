@@ -193,15 +193,6 @@ val tryFinder: Finder[Try] = new Finder[Try] {
 
 When using `Try`, the `find` method will return either `Success(maybeItem)` or `Failure(throwable)` as a result, rather than throwing an exception up the stack.
 
-In addition to using a Tagless Final approach, the `cats-effect` library may also be used to provide an [`IO` monad](https://typelevel.org/cats-effect/datatypes/io.html) around a sensitive operation and defer execution while maintaining stack safety:
-
-```scala
-import cats.effect.IO
-val program = IO(finder.find(id)) // does not execute finder
-// ...composes program with more operations based off finder...
-program.unsafeRunSync()           // executes program
-```
-
 ## Creating Capabilities Through Access Modifiers
 
 Creating a resource which exposes all its public methods is very convenient in situations where direct access to the resource is tightly restricted, and all external access is regulated through facets.  This is not always the case: for example, in an Inversion-of-Control container like Spring or Guice, all resources are accessible, i.e.
@@ -295,6 +286,41 @@ Creating an `Access` class can also be useful because it can mediate between a r
 final class TryAccess private {
   def reader(doc: Document): Reader[Try] = Try(doc.capabilities.reader)
 }
+```
+
+Or you can go for a full-on type class approach:
+
+```scala
+object Document {
+  trait NameChanger[F[_]] {
+    def changeName(name: String): F[Unit]
+  }
+
+  trait WithEffect[C[_[_]], F[_]] {
+    def apply(capability: C[Id]): C[F]
+  }
+
+  // The default "no effect" type Id[A] = A
+  implicit val idEffect: NameChanger WithEffect Id = new WithEffect[NameChanger, Id] {
+    override def apply(capability: NameChanger[Id]): NameChanger[Id] = identity(capability)
+  }
+
+  // Apply a "Try" effect to the capability
+  implicit val tryEffect: NameChanger WithEffect Try = new WithEffect[NameChanger, Try] {
+    override def apply(capability: NameChanger[Id]): NameChanger[Try] = new NameChanger[Try] {
+      override def changeName(name: String): Try[Unit] =  Try(capability.changeName(name))
+    }
+  }
+
+  class Access {
+    def nameChanger[F[_]](doc: Document)(implicit ev: NameChanger WithEffect F): NameChanger[F] = {
+      val effect = implicitly[NameChanger WithEffect F]
+      effect(doc.capabilities.nameChanger)
+    }
+  }
+}
+
+val idNameChanger = access.nameChanger[Id](document)
 ```
 
 This does of course leave the question open of how you manage access to the `Access` instance, since it hands out capabilities to anyone who asks.  This leads into the next section.
