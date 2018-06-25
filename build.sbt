@@ -46,7 +46,6 @@ lazy val root = (project in file("."))
       "-language:higherKinds",
       "-language:implicitConversions",
       "-unchecked",
-      "-Xlint",
       "-Xfuture"
     ),
     //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
