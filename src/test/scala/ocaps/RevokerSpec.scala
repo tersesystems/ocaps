@@ -18,7 +18,7 @@ class RevokerSpec extends WordSpec with Matchers {
 
   "Revoker.pair" should {
     "work" in {
-      val (thunk, revoker) = Revoker.pair("derp")
+      val (thunk, revoker) = Revoker.tuple("derp")
       thunk() should equal("derp")
       revoker.revoke()
       assertThrows[RevokedException] {

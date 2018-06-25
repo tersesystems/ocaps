@@ -99,7 +99,7 @@ object RepositoryComposition {
   class ItemRepository {
     import ItemRepository._
 
-    private var items = Seq(Item(ID, "item name"))
+    private val items = Seq(Item(ID, "item name"))
 
     private def find(id: UUID): Option[Item] = items.find(_.id == id)
 

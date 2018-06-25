@@ -99,7 +99,7 @@ The discussion around capabilities and their lifecycles, and how capabilities ca
 
 ## Dispensing Capabilities with Composition
 
-When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.
+When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.  This works in situations
 
 ```scala
 class Caller(capabilities: Set[AnyRef]) {
@@ -138,7 +138,7 @@ class Caller(capabilities: AnyRef) {
 }
 ```
 
-Or the caller can decompose through *attenuation*:
+Or the caller can extract the facets through *attenuation*:
 
 ```scala
 val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
