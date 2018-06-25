@@ -193,15 +193,6 @@ val tryFinder: Finder[Try] = new Finder[Try] {
 
 When using `Try`, the `find` method will return either `Success(maybeItem)` or `Failure(throwable)` as a result, rather than throwing an exception up the stack.
 
-In addition to using a Tagless Final approach, the `cats-effect` library may also be used to provide an [`IO` monad](https://typelevel.org/cats-effect/datatypes/io.html) around a sensitive operation and defer execution while maintaining stack safety:
-
-```scala
-import cats.effect.IO
-val program = IO(finder.find(id)) // does not execute finder
-// ...composes program with more operations based off finder...
-program.unsafeRunSync()           // executes program
-```
-
 ## Creating Capabilities Through Access Modifiers
 
 Creating a resource which exposes all its public methods is very convenient in situations where direct access to the resource is tightly restricted, and all external access is regulated through facets.  This is not always the case: for example, in an Inversion-of-Control container like Spring or Guice, all resources are accessible, i.e.
