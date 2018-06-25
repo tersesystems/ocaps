@@ -34,9 +34,9 @@ import ocaps.macros._
 
 This section shows creation of capabilities and direct use.
 
-*  @ref:[Construction](construction.md)
-*  @ref:[Construction with Effects](effects.md)
-*  @ref:[Construction with Subtypes](subtypes.md)
+* @ref:[Construction](construction.md)
+* @ref:[Construction with Effects](effects.md)
+* @ref:[Construction with Subtypes](subtypes.md)
 
 ## Structural Patterns
 
@@ -44,6 +44,7 @@ This section shows structural patterns that do not change behavior.
 
 * @ref:[Composition](composition.md)
 * @ref:[Attenuation](attenuation.md)
+* @ref:[Abstraction](abstraction.md)
 
 ## Behavioral Patterns
 

@@ -102,7 +102,7 @@ The discussion around capabilities and their lifecycles, and how capabilities ca
 When there are several capabilities that may be available from authorization, one common pattern is to return a set of capabilities to the caller, providing a range of options.
 
 ```scala
-class Caller(capabilities: Set[AnyRef]) {
+class Caller(capabilities: Set[Capability]) {
  ...
 }
 
@@ -115,7 +115,7 @@ Note that `Caller` does not know what capabilities may be presented to it, and s
 Another option is to use *composition* to return an object that directly incorporates all the capabilities.
 
 ```scala
-class Caller(capabilities: AnyRef) {
+class Caller(caps: Reader with Writer) {
  ...
 }
 
@@ -138,14 +138,20 @@ class Caller(capabilities: AnyRef) {
 }
 ```
 
-Or the caller can decompose through *attenuation*:
+Or, if the caller has specific type information that is needed from a composed capability, the provider can extract the facets through *attenuation*:
 
 ```scala
+class Caller(reader: Reader, writer: Writer) {
+  ...
+}
+
 val reader: Reader = ocaps.macros.attenuate[Reader](capabilities)
 val writer: Writer = ocaps.macros.attenuate[Writer](capabilities)
+
+val caller = new Caller(reader, writer)
 ```
 
-You can see a complete @ref:[attenuation example](../examples/attenuation.md) for more details.
+You can see a complete @ref:[attenuation example](../examples/attenuation.md) for more details.  Also see the [gatekeeper example](../examples/gatekeeper.md).
 
 Composition is not the only way of arranging capabilities, of course.  Joe Duffy has a great [post](http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/) where he discusses the practical aspects of capabilities:
 

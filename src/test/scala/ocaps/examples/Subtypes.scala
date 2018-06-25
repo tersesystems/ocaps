@@ -15,7 +15,6 @@
  */
 package ocaps.examples
 
-import scala.language.existentials
 import scala.util.Try
 
 // #subtypes
@@ -125,7 +124,7 @@ object Subtypes {
     val eatenPear: Try[Option[Pear]] = mutt.eats(pear)
     println(s"mutt's pear = $eatenPear")
 
-    var jeff = User("jeff")
+    val jeff = User("jeff")
     val pear2 = new Pear()
     jeff.eats(pear2)
   }
