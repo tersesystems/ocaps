@@ -1,8 +1,6 @@
 @@@ index
 
-* [Construction](construction.md)
-* [Construction with Effects](effects.md)
-* [Construction with Subtypes](subtypes.md)
+* [Construction](construction/index.md)
 * [Composition](composition.md)
 * [Attenuation](attenuation.md)
 * [Modulation](modulation.md)
@@ -41,9 +39,7 @@ import ocaps.macros._
 
 This section shows creation of capabilities and direct use.
 
-* @ref:[Construction](construction.md)
-* @ref:[Construction with Effects](effects.md)
-* @ref:[Construction with Subtypes](subtypes.md)
+* @ref:[Construction](construction/index.md)
 
 ## Structural Patterns
 
@@ -62,7 +58,7 @@ This section shows patterns that change the behavior of capabilities, typically 
 
 ## Operational Patterns
 
-This section shows capabilities used together.
+This section shows capabilities used together#.
 
 * @ref:[Amplification](amplification.md)
 * @ref:[Abstraction](abstraction.md)
