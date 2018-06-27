@@ -73,7 +73,69 @@ You may get an object reference -- a capability -- to a `Cake`.  But here, the a
 
 So if the only way you can get a cake is through a bakery, then you have to play by the bakery's rules.
 
-## Creating Capabilities Through Facets
+## Capabilities as Traits
+
+Because capabilities are references, referring to a `Cake` class is perfectly legal.  However, given the nature of capabilities as a security primitive, implementing a capability as a class limits functionality, because it is trickier to implement behavior that usually requires forwarding proxies, such as *revocation* and *composition*.  
+
+In most cases, using a pure trait with no behavior is the safest choice.  For example, rather than having a reference to a `Cake` class, implementing an `Eatable` trait that contains a method `eat()` would be more convenient as a capability, and then `Cake` can implement that interface:
+
+```scala
+trait Eatable {
+  def eat()
+}
+
+class Cake extends Eatable {
+  ...
+}
+```
+
+Now, we know that we can `eat` the cake, because it is `Eatable`.
+
+@@@note
+
+Avoid default methods and default parameters on traits. They add behavior, and interfere with `ocaps` macros.
+
+@@@
+
+Note that `Eatable` is a Single Abstract Method (SAM) trait.  Capabilities are not required to only implement a single method, but it can make things more convenient.  An example of a capability that could implement several methods would be a `FileReader` which could return either a byte-oriented stream, or a character oriented stream:
+
+```scala
+trait Reader {
+  def bufferedReader[T](block: BufferedReader => T): T
+
+  def inputStream[T](block: InputStream => T): T
+}
+```
+
+Note that only a `BufferedReader` or an `InputStream` are returned here.  This is because exposing a `java.io.File` object can lead to manipulation of the filesystem, causing the capability to "leak" information and expose additional privileges that were not explicitly granted.  
+ 
+@@@ note 
+ 
+Be careful that your capability does not leak! 
+
+@@@
+
+### Traits vs Anonymous Functions
+
+There's an argument that anonymous functions such as `FunctionN` are natural capabilities.
+
+Anonymous functions are good for many things, but they have the following drawbacks compared to explicit traits:
+
+* Anonymous functions are anonymous.  One `() => ()` looks much the same as another, so it's harder to track where a capability is exposed through IDE.
+* Anonymous functions are opaque.  When you see an `Eatable`, you know what it does.  A `() => ()` method could do anything.
+* Anonymous functions are not refactorable.  If you have an `Eatable` trait, you can add more methods to it, subtype, change the name where appropriate.
+  
+A similar argument applies to `java.lang.Runnable` and other SAM traits that are part of the Java platform: they are not part of the domain, and they are intended for different purposes.  It's always possible to turn a SAM trait into an anonymous function when necessary, but the reverse is not possible.  
+
+If a drop in is required, then extending an anonymous function type is acceptable, i.e.
+
+```scala
+trait Doer extends (String => Unit)
+```
+
+Although personally I still don't like this, because subclassing means that you can still downcast to `Function1` and lose the trait information.
+  
+## Construction Through Composition
 
 Let's dig a little deeper and discuss capabilities in the context of a [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) based repository, and show how resources and capabilities interact, and how to expose capabilities.
 
@@ -133,7 +195,23 @@ val finder = new ItemRepository.Finder() {
 }
 ```
 
-When we have a pattern like this, where capabilities have a shared underlying resource, we say that they are facets of the resource.  In this case, we have a `finder` facet of the `ItemRepository` resource.  Note that we create a new `Finder` instance, and proxy through to `repo.finder`.  This is called *attenuation*.   
+
+When we have a pattern like this, where capabilities have a shared underlying resource, we say that they are facets of the resource.  In this case, we have a `finder` facet of the `ItemRepository` resource. 
+
+You would think that since `ItemRepository` implements the `Finder` trait itself, that you could just pass it around directly.  The problem there is that an object reference is still an object reference **no matter what type you give it**.  As such, you can get access to the other facets by downcasting to `ItemRepository`:
+
+```scala
+val onlyAFinder: ItemRepository.Finder = repo
+val recoveredRepo: ItemRepository = onlyAFinder.asInstanceOf[ItemRepository]
+recoveredRepo.delete(ID) // oh dear, we only wanted to give you a finder.
+```
+
+So instead, we create a new `Finder` instance, and proxy through to `repo.finder`.  This is called *attenuation*.   You can use an ocaps macro to write this code for you automatically:
+
+```scala
+val attenuatedFinder: ItemRepository.Finder = ocaps.macros.attenuate[ItemRepository.Finder](repo)
+```
+
 Facets do not have to be created through attenuation, and in some cases it's undesirable because it fixes traits onto the resource.  We'll show another way facets can be created later in this section.
  
 Now we have the facet, we can use it in other operations:
@@ -146,12 +224,6 @@ class NameChanger(finder: ItemRepository.Finder) {
 }
 ```
 
-You would think that since `ItemRepository` implements the `Finder` trait itself, that you could just pass it around directly.  The problem there is that an object reference is still an object reference **no matter what type you give it**.  As such, you can get access to the other facets by downcasting to `ItemRepository`:
-
-```scala
-val onlyAFinder: ItemRepository.Finder = repo
-val recoveredRepo: ItemRepository = onlyAFinder.asInstanceOf[ItemRepository]
-```
 
 ## Effects in Capabilities with Tagless Final
 
@@ -193,7 +265,7 @@ val tryFinder: Finder[Try] = new Finder[Try] {
 
 When using `Try`, the `find` method will return either `Success(maybeItem)` or `Failure(throwable)` as a result, rather than throwing an exception up the stack.
 
-## Creating Capabilities Through Access Modifiers
+## Construction Through Access
 
 Creating a resource which exposes all its public methods is very convenient in situations where direct access to the resource is tightly restricted, and all external access is regulated through facets.  This is not always the case: for example, in an Inversion-of-Control container like Spring or Guice, all resources are accessible, i.e.
 
@@ -323,4 +395,6 @@ object Document {
 val idNameChanger = access.nameChanger[Id](document)
 ```
 
-This does of course leave the question open of how you manage access to the `Access` instance, since it hands out capabilities to anyone who asks.  This leads into the next section.
+This `Access` class constructor is public here, but obviously anyone who has both `Access` and a resource will be able to expose capabilities, so you should protect your access appropriately.  You can use dynamic sealing or Scala access modifiers to ensure access is tightly controlled.
+
+Note that these are "root level" capabilities -- they are non-revocable, "private key" object references, so you typically want to wrap these in `ocap.Revocable` and hand out the revocable capability instead.
