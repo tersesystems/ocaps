@@ -139,7 +139,7 @@ ocaps
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.1*
+<i class="md-icon">label_outline</i> 0.1.0
 </div>
 </nav>
 
@@ -168,13 +168,7 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#construction-through-access" name="construction-through-access" class="anchor"><span class="anchor-link"></span></a>Construction Through Access</h1>
 <p>The most flexible way to set up capabilities from resources is to set up a resource with private methods that are then exposed through an <code>Access</code> class in a companion object which has sibling privileges to the capabilities.</p>
-<p>Single Abstract Method (SAM) traits, such as <code>java.lang.Runnable</code> and <code>FunctionN</code> are natural capabilities. </p>
-<p>However, anonymous functions typically don&rsquo;t expose the domain, and don&rsquo;t indicate sensitivity &ndash; one <code>() =&gt; String</code> looks much the same as another, so it&rsquo;s harder to track where a capability is exposed. You can extend these to provided named traits that expose your domain functionality.</p>
-<p>For example, we don&rsquo;t want just anyone to be able to change the name, so we set up a <code>NameChanger</code> capability, which extends <code>Function0</code>.</p>
-<p>You&rsquo;ll note that access modifiers are used heavily here, and there&rsquo;s an <code>Access</code> class which is involved in exposing the capability. When two (or more) objects are required to expose some extra functionality, it&rsquo;s called <a href="../amplification.html">amplification</a>, but in this case it&rsquo;s done only to expose the capability itself.</p>
-<p>This <code>Access</code> class constructor is public here, but obviously anyone who has both <code>Access</code> and a resource will be able to expose capabilities, so you should protect your access appropriately. You can use dynamic sealing or Scala access modifiers to ensure access is tightly controlled.</p>
-<p>Note that these are &ldquo;root level&rdquo; capabilities &ndash; they are non-revocable, &ldquo;private key&rdquo; object references, so you typically want to wrap these in <code>ocap.Revocable</code> and hand out the revocable capability instead.</p>
-<p>You should also be careful that your capability does not &ldquo;leak&rdquo;: i.e. if you create a capability on a File, then exposing a <code>java.io.File</code> object can lead to manipulation of the filesystem.</p>
+<p>You can read more in <a href="../../guide/construction.html#construction-through-access">Constructing Capabilities</a> section of the guide.</p>
 <h2><a href="#before" name="before" class="anchor"><span class="anchor-link"></span></a>Before</h2>
 <pre class="prettyprint"><code class="language-scala">object Before {
 
@@ -230,7 +224,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.1*
+0.1.0
 </span>
 </div>
 </article>

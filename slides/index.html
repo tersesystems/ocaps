@@ -351,10 +351,10 @@ val document = new Document("Steve")
 // document: CapExample.Document = Document(Steve)
 
 val access = new Document.Access()
-// access: CapExample.Document.Access = CapExample$Document$Access@76343e45
+// access: CapExample.Document.Access = CapExample$Document$Access@647c8a17
 
 val nameChanger = access.nameChanger(document)
-// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@34fbd328
+// nameChanger: CapExample.Document.NameChanger = CapExample$Document$capabilities$$anon$1@58461b31
 
 nameChanger.changeName("Will")
 
@@ -442,13 +442,13 @@ class ItemRepository {
 
 ```scala
 scala> val repo: ItemRepository = new ItemRepository {}
-repo: RevokeExample.ItemRepository = $anon$1@1e0a7f9c
+repo: RevokeExample.ItemRepository = $anon$1@544b76a6
 
 scala> val access = new ItemRepository.Access()
-access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@641ff2fe
+access: RevokeExample.ItemRepository.Access = RevokeExample$ItemRepository$Access@4ab56126
 
 scala> val finder = access.finder(repo)
-finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@533d9d6b
+finder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = RevokeExample$ItemRepository$capabilities$$anon$1@5025c90
 
 scala> val maybeItem: Option[Item] = finder.find(ID)
 maybeItem: Option[RevokeExample.Item] = Some(Item(c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7,item name))
@@ -472,11 +472,11 @@ scala> class TryAccess(access: ItemRepository.Access) {
 defined class TryAccess
 
 scala> val tryAccess = new TryAccess(access)
-tryAccess: TryAccess = TryAccess@7485de2a
+tryAccess: TryAccess = TryAccess@5cfa2eae
 
 scala> // Create a finder which uses `Try` as an effect
      | val tryFinder = tryAccess.finder(repo)
-tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$10777/2106629409@142e264d
+tryFinder: RevokeExample.ItemRepository.Finder[scala.util.Try] = TryAccess$$Lambda$8818/949160793@7733cffb
 
 scala> // Now we know it won't throw exceptions :-)
      | val tryMaybeItem: Try[Option[Item]] = tryFinder.find(ID)
@@ -509,8 +509,8 @@ import ocaps.macros._
 scala> // Create proxy finder that will forward "find" method to `finder`
      | // revocableFinder is also called a "caretaker"
      | val Revocable(revocableFinder, revoker) = revocable[ItemRepository.Finder[Id]](finder)
-revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@323b146
-revoker: ocaps.Revoker = ocaps.LatchRevoker@624e7c1b
+revocableFinder: RevokeExample.ItemRepository.Finder[RevokeExample.Id] = $anon$1@7d442870
+revoker: ocaps.Revoker = ocaps.LatchRevoker@61ca5bd8
 
 scala> // Call the revoker, which causes forwarding to stop...
      | revoker.revoke()
@@ -588,8 +588,8 @@ scala> import ocaps._
 import ocaps._
 
 scala> val (sealer, unsealer) = Brand.create[String]("string hint").tuple
-sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$10906/1531645696@5e578efb
-unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$10907/945004523@2bab4aff
+sealer: ocaps.Brand.Sealer[String] = ocaps.Brand$$Lambda$8947/1701828240@3ffa0e47
+unsealer: ocaps.Brand.Unsealer[String] = ocaps.Brand$$Lambda$8948/1678670139@20befaeb
 
 scala> val sealedBox = sealer("foo")
 sealedBox: ocaps.Brand.Box[String] = <sealed string hint box>
@@ -625,11 +625,11 @@ scala> class CanOpener(unsealer: Brand.Unsealer[Food]) {
 defined class CanOpener
 
 scala> val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
-sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$10906/1531645696@34a59143
-unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$10907/945004523@7741584f
+sealer: ocaps.Brand.Sealer[Food] = ocaps.Brand$$Lambda$8947/1701828240@1e2cc0dd
+unsealer: ocaps.Brand.Unsealer[Food] = ocaps.Brand$$Lambda$8948/1678670139@37176f50
 
 scala> val canOpener = new CanOpener(unsealer)
-canOpener: CanOpener = CanOpener@519312d3
+canOpener: CanOpener = CanOpener@6105252a
 
 scala> val canOfSpam: Can = Can(sealer(Food("spam")))
 canOfSpam: Can = Can(<sealed canned food box>)
@@ -756,13 +756,13 @@ class MembraneAccess(access: Location.Access, val membrane: PermeableMembrane) {
 
 ```scala
 val m = RevokerMembrane()
-// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@16c06051
+// m: ocaps.RevokerMembrane = ocaps.RevokerMembrane@7cd11914
 
 val location = new Location(Locale.US, TimeZone.getTimeZone("PST"))
-// location: MembraneExample.Location = MembraneExample$Location@1676fe24
+// location: MembraneExample.Location = MembraneExample$Location@774f6860
 
 val access = new MembraneAccess(new Location.Access(), m)
-// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@37d6fe28
+// access: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@2507d2d6
 
 val format = for {
   timeZone <- access.timeZoneReader(location).timeZone
@@ -772,10 +772,10 @@ val format = for {
     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
       .withLocale(locale))
 }
-// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@709841ef
+// format: access.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@4716891d
 
 format.get
-// res11: String = Tuesday, June 26, 2018 10:18:31 AM PDT
+// res11: String = Wednesday, June 27, 2018 10:59:12 AM PDT
 ```
 
 ---
@@ -783,10 +783,10 @@ format.get
 
 ```scala
 val m2 = RevokerMembrane()
-// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@2961b501
+// m2: ocaps.RevokerMembrane = ocaps.RevokerMembrane@45f93944
 
 val access2 = new MembraneAccess(new Location.Access(), m2)
-// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@325457d4
+// access2: MembraneExample.MembraneAccess = MembraneExample$MembraneAccess@f7cbd00
 
 val format2 = for {
   timeZone <- access2.timeZoneReader(location).timeZone
@@ -796,7 +796,7 @@ val format2 = for {
     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
       .withLocale(locale))
 }
-// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@63b75c71
+// format2: access2.membrane.Wrapper[String] = ocaps.PermeableMembrane$Wrapper$$anon$1@166a259b
 
 m2.revoke()
 ```
