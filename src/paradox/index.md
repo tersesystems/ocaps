@@ -12,7 +12,7 @@
 
 - @ref:[Revoker / Revocable](examples/revocation.md) classes for revoking capabilities.
 - @ref:[Brand](examples/dynamic_seal.md) for sealing and unsealing capabilities
-- @ref:[PermeableMembrane](examples/membrane.md) for revocation as an effect.
+- @ref:[RevocableMembrane](examples/membrane.md) for revocation as an effect.
 - Macros for @ref:[composition](examples/composition.md), @ref:[attenuation](examples/attenuation.md), @ref:[revocable](examples/revocation.md) and @ref:[modulating](examples/modulation.md) capabilities.
 - No libraries dependencies (other than `scala-reflect`)
 
@@ -22,4 +22,4 @@ Examples can be found at [https://wsargent.github.io/ocaps/examples/](https://ws
 
 A guide to object capabilities can be found at [https://wsargent.github.io/ocaps/guide/](https://wsargent.github.io/ocaps/guide/)
 
-Slides from Scaladays NYC 2018 are available [here](https://wsargent.github.io/ocaps/slides/).
+The `ocaps` library was presented as part of the [Security in Scala](https://na.scaladays.org/schedule/security-with-scala-refined-types-and-object-capabilities) presentation at [Scaladays NYC 2018](https://na.scaladays.org/).  [Slides](https://wsargent.github.io/ocaps/slides/) and [video](https://slideslive.com/38908776/security-with-scala-refined-types-and-object-capabilities?subdomain=false) are available.
