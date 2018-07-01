@@ -132,14 +132,14 @@ ocaps
 <ul>
   <li><a href="../guide/confinement.html#confining-capabilities" class="header">Confining Capabilities</a>
   <ul>
-    <li><a href="../guide/confinement.html#encapsulating-capabilities-with-brands" class="header">Encapsulating Capabilities with Brands</a></li>
+    <li><a href="../guide/confinement.html#encapsulating-capabilities-with-dynamic-sealing" class="header">Encapsulating Capabilities with Dynamic Sealing</a></li>
     <li><a href="../guide/confinement.html#confining-operations-with-membranes" class="header">Confining Operations with Membranes</a></li>
   </ul></li>
 </ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0
+<i class="md-icon">label_outline</i> 0.1.1*
 </div>
 </nav>
 
@@ -154,7 +154,7 @@ ocaps
 <ul>
   <li><a href="../guide/confinement.html#confining-capabilities" class="header">Confining Capabilities</a>
   <ul>
-    <li><a href="../guide/confinement.html#encapsulating-capabilities-with-brands" class="header">Encapsulating Capabilities with Brands</a></li>
+    <li><a href="../guide/confinement.html#encapsulating-capabilities-with-dynamic-sealing" class="header">Encapsulating Capabilities with Dynamic Sealing</a></li>
     <li><a href="../guide/confinement.html#confining-operations-with-membranes" class="header">Confining Operations with Membranes</a></li>
   </ul></li>
 </ul>
@@ -170,8 +170,9 @@ ocaps
 <p>Managing capabilities in the context of an architecture can be complex. </p>
 <p>One issue is that managing capabilities can mean limiting scope and access to an object reference, but many architectures assume a context in which all object references are publically accessible &ndash; for example, events may be sent across an event bus, or through a streaming model. And because data structures inherently involve object references, there&rsquo;s the question of how to keep capabilities safe and isolated.</p>
 <p>We touched on this a little bit in the <code>Access</code> class which uses access modifiers and a companion object to construct capabilities which cannot be accessed directly. Unfortunately, in Scala, <a href="http://www.jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/">access modifiers and qualifiers only apply to enclosing scope</a>, so there is no way to qualify private access to things outside that scope. However, there is a way to protect capabilities to produce this effect &ndash; through the use of <code>Brand</code>.</p>
-<h2><a href="#encapsulating-capabilities-with-brands" name="encapsulating-capabilities-with-brands" class="anchor"><span class="anchor-link"></span></a>Encapsulating Capabilities with Brands</h2>
-<p>A Brand is a means of &ldquo;<a href="https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf">providing data abstraction in the absence of static typing</a>.&rdquo; It consists of a sealing function, which provides a &ldquo;boxed&rdquo; reference to the capability <strong>which cannot be opened</strong>, and an unsealing function, which takes the box, and returns the contained capability. The best way of describing it is that a Brand provides both a canner and the associated can opener.</p>
+<h2><a href="#encapsulating-capabilities-with-dynamic-sealing" name="encapsulating-capabilities-with-dynamic-sealing" class="anchor"><span class="anchor-link"></span></a>Encapsulating Capabilities with Dynamic Sealing</h2>
+<p>Dynamic sealing is a means of &ldquo;<a href="https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf">providing data abstraction in the absence of static typing</a>.&rdquo; It consists of a sealing function, which provides a &ldquo;boxed&rdquo; reference to the capability <strong>which cannot be opened</strong>, and an unsealing function, which takes the box, and returns the contained capability. The best way of describing it is that dynamic sealing provides both a canner and the associated can opener. </p>
+<p>In <code>ocaps</code>, this is done by using an <code>ocaps.Brand</code>, which contains the sealer and unsealer.</p>
 <pre class="prettyprint"><code class="language-scala">import ocaps.Brand
 
 object Main {
@@ -188,7 +189,7 @@ object Main {
     val canOfSpam: Can = Can(sealer(Food(&quot;spam&quot;)))
 
     val cannedFood: Brand.Box[Food] = canOfSpam.food
-    println(s&quot;food = ${canOfSpam.food.toString}&quot;) // DOES NOT WORK
+    println(s&quot;food = ${cannedFood.toString}&quot;) // DOES NOT WORK
     val canOpener = new CanOpener(unsealer)
 
     // We need both Can and CanOpener to unseal.
@@ -204,11 +205,12 @@ object Main {
 <p>Because both an unsealer and the sealed item are necessary to unseal, the act of unsealing is inherently a case of <em>amplification</em>, where putting two capabilities together lets you do things that neither one could do individually.</p>
 <p>Sealers can be used for many things. It&rsquo;s helpful to think of them in the context where you would use public key encryption, for example</p>
 <ul>
-  <li>Signing &ndash; an box can be passed around and an unsealer on a resource can be made public, attesting to its origin.</li>
-  <li>Encryption &ndash; a public sealer can &ldquo;encrypt&rdquo; information by boxing it, and sending it to an actor with the sealer.</li>
-  <li>Assurance &ndash; boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.</li>
-  <li>Private Channel &ndash; two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or <code>LoggingReceive</code> is enabled.</li>
+  <li><em>Signing</em> &ndash; a box can be passed around and an unsealer on a resource can be made public, attesting to its origin.</li>
+  <li><em>Encryption</em> &ndash; a public sealer can &ldquo;encrypt&rdquo; information by boxing it, and sending it to an actor with the sealer &ndash; in effect, the sealer is the public key.</li>
+  <li><em>Assurance</em> &ndash; boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.</li>
+  <li><em>Private Channel</em> &ndash; two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or <code>LoggingReceive</code> is enabled.</li>
 </ul>
+<p>An example of signing and assurance is in representing responsibility for operations, as shown in <a href="http://www.erights.org/elib/capability/horton/">HORTON</a>.</p>
 <p>One possible application of dynamic sealing is that all <code>Access</code> objects can be sealed and safely bound in a dependency injection framework, and a revocable unsealer capability can be passed around to enable access from a central gatekeeper. I still need to implement this, but I think it&rsquo;s fairly straightforward.</p>
 <pre class="prettyprint"><code class="language-scala">// import scalaguice so we don&#39;t use new TypeLiteral[Box[Foo.Access]] {}
 class Module extends ScalaModule {
@@ -228,8 +230,8 @@ class Module extends ScalaModule {
 <p>A membrane is an extension of a <code>Revocable</code> that transitively imposes revocability on all references exchanged via the membrane. </p>
 <p>Membranes are supposed to stop messages passing from one place to another without being wrapped. They are most commonly used for <a href="https://web.archive.org/web/20160408162552/http://www.eros-os.org/pipermail/e-lang/2003-January/008434.html">&ldquo;uncooperative revocation&rdquo;</a>, although any effect can be applied with a membrane, not just revocation.</p>
 <p>Membranes are useful in a situation in which you have to run some foreign code in a sandbox, and you absolutely do not trust it. Tellingly, the papers above implement membranes using Javascript, where any website can tell code to be run locally in the browser. Mozilla uses capabilities heavily internally, and membranes ensure an airgap between the browser&rsquo;s internal code and the code available to the site Javascript.</p>
-<p>The JVM is not a great platform for implementing a completely safe membranae. In particular, the JVM SecurityManager is easily subverted, and Java Serialization attacks mean that the boundary is very hard to enforce.</p>
-<p>In general, the best way to implement a membrane in Java would be to implement a generic method interceptor in <a href="http://bytebuddy.net/#/">Byte Buddy</a> and attach behavior outside of the context of &ldquo;normal&rdquo; Java code.</p>
+<p>The JVM is not a great platform for implementing a completely safe membrane in the face of an attacker who can run executable bytecode. The JVM SecurityManager is <a href="https://tersesystems.com/blog/2015/12/29/sandbox-experiment/">easily subverted</a>, and <a href="https://tersesystems.com/blog/2015/11/08/closing-the-open-door-of-java-object-serialization/">Java Serialization attacks</a> mean that the boundary is very hard to enforce. After RCE has been achieved, <a href="https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/">monkeypatching Java classes</a> is easily accomplished through <code>setAccessible</code>.</p>
+<p>However, if the assumption is made that attackers cannot run their own code, the best way to implement a membrane in Java would be to implement a generic method interceptor in <a href="http://bytebuddy.net/#/">Byte Buddy</a> and attach behavior outside of the context of &ldquo;normal&rdquo; Java code.</p>
 <p>However, because membranes can implement any effect, and because membranes have a strong conceptual affinity with some FP concepts, it&rsquo;s actually very easy to implement &ldquo;co-operative revocation&rdquo; using a dependently typed effect. This is best called a &ldquo;permeable membrane&rdquo;, because it is an opt-in system that only works if the effect is propagated.</p>
 <p>Please see the <a href="../examples/membrane.html">Membrane example</a> for details how Membrane is used in <code>ocaps</code>.</p>
 <p>The clearest layman explanation of membranes is <a href="http://blog.ezyang.com/2013/03/what-is-a-membran/">What is a Membrane?</a> by Edward Z. Yang. </p>
@@ -242,7 +244,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0
+0.1.1*
 </span>
 </div>
 </article>

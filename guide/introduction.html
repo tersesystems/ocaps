@@ -141,7 +141,7 @@ ocaps
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.0
+<i class="md-icon">label_outline</i> 0.1.1*
 </div>
 </nav>
 
@@ -175,12 +175,13 @@ ocaps
 <p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Object-capability systems</a> start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
 <p>So what is a capability?</p>
 <h2><a href="#definition" name="definition" class="anchor"><span class="anchor-link"></span></a>Definition</h2>
-<p>We use the following definitions for capabilities.</p>
+<p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. The definition of what a capability have been refined and formalized in object oriented languages. </p>
+<p>We use the following definitions for an object capability:</p>
 <p><strong>A capability is a security primitive that confers authority by reference.</strong></p>
 <p>We use the <a href="https://ai.google/research/pubs/pub45570">following definition of authority</a>:</p>
 <p><strong>An authority is <em>sufficient justification</em> to affect a resource.</strong></p>
-<p>In Scala, a resource is <em>an object</em> and a capability is a <em>reference</em> to an object that can affect that resource. </p>
-<p>Note that a capability may be a reference to the resource itself, or it may be a very indirect chain of forwarded calls to an inner class which can change the resource&rsquo;s internals. As long as the end result is the same, it doesn&rsquo;t matter.</p>
+<p>In Scala, a resource is <em>an object</em> and a capability is a <em>reference</em> to an object that can affect that resource. There is also the concept of <em>permission</em>, which is a direct reference to the resource &ndash; however, as we&rsquo;ll see, permission doesn&rsquo;t always imply authority or vice versa.</p>
+<p>In fact, capability may be a reference to the resource itself, or it may be a very indirect chain of forwarded calls to an inner class which is not the resource, which can change the resource&rsquo;s internals. As long as the end result is the same and the resource is affected, it doesn&rsquo;t matter.</p>
 <p>There is an important difference between capabilities and object oriented programming. Whereas OOP is typically interested in <strong>making things accessible</strong> and creating graphs of things, a capability is a security tool, used for <strong>making things inaccessible</strong>. A capability is a precious thing, a tightly guarded key to a locked room full of treasure. You are only handed one, and if you lose it, then you must ask a <a href="../examples/gatekeeper.html">gatekeeper</a> to give you another one.</p>
 <h2><a href="#scala-example" name="scala-example" class="anchor"><span class="anchor-link"></span></a>Scala Example</h2>
 <p>Say that you have a class <code>Foo</code>:</p>
@@ -221,7 +222,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.0
+0.1.1*
 </span>
 </div>
 </article>
