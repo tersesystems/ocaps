@@ -6,9 +6,11 @@ One issue is that managing capabilities can mean limiting scope and access to an
 
 We touched on this a little bit in the `Access` class which uses access modifiers and a companion object to construct capabilities which cannot be accessed directly.  Unfortunately, in Scala, [access modifiers and qualifiers only apply to enclosing scope](http://www.jesperdj.com/2016/01/08/scala-access-modifiers-and-qualifiers-in-detail/), so there is no way to qualify private access to things outside that scope.  However, there is a way to protect capabilities to produce this effect -- through the use of `Brand`.
 
-## Encapsulating Capabilities with Brands
+## Encapsulating Capabilities with Dynamic Sealing
 
-A Brand is a means of "[providing data abstraction in the absence of static typing](https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf)."  It consists of a sealing function, which provides a "boxed" reference to the capability **which cannot be opened**, and an unsealing function, which takes the box, and returns the contained capability. The best way of describing it is that a Brand provides both a canner and the associated can opener.
+Dynamic sealing is a means of "[providing data abstraction in the absence of static typing](https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf)."  It consists of a sealing function, which provides a "boxed" reference to the capability **which cannot be opened**, and an unsealing function, which takes the box, and returns the contained capability. The best way of describing it is that dynamic sealing provides both a canner and the associated can opener.  
+
+In `ocaps`, this is done by using an `ocaps.Brand`, which contains the sealer and unsealer.
 
 ```scala
 import ocaps.Brand
@@ -27,7 +29,7 @@ object Main {
     val canOfSpam: Can = Can(sealer(Food("spam")))
 
     val cannedFood: Brand.Box[Food] = canOfSpam.food
-    println(s"food = ${canOfSpam.food.toString}") // DOES NOT WORK
+    println(s"food = ${cannedFood.toString}") // DOES NOT WORK
     val canOpener = new CanOpener(unsealer)
 
     // We need both Can and CanOpener to unseal.
@@ -45,10 +47,12 @@ Because both an unsealer and the sealed item are necessary to unseal, the act of
 
 Sealers can be used for many things.  It's helpful to think of them in the context where you would use public key encryption, for example
 
-* Signing -- an box can be passed around and an unsealer on a resource can be made public, attesting to its origin.
-* Encryption -- a public sealer can "encrypt" information by boxing it, and sending it to an actor with the sealer.
-* Assurance -- boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.
-* Private Channel -- two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or `LoggingReceive` is enabled.
+* *Signing* -- a box can be passed around and an unsealer on a resource can be made public, attesting to its origin.
+* *Encryption* -- a public sealer can "encrypt" information by boxing it, and sending it to an actor with the sealer -- in effect, the sealer is the public key.
+* *Assurance* -- boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.
+* *Private Channel* -- two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or `LoggingReceive` is enabled.
+
+An example of signing and assurance is in representing responsibility for operations, as shown in [HORTON](http://www.erights.org/elib/capability/horton/).
 
 One possible application of dynamic sealing is that all `Access` objects can be sealed and safely bound in a dependency injection framework, and a revocable unsealer capability can be passed around to enable access from a central gatekeeper.  I still need to implement this, but I think it's fairly straightforward.
 
@@ -82,9 +86,9 @@ Membranes are supposed to stop messages passing from one place to another withou
 
 Membranes are useful in a situation in which you have to run some foreign code in a sandbox, and you absolutely do not trust it.  Tellingly, the papers above implement membranes using Javascript, where any website can tell code to be run locally in the browser.  Mozilla uses capabilities heavily internally, and membranes ensure an airgap between the browser's internal code and the code available to the site Javascript.
 
-The JVM is not a great platform for implementing a completely safe membranae.  In particular, the JVM SecurityManager is easily subverted, and Java Serialization attacks mean that the boundary is very hard to enforce.
+The JVM is not a great platform for implementing a completely safe membrane in the face of an attacker who can run executable bytecode.  The JVM SecurityManager is [easily subverted](https://tersesystems.com/blog/2015/12/29/sandbox-experiment/), and [Java Serialization attacks](https://tersesystems.com/blog/2015/11/08/closing-the-open-door-of-java-object-serialization/) mean that the boundary is very hard to enforce.  After RCE has been achieved, [monkeypatching Java classes](https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/) is easily accomplished through `setAccessible`.
 
-In general, the best way to implement a membrane in Java would be to implement a generic method interceptor in [Byte Buddy](http://bytebuddy.net/#/) and attach behavior outside of the context of "normal" Java code.
+However, if the assumption is made that attackers cannot run their own code, the best way to implement a membrane in Java would be to implement a generic method interceptor in [Byte Buddy](http://bytebuddy.net/#/) and attach behavior outside of the context of "normal" Java code.
 
 However, because membranes can implement any effect, and because membranes have a strong conceptual affinity with some FP concepts, it's actually very easy to implement "co-operative revocation" using a dependently typed effect.  This is best called a "permeable membrane", because it is an opt-in system that only works if the effect is propagated.
 

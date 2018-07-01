@@ -9,7 +9,9 @@ So what is a capability?
 
 ## Definition
 
-We use the following definitions for capabilities.
+The original paper describing capabilities is [Programming Semantics for Multiprogrammed Computations](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948) by Dennis and Van Horn in 1963, but in an operating systems context.  The definition of what a capability have been refined and formalized in object oriented languages. 
+
+We use the following definitions for an object capability:
  
 **A capability is a security primitive that confers authority by reference.**
 
@@ -17,9 +19,9 @@ We use the [following definition of authority](https://ai.google/research/pubs/p
 
 **An authority is *sufficient justification* to affect a resource.**
 
-In Scala, a resource is *an object* and a capability is a *reference* to an object that can affect that resource.  
+In Scala, a resource is *an object* and a capability is a *reference* to an object that can affect that resource.  There is also the concept of *permission*, which is a direct reference to the resource -- however, as we'll see, permission doesn't always imply authority or vice versa.
 
-Note that a capability may be a reference to the resource itself, or it may be a very indirect chain of forwarded calls to an inner class which can change the resource's internals.  As long as the end result is the same, it doesn't matter.
+In fact, capability may be a reference to the resource itself, or it may be a very indirect chain of forwarded calls to an inner class which is not the resource, which can change the resource's internals.  As long as the end result is the same and the resource is affected, it doesn't matter.
  
 There is an important difference between capabilities and object oriented programming.  Whereas OOP is typically interested in **making things accessible** and creating graphs of things, a capability is a security tool, used for **making things inaccessible**.  A capability is a precious thing, a tightly guarded key to a locked room full of treasure.  You are only handed one, and if you lose it, then you must ask a @ref:[gatekeeper](../examples/gatekeeper.md) to give you another one.
 
@@ -72,5 +74,4 @@ The assumption in this document is that you are playing a straight game, where r
 Basically, you're not setting or accessing capabilities through global state through singleton objects, static fields, or thread locals.  You can use Akka and only send capabilities through messages between actors for a more accurate capability model, but it's not required.
 
 Likewise, we assume that you're not a hostile attacker -- if you are hostile and can execute code in the JVM, it's trivial to subvert the SecurityManager, call `setAccessible` and start [monkeypatching](https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/), so effectively all fields and methods are public if you scratch hard enough.  Scala is not an ocap language, so this is purely about capabilities as a software engineering practice.
-
 

@@ -1,4 +1,4 @@
-package ocaps.examples
+package ocaps.examples.experimental
 
 class Horton {
 

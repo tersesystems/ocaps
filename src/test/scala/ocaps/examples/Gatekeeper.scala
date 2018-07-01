@@ -149,32 +149,28 @@ object Gatekeeper {
     // If a user's session expires or the user misbehaves, we can revoke
     // any access that the user has to all documents.
     def revoke(user: User): Unit = {
+      // Note that the revoker map prevents the document object from being GC'ed,
+      // so if you want to release it you may need to use scala.WeakReference
       userRevokerMap.get(user).foreach(_.revoke())
+      userRevokerMap -= user
     }
 
-    /**
-     * Define the operational contract between users and documents
-     *
-     * https://types.cs.washington.edu/ftfjp2013/preprints/a6-Drossopoulou.pdf
-     */
-    // Normal users can read anything, but only write to document they own.
     class DocumentPolicy {
+      // anyone can read.
       def canRead(user: User, doc: Document): Boolean = true
 
+      // only document owner can write.
       def canWrite(user: User, doc: Document): Boolean = {
-        isDocumentOwner(user, doc) || isAdmin(user)
+        isDocumentOwner(user, doc)
       }
 
+      // only document owner can delete.
       def canDelete(user: User, doc: Document): Boolean = {
-        isDocumentOwner(user, doc) || isAdmin(user)
+        isDocumentOwner(user, doc)
       }
 
       private def isDocumentOwner(user: User, doc: Document): Boolean = {
-        doc.owner.equals(user.name) || isAdmin(user)
-      }
-
-      private def isAdmin(user: User): Boolean = {
-        user.name.equals("admin")
+        doc.owner.equals(user.name)
       }
     }
 

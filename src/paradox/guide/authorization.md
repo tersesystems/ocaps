@@ -50,13 +50,10 @@ class DocumentGatekeeper() {
 
   private class DocumentPolicy {
     def canRead(user: User, doc: Document): Boolean = {
-      isDocumentOwner(user, doc) || isAdmin(user)
+      isDocumentOwner(user, doc) 
     }
     private def isDocumentOwner(user: User, doc: Document): Boolean = {
-      doc.owner.equals(user.name) || isAdmin(user)
-    }
-    private def isAdmin(user: User): Boolean = {
-      user.name.equals("admin")
+      doc.owner.equals(user.name)
     }
   }
 
