@@ -79,14 +79,15 @@ lazy val root = (project in file("."))
       "snip.examples.base_dir" -> s"${(sourceDirectory in Test).value}/scala/ocaps/examples",
     ),
     paradoxMaterialTheme in Compile ~= {
-      _.withRepository(uri("https://github.com/wsargent/ocaps"))
-    },
-    paradoxMaterialTheme in Compile ~= {
       _.withSocial(
         uri("https://github.com/wsargent"),
         uri("https://twitter.com/will_sargent")
-      )
+      ).withRepository(uri("https://github.com/wsargent/ocaps"))
     },
+    paradoxDirectives += MermaidDirective,
+    // https://github.com/lightbend/paradox/issues/139
+    sourceDirectory in Paradox in paradoxTheme := sourceDirectory.value / "paradox" / "_template",
+
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
