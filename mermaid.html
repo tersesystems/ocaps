@@ -17,13 +17,13 @@
 
 
 <meta name="description" content="ocaps">
-<link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Designing with Capabilities</title>
-<link rel="stylesheet" href="../assets/stylesheets/application.7a4cdee3.css">
-<link rel="stylesheet" type="text/css" href="../assets/stylesheets/mermaid.css"/>
-<link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
-<link rel="stylesheet" href="../lib/prettify/prettify.css">
-<script src="../lib/modernizr/modernizr.min.js"></script>
+<link rel="shortcut icon" href="assets/images/favicon.png">
+<title>Mermaid</title>
+<link rel="stylesheet" href="assets/stylesheets/application.7a4cdee3.css">
+<link rel="stylesheet" type="text/css" href="assets/stylesheets/mermaid.css"/>
+<link rel="stylesheet" href="lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="lib/prettify/prettify.css">
+<script src="lib/modernizr/modernizr.min.js"></script>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
 <style>
@@ -32,7 +32,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="../assets/stylesheets/paradox-material-theme.css">
+<link rel="stylesheet" href="assets/stylesheets/paradox-material-theme.css">
 </head>
 <body
 >
@@ -43,7 +43,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 <nav class="md-header-nav md-grid">
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
-<a href="../guide/designing.html" title="Designing with Capabilities" class="md-header-nav__button md-logo">
+<a href="mermaid.html" title="Mermaid" class="md-header-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </a>
 </div>
@@ -52,7 +52,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 </div>
 <div class="md-flex__cell md-flex__cell--stretch">
 <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-Designing with Capabilities
+Mermaid
 </div>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
@@ -94,8 +94,8 @@ Type to start searching
 <span class="md-nav__button md-logo">
 <i class="md-icon">local_library</i>
 </span>
-<a href="../guide/designing.html" title="Designing with Capabilities">
-Designing with Capabilities
+<a href="mermaid.html" title="Mermaid">
+Mermaid
 </a>
 </label>
 <ul>
@@ -114,19 +114,93 @@ Designing with Capabilities
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#designing-with-capabilities" name="designing-with-capabilities" class="anchor"><span class="anchor-link"></span></a>Designing with Capabilities</h1>
-<ul>
-  <li>Building up to higher level capabilities</li>
-  <li>Capabilities with Domain Driven Design</li>
-  <li>Capabilities and Aggregate Roots</li>
-  <li>When to use Capabilities</li>
-  <li>Capabilities and Side Effects</li>
-  <li>Capabilities and Akka Actors</li>
-  <li>Attestation (HORTON) through signed (public unsealers)</li>
-</ul>
+<h1><a href="#mermaid" name="mermaid" class="anchor"><span class="anchor-link"></span></a>Mermaid</h1><div class="mermaid">
+graph TD
+  A[Christmas] -->|Get money| B(Go shopping)
+  B --> C{Let me think}
+  C -->|One| D[Laptop]
+  C -->|Two| E[iPhone]
+  C -->|Three| F[Car]
+  click A "index.html#link-clicked" "link test"
+  click B testClick "click test"
+</div>
+<hr/><div class="mermaid">
+  sequenceDiagram
+  loop every day
+  Alice->>John: Hello John, how are you?
+  John-->>Alice: Great!
+  end
+  click B testClick "click test"
+</div>
+<hr/><div class="mermaid">
+  gantt
+  dateFormat  YYYY-MM-DD
+  title Adding GANTT diagram to mermaid
+
+  section A section
+  Completed task            :done,    des1, 2014-01-06,2014-01-08
+  Active task               :active,  des2, 2014-01-09, 3d
+  Future task               :         des3, after des2, 5d
+  Future task2               :         des4, after des3, 5d
+
+  section Critical tasks
+  Completed task in the critical line :crit, done, 2014-01-06,24h
+  Implement parser and jison          :crit, done, after des1, 2d
+  Create tests for parser             :crit, active, 3d
+  Future task in critical line        :crit, 5d
+  Create tests for renderer           :2d
+  Add to mermaid                      :1d
+
+  section Documentation
+  Describe gantt syntax               :active, a1, after des1, 3d
+  Add gantt diagram to demo page      :after a1  , 20h
+  Add another diagram to demo page    :doc1, after a1  , 48h
+
+  section Last section
+  Describe gantt syntax               :after doc1, 3d
+  Add gantt diagram to demo page      : 20h
+  Add another diagram to demo page    : 48h
+</div>
+
+<hr/>
+
+<div class="mermaid">
+  gitGraph:
+  options
+  {
+  "nodeSpacing": 150,
+  "nodeRadius": 10
+  }
+  end
+  commit
+  branch newbranch
+  checkout newbranch
+  commit
+  commit
+  checkout master
+  commit
+  commit
+  merge newbranch
+</div>
+<hr/><div class="mermaid">
+  classDiagram
+  Class01 <|-- AveryLongClass : Cool
+  Class03 *-- Class04
+  Class05 o-- Class06
+  Class07 .. Class08
+  Class09 --> C2 : Where am i?
+  Class09 --* C3
+  Class09 --|> Class07
+  Class07 : equals()
+  Class07 : Object[] elementData
+  Class01 : size()
+  Class01 : int chimp
+  Class01 : int gorilla
+  Class08 <--> C2: Cool label
+</div>
 </div>
 <div>
-<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/guide/designing.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/mermaid.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -154,13 +228,13 @@ and
 </footer>
 
 </div>
-<script src="../assets/javascripts/application.5165553b.js"></script>
-<script src="../assets/javascripts/paradox-material-theme.js"></script>
-<script>app.initialize({version:"0.17",url:{base:"../."}})</script>
-<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
-<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
-<script type="text/javascript" src="../assets/javascripts/mermaid/7.1.2/mermaid.min.js"></script>
-<script type="text/javascript" src="../assets/javascripts/mermaid-load.js"></script>
+<script src="assets/javascripts/application.5165553b.js"></script>
+<script src="assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"."}})</script>
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
+<script type="text/javascript" src="assets/javascripts/mermaid/7.1.2/mermaid.min.js"></script>
+<script type="text/javascript" src="assets/javascripts/mermaid-load.js"></script>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function(event) {
 window.prettyPrint && prettyPrint();
