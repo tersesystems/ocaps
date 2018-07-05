@@ -16,7 +16,7 @@ And add the given library dependency in `build.sbt`:
 
 @@dependency[sbt,Maven,Gradle] {
   group="ocaps"
-  artifact="ocaps_2.12"
+  artifact="ocaps-core_2.12"
   version=$project.version$
 }
 
