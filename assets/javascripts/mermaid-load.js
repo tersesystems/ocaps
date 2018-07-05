@@ -1,1 +1,1 @@
- mermaid.initialize({ theme: 'forest' });
+ mermaid.initialize({startOnLoad:true, theme:"neutral"});

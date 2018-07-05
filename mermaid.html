@@ -20,7 +20,7 @@
 <link rel="shortcut icon" href="assets/images/favicon.png">
 <title>Mermaid</title>
 <link rel="stylesheet" href="assets/stylesheets/application.7a4cdee3.css">
-<link rel="stylesheet" type="text/css" href="assets/stylesheets/mermaid.css"/>
+<link rel="stylesheet" type="text/css" href="assets/stylesheets/mermaid.custom.css"/>
 <link rel="stylesheet" href="lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="lib/prettify/prettify.css">
 <script src="lib/modernizr/modernizr.min.js"></script>
@@ -182,7 +182,9 @@ graph TD
   commit
   merge newbranch
 </div>
-<hr/><div class="mermaid">
+<hr/>
+<p>Custom CSS doesn&rsquo;t quite cover it:</p>
+<a href="https://unpkg.com/mermaid@7.1.2/src/less/neutral/classDiagram.less">https://unpkg.com/mermaid@7.1.2/src/less/neutral/classDiagram.less</a><div class="mermaid">
   classDiagram
   Class01 <|-- AveryLongClass : Cool
   Class03 *-- Class04
