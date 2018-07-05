@@ -110,6 +110,7 @@ lazy val root = (project in file("."))
     tutSourceDirectory := baseDirectory.value / tutPath.value,
     tutTargetDirectory := baseDirectory.value / "target" / tutPath.value,
     watchSources ++= (tutSourceDirectory.value ** "*.html").get,
+    // tut is great, but we don't need to run it every time we preview the site.
     addMappingsToSiteDir(tut, tutPath),
     libraryDependencies += "eu.timepit" %% "refined" % "0.9.0" % "tut",
 

@@ -53,7 +53,7 @@ $!
       <title>$page.home.title$</title>
     $ endif $
     <link rel="stylesheet" href="$page.base$assets/stylesheets/application.7a4cdee3.css">
-    <link rel="stylesheet" type="text/css" href="$page.base$assets/stylesheets/mermaid.css"/>
+    <link rel="stylesheet" type="text/css" href="$page.base$assets/stylesheets/mermaid.custom.css"/>
     $ if (page.properties.("material.color.primary")) $
       <link rel="stylesheet" href="$page.base$assets/stylesheets/application-palette.792431c1.css">
     $ endif $

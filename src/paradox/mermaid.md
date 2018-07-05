@@ -84,6 +84,10 @@ graph TD
 
 <hr/>
 
+Custom CSS doesn't quite cover it:
+
+<a href="https://unpkg.com/mermaid@7.1.2/src/less/neutral/classDiagram.less">https://unpkg.com/mermaid@7.1.2/src/less/neutral/classDiagram.less</a>
+
 @@@mermaid
 ```
   classDiagram
