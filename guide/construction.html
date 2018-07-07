@@ -182,7 +182,10 @@ val cake = new Cake() {
   def eat() = ()
 }
 cake.eat()
-</code></pre>
+</code></pre><div class="mermaid">
+graph LR
+  You -->|cake|ci((Cake object))
+</div>
 <p>You may know that a resource (an instance of <code>Cake</code>) exists, but you still need an object reference <code>cake</code> in order to affect the <code>Cake</code> instance by calling the <code>eat()</code> method on it. This is a fairly trivial example, because if you can instantiate a cake yourself, you will have no problem referencing it.</p>
 <p>Things start getting more interesting when you add more objects, and you don&rsquo;t control or instantiate resources directly. For example, you may not be able to make cakes yourself, so you go to a bakery.</p>
 <pre class="prettyprint"><code class="language-scala">trait Bakery {
@@ -200,7 +203,11 @@ val bakery = new Bakery() {
 }
 val you = new Person(bakery)
 you.buyAndEatCake()
-</code></pre>
+</code></pre><div class="mermaid">
+graph LR
+  You --> bi((Bakery))
+  bi --> ci((Cake))
+</div>
 <p>Here, you&rsquo;re still interested in affecting a resource <code>Cake</code> by, well, eating it, but you don&rsquo;t have direct access to the cake. Instead, <code>you</code>, an instance of a <code>Person</code>, have a reference to a <code>Bakery</code>, and that <code>Bakery</code> may give you a cake. </p>
 <p>Note that because <code>bakery</code> is an object reference, it is also a capability. You can&rsquo;t buy things from a bakery unless you know how to get to one.</p>
 <p>The bakery may give you a cake. But it may throw an exception, because they don&rsquo;t have cakes or you don&rsquo;t have enough money, or because they&rsquo;re closed. In addition, you don&rsquo;t control the behavior of the <code>eat</code> method. You have a reference, but that reference is a contract and it&rsquo;s the object that chooses how to execute it &ndash; when you call <code>cake.eat()</code>, that may also throw an exception or do something behind the scenes. </p>
@@ -227,7 +234,11 @@ val sneakyYou = new Person(enforcingBakery)
 val oneTimeCake = sneakyYou.bakery.buy()
 sneakyYou.eatCake(oneTimeCake)
 sneakyYou.eatCake(oneTimeCake)
-</code></pre>
+</code></pre><div class="mermaid">
+graph LR
+  sneakyYou --> ci((Cake Proxy))
+  ci --> rc((Real Cake))
+</div>
 <p>You may get an object reference &ndash; a capability &ndash; to a <code>Cake</code>. But here, the actual cake is only accessible through a delegate (also called a &ldquo;forwarder&rdquo;) which proxies the call. You have no direct access to the resource (<code>realCake</code>), and you can affect the resource (call <code>realCake.eat()</code>) only if the proxy allows it. The proxy may refuse to proxy the call. This is called <em>revocation</em>, and it is a key part of capability-based systems.</p>
 <p>So if the only way you can get a cake is through a bakery, then you have to play by the bakery&rsquo;s rules.</p>
 <h2><a href="#capabilities-as-traits" name="capabilities-as-traits" class="anchor"><span class="anchor-link"></span></a>Capabilities as Traits</h2>
@@ -250,8 +261,8 @@ class Cake extends Eatable {
   def inputStream[T](block: InputStream =&gt; T): T
 }
 </code></pre>
-<p>Note that only a <code>BufferedReader</code> or an <code>InputStream</code> are returned here. This is because exposing a <code>java.io.File</code> object can lead to manipulation of the filesystem, causing the capability to &ldquo;leak&rdquo; information and expose additional privileges that were not explicitly granted. </p><div class="callout note "><div class="callout-title">Note</div>
-<p>Be careful that your capability does not leak! </p></div>
+<p>Note that only a <code>BufferedReader</code> or an <code>InputStream</code> are returned here. This is because exposing a <code>java.io.File</code> object can lead to manipulation of the filesystem, causing the capability to &ldquo;leak&rdquo; information and expose additional privileges that were not explicitly granted. </p><div class="callout warning "><div class="callout-title">Warning</div>
+<p>Be careful that your capability does not leak extra functionality!</p></div>
 <h3><a href="#traits-vs-anonymous-functions" name="traits-vs-anonymous-functions" class="anchor"><span class="anchor-link"></span></a>Traits vs Anonymous Functions</h3>
 <p>There&rsquo;s an argument that anonymous functions such as <code>FunctionN</code> are natural capabilities.</p>
 <p>Anonymous functions are good for many things, but they have the following drawbacks compared to explicit traits:</p>
@@ -460,7 +471,7 @@ val text = reader.bufferedReader(_.readLine())
 val idNameChanger = access.nameChanger[Id](document)
 </code></pre>
 <p>This <code>Access</code> class constructor is public here, but obviously anyone who has both <code>Access</code> and a resource will be able to expose capabilities, so you should protect your access appropriately. You can use dynamic sealing or Scala access modifiers to ensure access is tightly controlled.</p>
-<p>Note that these are &ldquo;root level&rdquo; capabilities &ndash; they are non-revocable, &ldquo;private key&rdquo; object references, so you typically want to wrap these in <code>ocap.Revocable</code> and hand out the revocable capability instead.</p>
+<p>Note that these are &ldquo;root level&rdquo; capabilities &ndash; they are non-revocable, &ldquo;private key&rdquo; object references, so you typically want to wrap these in <code>ocap.Revocable</code> and hand out the revocable capability (aka caretaker) instead.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/guide/construction.md" title="Edit this page" class="md-source-file md-edit">

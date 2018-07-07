@@ -134,6 +134,8 @@ ocaps
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
+    <li><a href="../guide/introduction.html#why-use-object-capabilities-" class="header">Why Use Object Capabilities?</a></li>
+    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
     <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
@@ -158,6 +160,8 @@ ocaps
 <ul>
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
+    <li><a href="../guide/introduction.html#why-use-object-capabilities-" class="header">Why Use Object Capabilities?</a></li>
+    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
     <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
@@ -174,10 +178,22 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
 <p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
-<p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Object-capability systems</a> start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
-<p>So what is a capability?</p>
+<p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Object-capability systems</a>, also known as OCAP, start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
+<p>However, there is a difference between FP, OOP and OCAP. While FP and OOP are concerned about program design, OCAP (and capabilities in general) is concerned about security. Like an <a href="https://en.wikipedia.org/wiki/Access_control_list">Access Control List</a>, a capability is a security primitive, that can be put together to enable a secure system.</p>
+<h2><a href="#why-use-object-capabilities-" name="why-use-object-capabilities-" class="anchor"><span class="anchor-link"></span></a>Why Use Object Capabilities?</h2>
+<p>Object Capabilities make a natural building block for designing </p>
+<ul>
+  <li>Capabilities follow the programming domain precisely.</li>
+  <li>Capabilities allow for flexible delegation without widening access control. Workers have only the access they need to do their jobs, and nothing more.</li>
+  <li>Capabilities allow for on-the-spot revocation at any level with the appropriate design.</li>
+  <li>Capabilities can build in auditing, logging and accountability directly into code without changes to application code.</li>
+</ul>
+<h2><a href="#history" name="history" class="anchor"><span class="anchor-link"></span></a>History</h2>
+<p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. </p>
+<p>The definition of what a capability have been refined and formalized in object oriented languages, most notably Mark Miller&rsquo;s PhD thesis, <a href="http://erights.org/talks/thesis/markm-thesis.pdf">Robust Composition: Towards a Unified Approach to Access Control and Concurrency Control</a>. Miller&rsquo;s PhD thesis is regarded as the founding document of the <a href="https://en.wikipedia.org/wiki/Object-capability_model">Object Capability Model</a>.</p>
+<p>Miller followed up this paper with <a href="http://srl.cs.jhu.edu/pubs/SRL2003-02.pdf">Capability Myths Demolished</a>, which details the <a href="https://blog.acolyer.org/2016/02/16/capability-myths-demolished/">advantages that capabilities have</a> over other security primitives.</p>
 <h2><a href="#definition" name="definition" class="anchor"><span class="anchor-link"></span></a>Definition</h2>
-<p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. The definition of what a capability have been refined and formalized in object oriented languages. </p>
+<p>So what is a capability?</p>
 <p>We use the following definitions for an object capability:</p>
 <p><strong>A capability is a security primitive that confers authority by reference.</strong></p>
 <p>We use the <a href="https://ai.google/research/pubs/pub45570">following definition of authority</a>:</p>
@@ -199,7 +215,10 @@ ocaps
 <pre class="prettyprint"><code class="language-scala">val foo = createFoo
 // now we can affect the object referred to as `foo` by accessing name
 val name = foo.name
-</code></pre>
+</code></pre><div class="mermaid">
+graph LR
+You -->|foo| Foo(Foo object)
+</div>
 <p>If you call a method, or access a field, or modify a field, then you are <em>affecting the resource</em>. Therefore, your <code>foo</code> capability is sufficient justification to affect the resource that is the <code>Foo</code> instance.</p>
 <h2><a href="#differences-between-capabilities-and-oo" name="differences-between-capabilities-and-oo" class="anchor"><span class="anchor-link"></span></a>Differences between Capabilities and OO</h2>
 <p>It may seem like the only thing we&rsquo;ve done here is come up with different names for well known concepts, but that&rsquo;s not actually the case. Capabilities come from a different space altogether, where &ldquo;unforgeable references&rdquo; meant long strings or signed and encrypted messages. Implementing capabilities in an OO language &ndash; <em>object capabilities</em> or <em>ocap</em> for short &ndash; is a very clean mapping, because references to objects can&rsquo;t be forged or faked, and so much of the ground level work has already been done. </p>
