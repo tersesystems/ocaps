@@ -178,15 +178,23 @@ ocaps
 <div class="md-content__searchable">
 <h1><a href="#introducing-capabilities" name="introducing-capabilities" class="anchor"><span class="anchor-link"></span></a>Introducing Capabilities</h1>
 <p>Object oriented programming starts with a single object. Functional programming starts with a single function. The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives. OOP is all about wiring objects together. FP is all about wiring functions together. </p>
-<p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Object-capability systems</a>, also known as OCAP, start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
-<p>However, there is a difference between FP, OOP and OCAP. While FP and OOP are concerned about program design, OCAP (and capabilities in general) is concerned about security. Like an <a href="https://en.wikipedia.org/wiki/Access_control_list">Access Control List</a>, a capability is a security primitive, that can be put together to enable a secure system.</p>
+<p>In the same way, <a href="https://en.wikipedia.org/wiki/Capability-based_security">object-capability systems</a>, also known as OCAP, start with a single capability, and builds on it by wiring capabilities together. Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.</p>
+<p>However, there is a difference between FP, OOP and OCAP. While FP and OOP are concerned about program design, OCAP (and capabilities in general) is concerned about security. Like an <a href="https://en.wikipedia.org/wiki/Access_control_list">access control list</a>, a capability is a security primitive.</p>
 <h2><a href="#why-use-object-capabilities-" name="why-use-object-capabilities-" class="anchor"><span class="anchor-link"></span></a>Why Use Object Capabilities?</h2>
-<p>Object Capabilities make a natural building block for designing </p>
+<p>Object Capabilities make a natural building block for designing secure systems for several reasons.</p>
+<p>From an engineering perspective:</p>
 <ul>
-  <li>Capabilities follow the programming domain precisely.</li>
+  <li>Object capabilities follow the programming domain precisely and build on encapsulation and information hiding principles that are already well-known and well understood by the programming community.</li>
   <li>Capabilities allow for flexible delegation without widening access control. Workers have only the access they need to do their jobs, and nothing more.</li>
-  <li>Capabilities allow for on-the-spot revocation at any level with the appropriate design.</li>
-  <li>Capabilities can build in auditing, logging and accountability directly into code without changes to application code.</li>
+  <li>Auditing, logging, security notifications and accountability can be built directly into capabilities without changes to application code.</li>
+  <li>Object capabilities are more &ldquo;provably correct&rdquo; than other security primitives.</li>
+</ul>
+<p>From a security perspective:</p>
+<ul>
+  <li>Capabilities are a better solution to the <a href="https://en.wikipedia.org/wiki/Confused_deputy_problem">&ldquo;confused deputy&rdquo;</a> and <a href="https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use">Time of Check/Time of Use</a> problems.</li>
+  <li>Capabilities allow for on-the-spot revocation at any level with the appropriate design, for immediate lockdown of an account or resource.</li>
+  <li>Built-in time based or execution based expiration of capabilities, after which the capability is revoked. Allows for &ldquo;sudo&rdquo; and &ldquo;1-time&rdquo; access.</li>
+  <li>Capabilities allow for a far richer domain of security control and access than access control lists.</li>
 </ul>
 <h2><a href="#history" name="history" class="anchor"><span class="anchor-link"></span></a>History</h2>
 <p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. </p>
