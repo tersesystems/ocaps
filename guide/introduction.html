@@ -135,11 +135,11 @@ ocaps
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html#why-use-object-capabilities-" class="header">Why Use Object Capabilities?</a></li>
-    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
     <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
     <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
+    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -161,11 +161,11 @@ ocaps
   <li><a href="../guide/introduction.html#introducing-capabilities" class="header">Introducing Capabilities</a>
   <ul>
     <li><a href="../guide/introduction.html#why-use-object-capabilities-" class="header">Why Use Object Capabilities?</a></li>
-    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
     <li><a href="../guide/introduction.html#definition" class="header">Definition</a></li>
     <li><a href="../guide/introduction.html#scala-example" class="header">Scala Example</a></li>
     <li><a href="../guide/introduction.html#differences-between-capabilities-and-oo" class="header">Differences between Capabilities and OO</a></li>
     <li><a href="../guide/introduction.html#caveats-and-assumptions" class="header">Caveats and Assumptions</a></li>
+    <li><a href="../guide/introduction.html#history" class="header">History</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -191,15 +191,11 @@ ocaps
 </ul>
 <p>From a security perspective:</p>
 <ul>
-  <li>Capabilities are a better solution to the <a href="https://en.wikipedia.org/wiki/Confused_deputy_problem">&ldquo;confused deputy&rdquo;</a> and <a href="https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use">Time of Check/Time of Use</a> problems.</li>
+  <li>Capabilities are a better solution to the <a href="https://en.wikipedia.org/wiki/Confused_deputy_problem">confused deputy problem</a> and <a href="https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use">Time of Check/Time of Use problem</a>.</li>
   <li>Capabilities allow for on-the-spot revocation at any level with the appropriate design, for immediate lockdown of an account or resource.</li>
   <li>Built-in time based or execution based expiration of capabilities, after which the capability is revoked. Allows for &ldquo;sudo&rdquo; and &ldquo;1-time&rdquo; access.</li>
-  <li>Capabilities allow for a far richer domain of security control and access than access control lists.</li>
+  <li>Capabilities allow for a far richer domain of security control and can manage access decisions involving multiple principals, as opposed to <a href="http://waterken.sourceforge.net/aclsdont/current.pdf">access control lists</a>.</li>
 </ul>
-<h2><a href="#history" name="history" class="anchor"><span class="anchor-link"></span></a>History</h2>
-<p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. </p>
-<p>The definition of what a capability have been refined and formalized in object oriented languages, most notably Mark Miller&rsquo;s PhD thesis, <a href="http://erights.org/talks/thesis/markm-thesis.pdf">Robust Composition: Towards a Unified Approach to Access Control and Concurrency Control</a>. Miller&rsquo;s PhD thesis is regarded as the founding document of the <a href="https://en.wikipedia.org/wiki/Object-capability_model">Object Capability Model</a>.</p>
-<p>Miller followed up this paper with <a href="http://srl.cs.jhu.edu/pubs/SRL2003-02.pdf">Capability Myths Demolished</a>, which details the <a href="https://blog.acolyer.org/2016/02/16/capability-myths-demolished/">advantages that capabilities have</a> over <a href="http://waterken.sourceforge.net/aclsdont/c">other security primitives</a>.</p>
 <h2><a href="#definition" name="definition" class="anchor"><span class="anchor-link"></span></a>Definition</h2>
 <p>So what is a capability?</p>
 <p>We use the following definitions for an object capability:</p>
@@ -243,6 +239,11 @@ You -->|foo| Foo(Foo object)
 <p>The assumption in this document is that you are playing a straight game, where references are handled only through creation (you created the reference), parentage (you are a subclass and you have access to references scoped by your parent class), or through scoping (you were handed references through parameters in the class, or followed an existing reference). </p>
 <p>Basically, you&rsquo;re not setting or accessing capabilities through global state through singleton objects, static fields, or thread locals. You can use Akka and only send capabilities through messages between actors for a more accurate capability model, but it&rsquo;s not required.</p>
 <p>Likewise, we assume that you&rsquo;re not a hostile attacker &ndash; if you are hostile and can execute code in the JVM, it&rsquo;s trivial to subvert the SecurityManager, call <code>setAccessible</code> and start <a href="https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/">monkeypatching</a>, so effectively all fields and methods are public if you scratch hard enough. Scala is not an ocap language, so this is purely about capabilities as a software engineering practice.</p>
+<h2><a href="#history" name="history" class="anchor"><span class="anchor-link"></span></a>History</h2>
+<p>The original paper describing capabilities is <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948">Programming Semantics for Multiprogrammed Computations</a> by Dennis and Van Horn in 1963, but in an operating systems context. </p>
+<p>In 2003, Miller, Yee and Shapiro wrote <a href="http://srl.cs.jhu.edu/pubs/SRL2003-02.pdf">Capability Myths Demolished</a>, which goes through <a href="https://blog.acolyer.org/2016/02/16/capability-myths-demolished/">the incorrect assumptions about capabilities</a>, and <a href="http://www.erights.org/talks/asian03/paradigm-revised.pdf">Paradigm Regained: Abstraction Mechanisms for Access Control</a>.</p>
+<p>Miller followed this up with his 2006 PhD thesis, <a href="http://erights.org/talks/thesis/markm-thesis.pdf">Robust Composition: Towards a Unified Approach to Access Control and Concurrency Control</a>. Miller&rsquo;s PhD thesis is regarded as the founding document of the <a href="https://en.wikipedia.org/wiki/Object-capability_model">Object Capability Model</a>.</p>
+<p>Other useful papers include <a href="http://www.erights.org/history/morris73.pdf">Protection in Programming Languages</a>, which covers dynamic sealing, and <a href="https://ai.google/research/pubs/pub40736">Trustworthy Proxies: Virtualizing Objects with Invariants</a> which expands on the Membrane pattern.</p>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/guide/introduction.md" title="Edit this page" class="md-source-file md-edit">
