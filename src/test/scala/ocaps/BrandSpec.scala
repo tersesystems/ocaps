@@ -23,19 +23,19 @@ class BrandSpec extends WordSpec with Matchers {
   "Brand" should {
 
     "create a new brand with hint" in {
-      val brand = Brand.create[String]("some brand hint")
+      val brand = Brand.create("some brand hint")
       brand.hint should equal(Hint("some brand hint"))
     }
 
     "Provide tuple" in {
-      val brand = Brand.create[String]("some brand")
+      val brand = Brand.create("some brand")
       brand.tuple shouldBe a[Tuple2[_, _]]
-      brand.tuple._1 shouldBe a[Brand.Sealer[_]]
-      brand.tuple._2 shouldBe a[Brand.Unsealer[_]]
+      brand.tuple._1 shouldBe a[Brand.Sealer]
+      brand.tuple._2 shouldBe a[Brand.Unsealer]
     }
 
     "apply and unapply correctly" in {
-      val brand = Brand.create[String]("string brand")
+      val brand = Brand.create("string brand")
       val boxedDerp: Brand.Box[String] = brand.sealer("derp")
 
       val unboxed = boxedDerp match {
@@ -49,8 +49,8 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
     "not unseal with a different brand" in {
-      val brand1 = Brand.create[String]("brand1")
-      val brand2 = Brand.create[String]("brand2")
+      val brand1 = Brand.create("brand1")
+      val brand2 = Brand.create("brand2")
       val boxedWith1: Brand.Box[String] = brand1("derp")
 
       val unboxed = boxedWith1 match {
@@ -73,7 +73,7 @@ class BrandSpec extends WordSpec with Matchers {
 
       type Action[A] = Request[A] => Response
 
-      val actionBrand = Brand.create[Action[String]]("complex function")
+      val actionBrand = Brand.create("complex function")
 
       val sealedAction = actionBrand((v1: Request[String]) => new Response { val body: String = v1.body })
       val unboxed = sealedAction match {
@@ -85,6 +85,47 @@ class BrandSpec extends WordSpec with Matchers {
       response.body should equal("hello")
     }
 
+    "work with multiple brands" in {
+      val fooFactory1 = new FooFactory("factory1")
+      val foo1 = fooFactory1.create("foo1")
+
+      val fooFactory2 = new FooFactory("factory2")
+      val foo2 = fooFactory2.create("foo2")
+
+      fooFactory1.validate(foo1) should be(true)
+      fooFactory2.validate(foo1) should be(false)
+      fooFactory1.validate(foo2) should be(false)
+      fooFactory2.validate(foo2) should be(true)
+    }
+
+    "work with ints" in {
+      val brand = Brand.create("int brand")
+      val boxedInt = brand.sealer(5)
+      brand.unsealer(boxedInt) should equal(Some(5))
+    }
+
   }
+
+  class FooFactory(name: String) {
+    private val selfBrand = Brand.create(s"brand for $name")
+
+    def create(name: String): Foo = {
+      val box = selfBrand.sealer(this)
+      //println(s"name = $name, box = $box")
+      Foo(name, box)
+    }
+
+    def validate(foo: Foo): Boolean = {
+      val maybeFactory = selfBrand.unsealer(foo.source)
+      //println(s"foo = $foo, maybeFactory = $maybeFactory, source = ${foo.source}")
+      maybeFactory.contains(this)
+    }
+
+    override def toString: String = {
+      name
+    }
+  }
+
+  case class Foo(name: String, source: Brand.Box[FooFactory])
 
 }
