@@ -23,3 +23,9 @@ Examples can be found at [https://wsargent.github.io/ocaps/examples/](https://ws
 A guide to object capabilities can be found at [https://wsargent.github.io/ocaps/guide/](https://wsargent.github.io/ocaps/guide/)
 
 The `ocaps` library was presented as part of the [Security in Scala](https://na.scaladays.org/schedule/security-with-scala-refined-types-and-object-capabilities) presentation at [Scaladays NYC 2018](https://na.scaladays.org/).  [Slides](https://wsargent.github.io/ocaps/slides/) and [video](https://slideslive.com/38908776/security-with-scala-refined-types-and-object-capabilities?subdomain=false) are available.
+
+@@@mermaid
+```
+fa:fa-ban
+```
+@@@

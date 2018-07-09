@@ -3,13 +3,31 @@
 
 Object oriented programming starts with a single object.  Functional programming starts with a single function.  The power in OOP and FP comes from being able to build and compose powerful structures out of these primitives.  OOP is all about wiring objects together.  FP is all about wiring functions together. 
 
-In the same way, [Object-capability systems](https://en.wikipedia.org/wiki/Capability-based_security) start with a single capability, and builds on it by wiring capabilities together.  Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.
+In the same way, [object-capability systems](https://en.wikipedia.org/wiki/Capability-based_security), also known as OCAP, start with a single capability, and builds on it by wiring capabilities together.  Just as an object is the primitive of OOP and a function is the primitive of FP, a capability is the primitive of OCAP.
 
-So what is a capability?
+However, there is a difference between FP, OOP and OCAP.  While FP and OOP are concerned about program design, OCAP (and capabilities in general) is concerned about security.  Like an [access control list](https://en.wikipedia.org/wiki/Access_control_list), a capability is a security primitive.
+
+## Why Use Object Capabilities?
+ 
+Object Capabilities make a natural building block for designing secure systems for several reasons.
+
+From an engineering perspective:
+
+* Object capabilities follow the programming domain precisely and build on encapsulation and information hiding principles that are already well-known and well understood by the programming community.
+* Capabilities allow for flexible delegation without widening access control. Workers have only the access they need to do their jobs, and nothing more.
+* Auditing, logging, security notifications and accountability can be built directly into capabilities without changes to application code.
+* Object capabilities are "provably correct" through static analysis and flow control.
+
+From a security perspective:
+ 
+* Capabilities are a better solution to the [confused deputy problem](https://en.wikipedia.org/wiki/Confused_deputy_problem) and [Time of Check/Time of Use problem](https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use).
+* Capabilities allow for on-the-spot revocation at any level with the appropriate design, for immediate lockdown of an account or resource.
+* Built-in time based or execution based expiration of capabilities, after which the capability is revoked.  Allows for "sudo" and "1-time" access.
+* Capabilities allow for a far richer domain of security control and can manage access decisions involving multiple principals, as opposed to [access control lists](http://waterken.sourceforge.net/aclsdont/current.pdf).
 
 ## Definition
 
-The original paper describing capabilities is [Programming Semantics for Multiprogrammed Computations](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948) by Dennis and Van Horn in 1963, but in an operating systems context.  The definition of what a capability have been refined and formalized in object oriented languages. 
+So what is a capability?
 
 We use the following definitions for an object capability:
  
@@ -53,6 +71,13 @@ val foo = createFoo
 val name = foo.name
 ```
 
+@@@mermaid
+```
+graph LR
+You -->|foo| Foo(Foo object)
+```
+@@@
+
 If you call a method, or access a field, or modify a field, then you are *affecting the resource*. Therefore, your `foo` capability is sufficient justification to affect the resource that is the `Foo` instance.
 
 ## Differences between Capabilities and OO
@@ -75,3 +100,12 @@ Basically, you're not setting or accessing capabilities through global state thr
 
 Likewise, we assume that you're not a hostile attacker -- if you are hostile and can execute code in the JVM, it's trivial to subvert the SecurityManager, call `setAccessible` and start [monkeypatching](https://tersesystems.com/blog/2014/03/02/monkeypatching-java-classes/), so effectively all fields and methods are public if you scratch hard enough.  Scala is not an ocap language, so this is purely about capabilities as a software engineering practice.
 
+## History
+
+The original paper describing capabilities is [Programming Semantics for Multiprogrammed Computations](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.9948) by Dennis and Van Horn in 1963, but in an operating systems context.  
+
+In 2003, Miller, Yee and Shapiro wrote [Capability Myths Demolished](http://srl.cs.jhu.edu/pubs/SRL2003-02.pdf), which goes through [the incorrect assumptions about capabilities](https://blog.acolyer.org/2016/02/16/capability-myths-demolished/), and [Paradigm Regained: Abstraction Mechanisms for Access Control](http://www.erights.org/talks/asian03/paradigm-revised.pdf).
+
+Miller followed this up with his 2006 PhD thesis, [Robust Composition: Towards a Unified Approach to Access Control and Concurrency Control](http://erights.org/talks/thesis/markm-thesis.pdf).  Miller's PhD thesis is regarded as the founding document of the [Object Capability Model](https://en.wikipedia.org/wiki/Object-capability_model).
+
+Other useful papers include [Protection in Programming Languages](http://www.erights.org/history/morris73.pdf), which covers dynamic sealing, and [Trustworthy Proxies: Virtualizing Objects with Invariants](https://ai.google/research/pubs/pub40736) which expands on the Membrane pattern.
