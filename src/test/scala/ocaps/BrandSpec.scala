@@ -23,8 +23,8 @@ class BrandSpec extends WordSpec with Matchers {
   "Brand" should {
 
     "create a new brand with hint" in {
-      val brand = Brand.create("some brand hint")
-      brand.hint should equal("some brand hint")
+      val brand = Brand.create[String]("some brand hint")
+      brand.hint should equal(Hint("some brand hint"))
     }
 
     "Provide tuple" in {
@@ -36,7 +36,7 @@ class BrandSpec extends WordSpec with Matchers {
 
     "apply and unapply correctly" in {
       val brand = Brand.create[String]("string brand")
-      val boxedDerp: Brand.Box[String] = brand("derp")
+      val boxedDerp: Brand.Box[String] = brand.sealer("derp")
 
       val unboxed = boxedDerp match {
         case brand(derp) =>

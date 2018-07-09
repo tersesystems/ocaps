@@ -16,7 +16,10 @@
 
 package ocaps
 
-import java.util.concurrent.locks.StampedLock
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicReference
+
+import scala.annotation.tailrec
 
 /**
   * Brand contains a sealer and unsealer.
@@ -24,58 +27,89 @@ import java.util.concurrent.locks.StampedLock
   * @param hint hint shown in boxes.
   * @tparam T the type to be sealed
   */
-final class Brand[T] private (val hint: String) {
+final class Brand[T] private (val hint: Hint) {
   import Brand._
 
-  private val sl = new StampedLock()
-  private var shared: Option[T] = None
+  private val shared: AtomicReference[T] = new AtomicReference[T]()
 
-  /**
-    * Applies a sealed box to the given input.
-    *
-    * {{{
-    *   val brand = Brand.create[String]("test brand")
-    *   val boxed: Brand.Box[String] = brand("this is a test")
-    * }}}
-    *
-    * @param input the unboxed input
-    * @return a sealed box abstracting the input
-    */
-  def apply(input: T): Box[T] = new Box[T](input, this)
+  val sealer: Sealer[T] = new Sealer[T] {
+    def hint: Hint = Brand.this.hint
 
-  def unapply(box: Box[T]): Option[T] = {
-    val l = sl.writeLock()
-    try {
-      box.shareContent()
-      shared.map { content =>
-        shared = None
-        content
+    /**
+     * Applies a sealed box to the given input.
+     *
+     * {{{
+     *   val (sealer, unsealer) = Brand.create[String]("test brand").tuple
+     *   val boxed: Brand.Box[String] = sealer("this is a test")
+     * }}}
+     *
+     * @param input the unboxed input
+     * @return a sealed box abstracting the input
+     */
+    def apply(input: T): Box[T] = new Box[T](input, Brand.this)
+  }
+
+  val unsealer: Unsealer[T] = new Unsealer[T] {
+    override def hint: Hint = Brand.this.hint
+    def apply(box: Box[T]): Option[T] = {
+      if (box.brand == Brand.this) {
+        Option(transformAndGet(_ => box.value))
+      } else {
+        None
       }
-    } finally {
-      sl.unlockWrite(l)
     }
   }
 
-  val sealer: Sealer[T] = apply
+  // https://alexn.org/blog/2013/05/07/towards-better-atomicreference-scala.html
+  @tailrec
+  private def transformAndGet(cb: T => T): T = {
+    val oldValue = shared.get
+    val newValue = cb(oldValue)
+    if (!shared.compareAndSet(oldValue, newValue))
+      transformAndGet(cb)
+    else
+      newValue
+  }
 
-  val unsealer: Unsealer[T] = unapply
+  def apply(value: T): Box[T] = sealer.apply(value)
+
+  def unapply(box: Box[T]): Option[T] = unsealer.apply(box)
 
   val tuple: (Sealer[T], Unsealer[T]) = (sealer, unsealer)
 }
 
+/**
+ * Hint is used to provide brand origin and check equality.
+ */
+trait Hint
+
+object Hint {
+  def apply(stringHint: String): Hint = StringHint(stringHint)
+
+  case class StringHint(hint: String) extends Hint {
+    override def toString: String = hint
+  }
+}
+
 object Brand {
 
-  type Sealer[T] = T => Box[T]
-  type Unsealer[T] = Box[T] => Option[T]
-
-  class Box[T](obj: T, brand: Brand[T]) {
-    private[Brand] def shareContent(): Unit = {
-      brand.shared = Option(obj)
-    }
-    override def toString: String = "<sealed " + brand.hint + " box>"
+  trait Sealer[T] extends (T => Box[T]) {
+    def hint: Hint
+  }
+  trait Unsealer[T] extends (Box[T] => Option[T]) {
+    def hint: Hint
   }
 
-  def create[T](hint: String) = new Brand[T](hint)
+  class Box[T] private[Brand] (private[Brand] val value: T, private[Brand] val brand: Brand[T]) {
+    def hint: Hint = brand.hint
+    override def toString: String = s"Box(hashCode = ${super.hashCode()}, hint = ${brand.hint})"
+  }
+
+  def create[T](stringHint: String): Brand[T] = new Brand[T](Hint(stringHint))
+
+  def create[T](hint: Hint): Brand[T] = new Brand[T](hint)
+
+  def create[T](): Brand[T] = new Brand[T](Hint(UUID.randomUUID().toString))
 
   def tuple[T](brand: Brand[T]): (Sealer[T], Unsealer[T]) = brand.tuple
 }
