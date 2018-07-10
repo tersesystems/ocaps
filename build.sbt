@@ -17,6 +17,9 @@ lazy val scalaMacroDependencies: Seq[Setting[_]] = Seq(
 )
 val tutPath = settingKey[String]("Path to tut files")
 
+val stableVersion = settingKey[String]("The version of ocaps that we want the user to download.")
+stableVersion := "0.1.0"
+
 val catsVersion = "1.1.0"
 val catsEffectVersion = "1.0.0-RC2"
 
@@ -75,7 +78,7 @@ lazy val root = (project in file("."))
 
     // paradox settings
     paradoxProperties in Paradox ++= Map(
-      "version" -> version.value,
+      "version" -> stableVersion.value,
       "snip.examples.base_dir" -> s"${(sourceDirectory in Test).value}/scala/ocaps/examples",
     ),
     paradoxMaterialTheme in Compile ~= {
@@ -83,6 +86,7 @@ lazy val root = (project in file("."))
         uri("https://github.com/wsargent"),
         uri("https://twitter.com/will_sargent")
       ).withRepository(uri("https://github.com/wsargent/ocaps"))
+      .withCustomStylesheet("https://use.fontawesome.com/releases/v5.1.0/css/all.css")
     },
     paradoxDirectives += MermaidDirective,
     // https://github.com/lightbend/paradox/issues/139
