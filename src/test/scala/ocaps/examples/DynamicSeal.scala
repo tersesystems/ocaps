@@ -43,7 +43,7 @@ object DynamicSeal {
     name: String,
     sentencer: User => User = identity,
     boxed: Option[Brand.Box[Message]] = None,
-    private val brand: Option[Brand[Message]] = None
+    private val brand: Option[Brand] = None
   ) {
     def sentence(user: User): User = sentencer(user)
 
@@ -57,8 +57,8 @@ object DynamicSeal {
   }
 
   def main(args: Array[String]): Unit = {
-    val softBrand = Brand.create[Message]("Brand for Judge Softtouch")
-    val doomBrand = Brand.create[Message]("Brand for Judge Doom")
+    val softBrand = Brand.create("Brand for Judge Softtouch")
+    val doomBrand = Brand.create("Brand for Judge Doom")
 
     val judgeSofttouch = User("Judge Softtouch", sentencer = { user =>
       user.copy(boxed = Some(softBrand(Save)))

@@ -24,7 +24,7 @@ object Amplification {
 
   case class Can(food: Brand.Box[Food])
 
-  class CanOpener(unsealer: Brand.Unsealer[Food]) {
+  class CanOpener(unsealer: Brand.Unsealer) {
     def open(can: Can): Food = {
       unsealer(can.food).get
     }
@@ -33,7 +33,7 @@ object Amplification {
   def main(args: Array[String]): Unit = {
     // We want to get at the food here.
 
-    val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
+    val (sealer, unsealer) = Brand.create("canned food").tuple
     val canOfSpam: Can = Can(sealer(Food("spam")))
 
     // The can by itself has the food, but we have no way to get to it
