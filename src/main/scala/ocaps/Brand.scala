@@ -39,6 +39,10 @@ final class Brand private (val hint: Hint) {
     def hint: Hint = Brand.this.hint
 
     def apply[T](input: T): Box[T] = new Box[T](input, Brand.this)
+
+    override def toString: String = {
+      s"Sealer(hashCode = ${super.hashCode()}, hint = $hint)"
+    }
   }
 
   val unsealer: Unsealer = new Unsealer {
@@ -51,6 +55,10 @@ final class Brand private (val hint: Hint) {
       } else {
         None
       }
+    }
+
+    override def toString: String = {
+      s"Unsealer(hashCode = ${super.hashCode()}, hint = $hint)"
     }
   }
 
@@ -88,6 +96,7 @@ final class Brand private (val hint: Hint) {
       newValue
   }
 
+  override def toString: String = s"Brand(hashCode = ${super.hashCode()}, hint = $hint)"
 }
 
 /**
