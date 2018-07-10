@@ -54,16 +54,10 @@ final class Brand private (val hint: Hint) {
     }
   }
 
-  // https://alexn.org/blog/2013/05/07/towards-better-atomicreference-scala.html
-  @tailrec
-  private def transformAndGet[T](cb: Any => T): T = {
-    val oldValue = shared.get
-    val newValue = cb(oldValue)
-    if (!shared.compareAndSet(oldValue, newValue))
-      transformAndGet(cb)
-    else
-      newValue
-  }
+  /**
+   * Convenience tuple.
+   */
+  val tuple: (Sealer, Unsealer) = (sealer, unsealer)
 
   /**
    * Convenience method for applying the sealer method.
@@ -83,10 +77,17 @@ final class Brand private (val hint: Hint) {
    */
   def unapply[T](box: Box[T]): Option[T] = unsealer.apply(box)
 
-  /**
-   * Convenience method that provides a tuple from the brand.
-   */
-  val tuple: (Sealer, Unsealer) = (sealer, unsealer)
+  // https://alexn.org/blog/2013/05/07/towards-better-atomicreference-scala.html
+  @tailrec
+  private def transformAndGet[T](cb: Any => T): T = {
+    val oldValue = shared.get
+    val newValue = cb(oldValue)
+    if (!shared.compareAndSet(oldValue, newValue))
+      transformAndGet(cb)
+    else
+      newValue
+  }
+
 }
 
 /**
