@@ -93,6 +93,20 @@ object Hint {
 
 object Brand {
 
+  trait ImplicitSealing {
+    implicit def implicitSeal[T](value: T)(implicit sealer: Sealer): Brand.Box[T] = sealer(value)
+  }
+
+  object ImplicitSealing extends ImplicitSealing
+
+  trait ImplicitUnsealing {
+    implicit def implicitUnseal[T](box: Box[T])(implicit unsealer: Unsealer): Option[T] = unsealer(box)
+  }
+
+  object ImplicitUnsealing extends ImplicitUnsealing
+
+  object Implicits extends ImplicitSealing with ImplicitUnsealing
+
   trait Sealer {
 
     def apply[T](value: T): Box[T]

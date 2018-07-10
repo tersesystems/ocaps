@@ -86,6 +86,28 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
     "work with multiple brands" in {
+      class FooFactory(name: String) {
+        private val selfBrand = Brand.create(s"brand for $name")
+
+        def create(name: String): Foo = {
+          val box = selfBrand.sealer(this)
+          //println(s"name = $name, box = $box")
+          Foo(name, box)
+        }
+
+        def validate(foo: Foo): Boolean = {
+          val maybeFactory = selfBrand.unsealer(foo.source)
+          //println(s"foo = $foo, maybeFactory = $maybeFactory, source = ${foo.source}")
+          maybeFactory.contains(this)
+        }
+
+        override def toString: String = {
+          name
+        }
+      }
+
+      case class Foo(name: String, source: Brand.Box[FooFactory])
+
       val fooFactory1 = new FooFactory("factory1")
       val foo1 = fooFactory1.create("foo1")
 
@@ -104,28 +126,49 @@ class BrandSpec extends WordSpec with Matchers {
       brand.unsealer(boxedInt) should equal(Some(5))
     }
 
+    "work with implicit sealing" in {
+      case class Bar(text: String) {
+        def matches(box: Brand.Box[Bar]): Boolean = {
+          Bar.brand.unsealer(box).contains(this)
+        }
+      }
+
+      object Bar extends ocaps.Brand.ImplicitSealing {
+        private val brand: Brand = Brand.create("Brand for singleton object Bar")
+
+        implicit val sealer: Brand.Sealer = brand.sealer
+      }
+
+      import Bar._
+
+      val bar = new Bar("I am bar!")
+      val bar2 = new Bar("I am bar2!")
+      val boxedFoo: Brand.Box[Bar] = bar // boxed automatically using the implicit sealer
+
+      bar.matches(boxedFoo) should be(true)
+      bar2.matches(boxedFoo) should be(false)
+    }
+
+    "work with implicit unsealing" in {
+      case class Bar private(text: String)
+
+      object Bar extends ocaps.Brand.ImplicitUnsealing {
+        private val brand: Brand = Brand.create("Brand for singleton object Bar")
+
+        def createBoxed(text: String): Brand.Box[Bar] = {
+          brand.sealer(new Bar(text))
+        }
+
+        implicit val unsealer: Brand.Unsealer = brand.unsealer
+      }
+
+      // Implicit scope doesn't resolve automatically in singleton object???
+      import Bar._
+
+      val boxed = Bar.createBoxed("foo") // can only be created boxed
+      boxed.map(_.text + " in bed") should be(Some("foo in bed")) // unsealer resolves to Option[Bar]
+    }
+
   }
-
-  class FooFactory(name: String) {
-    private val selfBrand = Brand.create(s"brand for $name")
-
-    def create(name: String): Foo = {
-      val box = selfBrand.sealer(this)
-      //println(s"name = $name, box = $box")
-      Foo(name, box)
-    }
-
-    def validate(foo: Foo): Boolean = {
-      val maybeFactory = selfBrand.unsealer(foo.source)
-      //println(s"foo = $foo, maybeFactory = $maybeFactory, source = ${foo.source}")
-      maybeFactory.contains(this)
-    }
-
-    override def toString: String = {
-      name
-    }
-  }
-
-  case class Foo(name: String, source: Brand.Box[FooFactory])
 
 }
