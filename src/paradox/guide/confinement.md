@@ -18,14 +18,14 @@ import ocaps.Brand
 object Main {
   case class Food(name: String)
   case class Can(food: Brand.Box[Food])
-  class CanOpener(unsealer: Brand.Unsealer[Food]) {
+  class CanOpener(unsealer: Brand.Unsealer) {
     def open(can: Can): Food = {
       unsealer(can.food).get // throws exception if we did not seal this
     }
   }
 
   def main(args: Array[String]): Unit = {
-    val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
+    val (sealer, unsealer) = Brand.create("canned food").tuple
     val canOfSpam: Can = Can(sealer(Food("spam")))
 
     val cannedFood: Brand.Box[Food] = canOfSpam.food
