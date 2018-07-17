@@ -127,18 +127,6 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
     "work with implicit sealing" in {
-      case class ImplicitBar(text: String) {
-        def matches(box: Brand.Box[ImplicitBar]): Boolean = {
-          ImplicitBar.brand.unsealer(box).contains(this)
-        }
-      }
-
-      object ImplicitBar extends ocaps.Brand.ImplicitSealing {
-        private val brand: Brand = Brand.create("Brand for singleton object ImplicitBar")
-
-        implicit val sealer: Brand.Sealer = brand.sealer
-      }
-
       import ImplicitBar._
 
       val bar = new ImplicitBar("I am bar!")
@@ -150,17 +138,7 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
     "work with implicit unsealing" in {
-      case class ImplicitUnBar private(text: String)
 
-      object ImplicitUnBar extends ocaps.Brand.ImplicitUnsealing {
-        private val brand: Brand = Brand.create("Brand for singleton object ImplicitUn")
-
-        def createBoxed(text: String): Brand.Box[ImplicitUnBar] = {
-          brand.sealer(new ImplicitUnBar(text))
-        }
-
-        implicit val unsealer: Brand.Unsealer = brand.unsealer
-      }
 
       // Implicit scope doesn't resolve automatically in singleton object???
       import ImplicitUnBar._
@@ -170,5 +148,27 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
   }
+  case class ImplicitBar(text: String) {
+    def matches(box: Brand.Box[ImplicitBar]): Boolean = {
+      ImplicitBar.brand.unsealer(box).contains(this)
+    }
+  }
 
+  object ImplicitBar extends ocaps.Brand.ImplicitSealing {
+    private val brand: Brand = Brand.create("Brand for singleton object ImplicitBar")
+
+    implicit val sealer: Brand.Sealer = brand.sealer
+  }
+
+  case class ImplicitUnBar private(text: String)
+
+  object ImplicitUnBar extends ocaps.Brand.ImplicitUnsealing {
+    private val brand: Brand = Brand.create("Brand for singleton object ImplicitUn")
+
+    def createBoxed(text: String): Brand.Box[ImplicitUnBar] = {
+      brand.sealer(new ImplicitUnBar(text))
+    }
+
+    implicit val unsealer: Brand.Unsealer = brand.unsealer
+  }
 }
