@@ -1,20 +1,6 @@
 
 // https://github.com/typelevel/cats/blob/master/build.sbt#L610
-lazy val scalaMacroDependencies: Seq[Setting[_]] = Seq(
-  libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
-  libraryDependencies ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
-      case Some((2, scalaMajor)) if scalaMajor >= 11 => Seq()
-      // in Scala 2.10, quasiquotes are provided by macro paradise
-      case Some((2, 10)) =>
-        Seq(
-          compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
-          "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary
-        )
-    }
-  }
-)
+
 val tutPath = settingKey[String]("Path to tut files")
 
 val stableVersion = settingKey[String]("The version of ocaps that we want the user to download.")
@@ -31,27 +17,8 @@ lazy val root = (project in file("."))
   .enablePlugins(ScalaUnidocPlugin) // https://github.com/sbt/sbt-unidoc#how-to-unify-scaladoc
   .enablePlugins(TutPlugin) // http://tpolecat.github.io/tut//configuration.html
   .enablePlugins(GhpagesPlugin) // https://github.com/sbt/sbt-ghpages
-  .settings(scalaMacroDependencies)
   .settings(
     name := "ocaps",
-    organization := "ocaps",
-
-    crossScalaVersions := Seq("2.12.6", "2.11.12"),
-    scalaVersion := crossScalaVersions.value.head,
-
-    scalacOptions in ThisBuild ++= Seq(
-      "-deprecation",
-      "-encoding", "utf-8",
-      "-explaintypes",
-      "-feature",
-      "-language:existentials",
-      "-language:experimental.macros",
-      "-language:higherKinds",
-      "-language:implicitConversions",
-      "-unchecked",
-      "-Xfuture"
-    ),
-    //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
 
     // scaladoc settings
     scalacOptions in (Compile, doc) ++= Seq(
@@ -95,6 +62,8 @@ lazy val root = (project in file("."))
     ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
 
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
 
@@ -129,3 +98,14 @@ lazy val root = (project in file("."))
     releaseCrossBuild := true
 
   )
+
+
+lazy val horton = (project in file("horton"))
+  .settings(
+    name := "horton",
+
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
+
+    publish := {}
+  ).dependsOn(root)

@@ -127,48 +127,48 @@ class BrandSpec extends WordSpec with Matchers {
     }
 
     "work with implicit sealing" in {
-      case class Bar(text: String) {
-        def matches(box: Brand.Box[Bar]): Boolean = {
-          Bar.brand.unsealer(box).contains(this)
-        }
-      }
+      import ImplicitBar._
 
-      object Bar extends ocaps.Brand.ImplicitSealing {
-        private val brand: Brand = Brand.create("Brand for singleton object Bar")
-
-        implicit val sealer: Brand.Sealer = brand.sealer
-      }
-
-      import Bar._
-
-      val bar = new Bar("I am bar!")
-      val bar2 = new Bar("I am bar2!")
-      val boxedFoo: Brand.Box[Bar] = bar // boxed automatically using the implicit sealer
+      val bar = new ImplicitBar("I am bar!")
+      val bar2 = new ImplicitBar("I am bar2!")
+      val boxedFoo: Brand.Box[ImplicitBar] = bar // boxed automatically using the implicit sealer
 
       bar.matches(boxedFoo) should be(true)
       bar2.matches(boxedFoo) should be(false)
     }
 
     "work with implicit unsealing" in {
-      case class Bar private(text: String)
 
-      object Bar extends ocaps.Brand.ImplicitUnsealing {
-        private val brand: Brand = Brand.create("Brand for singleton object Bar")
-
-        def createBoxed(text: String): Brand.Box[Bar] = {
-          brand.sealer(new Bar(text))
-        }
-
-        implicit val unsealer: Brand.Unsealer = brand.unsealer
-      }
 
       // Implicit scope doesn't resolve automatically in singleton object???
-      import Bar._
+      import ImplicitUnBar._
 
-      val boxed = Bar.createBoxed("foo") // can only be created boxed
+      val boxed = ImplicitUnBar.createBoxed("foo") // can only be created boxed
       boxed.map(_.text + " in bed") should be(Some("foo in bed")) // unsealer resolves to Option[Bar]
     }
 
   }
+  case class ImplicitBar(text: String) {
+    def matches(box: Brand.Box[ImplicitBar]): Boolean = {
+      ImplicitBar.brand.unsealer(box).contains(this)
+    }
+  }
 
+  object ImplicitBar extends ocaps.Brand.ImplicitSealing {
+    private val brand: Brand = Brand.create("Brand for singleton object ImplicitBar")
+
+    implicit val sealer: Brand.Sealer = brand.sealer
+  }
+
+  case class ImplicitUnBar private(text: String)
+
+  object ImplicitUnBar extends ocaps.Brand.ImplicitUnsealing {
+    private val brand: Brand = Brand.create("Brand for singleton object ImplicitUn")
+
+    def createBoxed(text: String): Brand.Box[ImplicitUnBar] = {
+      brand.sealer(new ImplicitUnBar(text))
+    }
+
+    implicit val unsealer: Brand.Unsealer = brand.unsealer
+  }
 }
