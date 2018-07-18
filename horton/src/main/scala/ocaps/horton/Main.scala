@@ -1,6 +1,6 @@
 package ocaps.horton
 
-import ocaps.horton.Principal.ProxyMaker
+import ocaps.horton.Principal._
 
 /**
  * Implementation of Horton in Scala.
@@ -21,9 +21,9 @@ object Main {
 
   object B {
     implicit val proxyMakerB: ProxyMaker[B] = new ProxyMaker[B] {
-      override def makeProxy(reportln: String => Unit, stub: Stub[B])(implicit principal: Principal, whoBlame: Who): Proxy[B] = {
+      override def makeProxy(stub: Stub[B])(implicit context: Context): Proxy[B] = {
         def log(msg: String): Unit = {
-          reportln(s"I ask ${whoBlame.hint} to:\n> $msg")
+          context.reportln(s"I ask ${context.whoBlame.hint} to:\n> $msg")
         }
 
         new B {
@@ -44,9 +44,9 @@ object Main {
 
   object C {
     implicit val proxyMakerC: ProxyMaker[C] = new ProxyMaker[C] {
-      override def makeProxy(reportln: String => Unit, stub: Stub[C])(implicit principal: Principal, whoBlame: Who): C = {
+      override def makeProxy(stub: Stub[C])(implicit context: Context): C = {
         def log(msg: String): Unit = {
-          reportln(s"I ask ${whoBlame.hint} to:\n> $msg")
+          context.reportln(s"I ask ${context.whoBlame.hint} to:\n> $msg")
         }
 
         new C {
