@@ -65,7 +65,8 @@ class Principal(label: String, printer: String => Unit) {
 
   def decodeFrom[T](gift: Gift[T], whoBlame: Who)(implicit proxyMaker: Principal.ProxyMaker[T]): T = {
     val stub = unwrap(gift, whoBlame)
-    val proxyB = proxyMaker.makeProxy(reportln, stub)(this, whoBlame)
+    implicit val context: proxyMaker.Context = proxyMaker.Context(this, whoBlame, reportln)
+    val proxyB = proxyMaker.makeProxy(stub)
     proxyAmps.put(proxyB, (stub, whoBlame))
     proxyB
   }
@@ -109,10 +110,11 @@ class Principal(label: String, printer: String => Unit) {
                         (implicit tTag: ru.TypeTag[T], cTag: ClassTag[T], proxyMaker: Principal.ProxyMaker[ArgType]): Any = {
       log(s"$verb/1")
 
-      val (gift3, whoFrom) = desc
-      val stub3: Stub[ArgType] = unwrap(gift3, whoFrom)
-      val proxy: Proxy[ArgType] = proxyMaker.makeProxy(reportln, stub3)(Principal.this, whoFrom)
-      proxyAmps.put(proxy, (stub3, whoFrom))
+      val (gift3, whoBlame) = desc
+      implicit val context: proxyMaker.Context = proxyMaker.Context(Principal.this, whoBlame, reportln)
+      val stub3: Stub[ArgType] = unwrap(gift3, whoBlame)
+      val proxy: Proxy[ArgType] = proxyMaker.makeProxy(stub3)
+      proxyAmps.put(proxy, (stub3, whoBlame))
       applyDynamic(verb)(proxy)(tTag, cTag)
     }
 
@@ -152,13 +154,15 @@ class Principal(label: String, printer: String => Unit) {
 object Principal {
 
   trait ProxyMaker[T] {
-    final def createDescription[A](argument: A)(implicit principal: Principal, whoBlame: Who): (Gift[A], Who) = {
-      val (stubToIntro, whoFrom) = principal.proxyAmps(argument)
-      val gift = stubToIntro.intro(whoBlame)
+    case class Context(principal: Principal, whoBlame: Who, reportln: String => Unit)
+
+    final def createDescription[A](argument: A)(implicit context: Context): (Gift[A], Who) = {
+      val (stubToIntro, whoFrom) = context.principal.proxyAmps(argument)
+      val gift = stubToIntro.intro(context.whoBlame)
       (gift, whoFrom)
     }
 
-    def makeProxy(reportln: String => Unit, stub: Stub[T])(implicit principal: Principal, whoBlame: Who): Proxy[T]
+    def makeProxy(stub: Stub[T])(implicit context: Context): Proxy[T]
   }
 
 }
