@@ -20,16 +20,18 @@ object Main {
   }
 
   object B {
-    implicit val proxyMakerB: ProxyMaker[B] = new ProxyMaker[B] {
+    implicit val proxyMaker: ProxyMaker[B] = new ProxyMaker[B] {
       override def makeProxy(stub: Stub[B])(implicit context: Context): Proxy[B] = {
+        import context._
+
         def log(msg: String): Unit = {
-          context.reportln(s"I ask ${context.whoBlame.hint} to:\n> $msg")
+          reportln(s"I ask ${whoBlame.hint} to:\n> $msg")
         }
 
         new B {
           override def foo(c: C): Unit = {
             log("> foo/1")
-            stub.deliver("foo", createDescription(c))
+            stub.deliver("foo", c) // createDescription implicitly converts c
           }
 
           override def toString: String = "B Proxy"
@@ -43,16 +45,18 @@ object Main {
   }
 
   object C {
-    implicit val proxyMakerC: ProxyMaker[C] = new ProxyMaker[C] {
+    implicit val proxyMaker: ProxyMaker[C] = new ProxyMaker[C] {
       override def makeProxy(stub: Stub[C])(implicit context: Context): C = {
+        import context._
+
         def log(msg: String): Unit = {
-          context.reportln(s"I ask ${context.whoBlame.hint} to:\n> $msg")
+          reportln(s"I ask ${whoBlame.hint} to:\n> $msg")
         }
 
         new C {
           override def hi(): Unit = {
             log("> hi/1")
-            stub.deliver("hi", createDescription(this))
+            stub.deliver("hi", this) // createDescription implicitly converts this
           }
 
           override def toString: String = "C Proxy"
@@ -79,9 +83,11 @@ object Main {
     val bob = new Principal("Bob", println)
     val carol = new Principal("Carol", println)
 
+    // Gifts are sealed and can only be unsealed by the recipient.
     val toAliceFromBob: Gift[B] = bob.encodeFor(b, alice.who)
     val toAliceFromCarol: Gift[C] = carol.encodeFor(c, alice.who)
 
+    // When gift is unsealed, a proxy is returned that establishes provenance.
     val p1: B = alice.decodeFrom(toAliceFromBob, bob.who)
     val p2: C = alice.decodeFrom(toAliceFromCarol, carol.who)
     val a = new A(p1, p2)

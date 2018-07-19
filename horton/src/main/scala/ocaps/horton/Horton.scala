@@ -154,9 +154,13 @@ class Principal(label: String, printer: String => Unit) {
 object Principal {
 
   trait ProxyMaker[T] {
+
     case class Context(principal: Principal, whoBlame: Who, reportln: String => Unit)
 
-    final def createDescription[A](argument: A)(implicit context: Context): (Gift[A], Who) = {
+    /**
+     * Implicitly converts from argument to a (Gift, Who) pair.
+     */
+    implicit final def createDescription[A](argument: A)(implicit context: Context): (Gift[A], Who) = {
       val (stubToIntro, whoFrom) = context.principal.proxyAmps(argument)
       val gift = stubToIntro.intro(context.whoBlame)
       (gift, whoFrom)
