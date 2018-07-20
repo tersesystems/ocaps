@@ -98,14 +98,3 @@ lazy val root = (project in file("."))
     releaseCrossBuild := true
 
   )
-
-
-lazy val horton = (project in file("horton"))
-  .settings(
-    name := "horton",
-
-    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
-
-    publish := {}
-  ).dependsOn(root)

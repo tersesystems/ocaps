@@ -1,4 +1,4 @@
-package ocaps.horton
+package ocaps.examples.horton
 
 import java.util.concurrent.atomic.AtomicReference
 
@@ -9,6 +9,7 @@ import scala.collection.mutable
 import reflect.ClassTag
 import scala.reflect.runtime.{universe => ru}
 
+// #horton
 class Who(sealer: Sealer) {
   def apply[T](provide: Provide[T]): Gift[T] = sealer(provide)
 
@@ -113,7 +114,7 @@ class Principal(label: String, printer: String => Unit) {
       val (gift3, whoBlame) = desc
       implicit val context: proxyMaker.Context = proxyMaker.Context(Principal.this, whoBlame, reportln)
       val stub3: Stub[ArgType] = unwrap(gift3, whoBlame)
-      val proxy: Proxy[ArgType] = proxyMaker.makeProxy(stub3)
+      val proxy: scala.Proxy[ArgType] = proxyMaker.makeProxy(stub3)
       proxyAmps.put(proxy, (stub3, whoBlame))
       applyDynamic(verb)(proxy)(tTag, cTag)
     }
@@ -166,7 +167,8 @@ object Principal {
       (gift, whoFrom)
     }
 
-    def makeProxy(stub: Stub[T])(implicit context: Context): Proxy[T]
+    def makeProxy(stub: Stub[T])(implicit context: Context): scala.Proxy[T]
   }
 
 }
+// #horton

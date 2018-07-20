@@ -12,6 +12,7 @@
 * [Gatekeeper](gatekeeper.md)
 * [Dynamic Sealing](dynamic_seal.md)
 * [Membrane](membrane.md)
+* [Responsibility Tracking](horton.md)
 
 @@@
 
@@ -58,7 +59,7 @@ This section shows patterns that change the behavior of capabilities, typically 
 
 ## Operational Patterns
 
-This section shows capabilities used together#.
+This section shows capabilities used together to either unlock new functionality through amplification or represent higher level functionality through abstraction.
 
 * @ref:[Amplification](amplification.md)
 * @ref:[Abstraction](abstraction.md)
@@ -76,3 +77,9 @@ This section shows capabilities being rendered inaccessible or made accessible t
 
 * @ref:[Dynamic Sealing](dynamic_seal.md)
 * @ref:[Membrane](membrane.md)
+
+## Responsibility Tracking
+
+This section shows how to track identity and responsibility through capabilities.
+
+* @ref:[Responsibility Tracking](horton.md)

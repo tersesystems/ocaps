@@ -1,4 +1,4 @@
-package ocaps
+package ocaps.examples
 
 package object horton {
   import ocaps.Brand._
