@@ -99,7 +99,7 @@ class Principal(label: String, printer: String => Unit) {
     result.get()
   }
 
-  class StubImpl[T](whoBlame: Who, delegate: T) extends Stub[T] with Dynamic {
+  class StubImpl[T](whoBlame: Who, delegate: T) extends Stub[T] {
 
     def intro(whoBob: Who): Gift[T] = {
       log(s"meet ${whoBob.hint}")
@@ -114,19 +114,15 @@ class Principal(label: String, printer: String => Unit) {
       val (gift3, whoBlame) = desc
       implicit val context: proxyMaker.Context = proxyMaker.Context(Principal.this, whoBlame, reportln)
       val stub3: Stub[ArgType] = unwrap(gift3, whoBlame)
-      val proxy: scala.Proxy[ArgType] = proxyMaker.makeProxy(stub3)
+      val proxy: Proxy[ArgType] = proxyMaker.makeProxy(stub3)
       proxyAmps.put(proxy, (stub3, whoBlame))
-      applyDynamic(verb)(proxy)(tTag, cTag)
-    }
 
-    //  http://www.erights.org/elib/capability/horton/amplify.html
-    // https://gist.github.com/bartschuller/4687387
-    def applyDynamic(method: String)(args: Any*)(implicit tTag: ru.TypeTag[T], classTag: ClassTag[T]): Any = {
+      // https://gist.github.com/bartschuller/4687387
       val m = ru.runtimeMirror(delegate.getClass.getClassLoader)
-      val sym = ru.weakTypeTag[T].tpe.decl(ru.TermName(method)).asMethod
+      val sym = ru.weakTypeTag[T].tpe.decl(ru.TermName(verb)).asMethod
       val im = m.reflect(delegate)
       val methodMirror = im.reflectMethod(sym)
-      methodMirror.apply(args: _*)
+      methodMirror.apply(proxy)
     }
 
     override def toString: String = {
@@ -167,7 +163,7 @@ object Principal {
       (gift, whoFrom)
     }
 
-    def makeProxy(stub: Stub[T])(implicit context: Context): scala.Proxy[T]
+    def makeProxy(stub: Stub[T])(implicit context: Context): Proxy[T]
   }
 
 }
