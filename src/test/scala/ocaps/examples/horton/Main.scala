@@ -1,13 +1,14 @@
-package ocaps.horton
+package ocaps.examples.horton
 
-import ocaps.horton.Principal._
 
 /**
  * Implementation of Horton in Scala.
  *
  * http://www.erights.org/elib/capability/horton/amplify.html
  */
+// #main
 object Main {
+  import Principal.ProxyMaker
 
   class A(b: B, c: C) {
     def start(): Unit = {
@@ -117,5 +118,4 @@ object Main {
   }
 
 }
-
-
+// #main

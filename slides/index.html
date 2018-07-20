@@ -621,7 +621,7 @@ Wrapping an object in another class so that it cannot be seen or tampered with u
 ```tut
 import ocaps._
 
-val (sealer, unsealer) = Brand.create[String]("string hint").tuple
+val (sealer, unsealer) = Brand.create("hint").tuple
 
 val sealedBox = sealer("foo")
 
@@ -645,11 +645,11 @@ val stringIsFoo = unsealer(sealedBox)
 ```tut
 case class Food(name: String)
 case class Can(food: Brand.Box[Food])
-class CanOpener(unsealer: Brand.Unsealer[Food]) {
+class CanOpener(unsealer: Brand.Unsealer) {
   def open(can: Can): Food = unsealer(can.food).get
 }
 
-val (sealer, unsealer) = Brand.create[Food]("canned food").tuple
+val (sealer, unsealer) = Brand.create("canned food").tuple
 val canOpener = new CanOpener(unsealer)
 
 val canOfSpam: Can = Can(sealer(Food("spam")))

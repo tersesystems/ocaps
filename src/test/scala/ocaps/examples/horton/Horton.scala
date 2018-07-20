@@ -1,4 +1,4 @@
-package ocaps.horton
+package ocaps.examples.horton
 
 import java.util.concurrent.atomic.AtomicReference
 
@@ -9,6 +9,7 @@ import scala.collection.mutable
 import reflect.ClassTag
 import scala.reflect.runtime.{universe => ru}
 
+// #horton
 class Who(sealer: Sealer) {
   def apply[T](provide: Provide[T]): Gift[T] = sealer(provide)
 
@@ -98,7 +99,7 @@ class Principal(label: String, printer: String => Unit) {
     result.get()
   }
 
-  class StubImpl[T](whoBlame: Who, delegate: T) extends Stub[T] with Dynamic {
+  class StubImpl[T](whoBlame: Who, delegate: T) extends Stub[T] {
 
     def intro(whoBob: Who): Gift[T] = {
       log(s"meet ${whoBob.hint}")
@@ -115,17 +116,13 @@ class Principal(label: String, printer: String => Unit) {
       val stub3: Stub[ArgType] = unwrap(gift3, whoBlame)
       val proxy: Proxy[ArgType] = proxyMaker.makeProxy(stub3)
       proxyAmps.put(proxy, (stub3, whoBlame))
-      applyDynamic(verb)(proxy)(tTag, cTag)
-    }
 
-    //  http://www.erights.org/elib/capability/horton/amplify.html
-    // https://gist.github.com/bartschuller/4687387
-    def applyDynamic(method: String)(args: Any*)(implicit tTag: ru.TypeTag[T], classTag: ClassTag[T]): Any = {
+      // https://gist.github.com/bartschuller/4687387
       val m = ru.runtimeMirror(delegate.getClass.getClassLoader)
-      val sym = ru.weakTypeTag[T].tpe.decl(ru.TermName(method)).asMethod
+      val sym = ru.weakTypeTag[T].tpe.decl(ru.TermName(verb)).asMethod
       val im = m.reflect(delegate)
       val methodMirror = im.reflectMethod(sym)
-      methodMirror.apply(args: _*)
+      methodMirror.apply(proxy)
     }
 
     override def toString: String = {
@@ -170,3 +167,4 @@ object Principal {
   }
 
 }
+// #horton
