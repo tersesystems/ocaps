@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>ocaps 0.1.1-SNAPSHOT - ocaps.macros</title>
-          <meta name="description" content="ocaps 0.1.1 - SNAPSHOT - ocaps.macros" />
-          <meta name="keywords" content="ocaps 0.1.1 SNAPSHOT ocaps.macros" />
+          <title>ocaps 0.2.0 - ocaps.macros</title>
+          <meta name="description" content="ocaps 0.2.0 - ocaps.macros" />
+          <meta name="keywords" content="ocaps 0.2.0 ocaps.macros" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -28,7 +28,7 @@
         </head>
         <body>
       <div id="search">
-        <span id="doc-title">ocaps<span id="doc-version">0.1.1-SNAPSHOT</span></span>
+        <span id="doc-title">ocaps<span id="doc-version">0.2.0</span></span>
         <span class="close-results"><span class="left">&lt;</span> Back</span>
         <div id="textfilter">
           <span class="input">
@@ -94,6 +94,10 @@
                         <a class="class" href="CapabilityException.html" title="Thrown when an application is unauthorized."></a>
                         <a href="CapabilityException.html" title="Thrown when an application is unauthorized.">CapabilityException</a>
                       </li><li class="current-entities indented1">
+                        <a class="object" href="Hint$.html" title=""></a>
+                        <a class="trait" href="Hint.html" title="Hint is used to provide brand origin and check equality for brands."></a>
+                        <a href="Hint.html" title="Hint is used to provide brand origin and check equality for brands.">Hint</a>
+                      </li><li class="current-entities indented1">
                         <span class="separator"></span>
                         <a class="class" href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally."></a>
                         <a href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally.">LatchRevoker</a>
@@ -157,7 +161,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.1.1-SNAPSHOT/ocaps/src/main/scala/ocaps/macros.scala" target="_blank">macros.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.2.0/ocaps/src/main/scala/ocaps/macros.scala" target="_blank">macros.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -404,6 +408,23 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="ocaps.macros#forward" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="forward[T](target:Any):T"></a><a id="forward[T](Any):T"></a>
+      <span class="permalink">
+      <a href="../ocaps/macros$.html#forward[T](target:Any):T" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">macro </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">forward</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="target">target: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <span class="extype" name="ocaps.macros.forward.T">T</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another object.</p><div class="fullcomment"><div class="comment cmt"><p>Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another object.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of the trait or abstract class to implement</p></dd><dt class="param">target</dt><dd class="cmt"><p>the object to forward to. Must have methods matching the name and type of <span class="extype" name="T">T</span>'s abstract methods.</p></dd><dt>returns</dt><dd class="cmt"><p>an instance of <span class="extype" name="T">T</span> with all abstract methods implemented by forwarding to <code>target</code>.</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">

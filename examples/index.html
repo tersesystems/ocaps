@@ -119,6 +119,7 @@ ocaps
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
+    <li><a href="../examples/horton.html" class="page">Responsibility Tracking (Horton)</a></li>
   </ul></li>
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
@@ -135,18 +136,19 @@ ocaps
   <li><a href="../examples/index.html#examples" class="header">Examples</a>
   <ul>
     <li><a href="../examples/index.html#imports" class="header">Imports</a></li>
-    <li><a href="../examples/index.html#construction" class="header">Construction</a></li>
+    <li><a href="../examples/index.html#construction-patterns" class="header">Construction Patterns</a></li>
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
     <li><a href="../examples/index.html#authorization-patterns" class="header">Authorization Patterns</a></li>
     <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
+    <li><a href="../examples/index.html#responsibility-tracking" class="header">Responsibility Tracking</a></li>
   </ul></li>
 </ul>
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.1*
+<i class="md-icon">label_outline</i> 0.2.0
 </div>
 </nav>
 
@@ -162,12 +164,13 @@ ocaps
   <li><a href="../examples/index.html#examples" class="header">Examples</a>
   <ul>
     <li><a href="../examples/index.html#imports" class="header">Imports</a></li>
-    <li><a href="../examples/index.html#construction" class="header">Construction</a></li>
+    <li><a href="../examples/index.html#construction-patterns" class="header">Construction Patterns</a></li>
     <li><a href="../examples/index.html#structural-patterns" class="header">Structural Patterns</a></li>
     <li><a href="../examples/index.html#behavioral-patterns" class="header">Behavioral Patterns</a></li>
     <li><a href="../examples/index.html#operational-patterns" class="header">Operational Patterns</a></li>
     <li><a href="../examples/index.html#authorization-patterns" class="header">Authorization Patterns</a></li>
     <li><a href="../examples/index.html#confinement-patterns" class="header">Confinement Patterns</a></li>
+    <li><a href="../examples/index.html#responsibility-tracking" class="header">Responsibility Tracking</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -186,10 +189,13 @@ ocaps
 <pre><code>import ocaps._
 import ocaps.macros._
 </code></pre>
-<h2><a href="#construction" name="construction" class="anchor"><span class="anchor-link"></span></a>Construction</h2>
+<h2><a href="#construction-patterns" name="construction-patterns" class="anchor"><span class="anchor-link"></span></a>Construction Patterns</h2>
 <p>This section shows creation of capabilities and direct use.</p>
 <ul>
-  <li><a href="construction/index.html">Construction</a></li>
+  <li><a href="construction/access.html">Construction through Access</a></li>
+  <li><a href="construction/composition.html">Construction through Composition</a></li>
+  <li><a href="construction/effects.html">Construction using Effects</a></li>
+  <li><a href="construction/subtypes.html">Construction using Subtypes</a></li>
 </ul>
 <h2><a href="#structural-patterns" name="structural-patterns" class="anchor"><span class="anchor-link"></span></a>Structural Patterns</h2>
 <p>This section shows structural patterns that do not change behavior.</p>
@@ -205,7 +211,7 @@ import ocaps.macros._
   <li><a href="expiration.html">Expiration</a></li>
 </ul>
 <h2><a href="#operational-patterns" name="operational-patterns" class="anchor"><span class="anchor-link"></span></a>Operational Patterns</h2>
-<p>This section shows capabilities used together#.</p>
+<p>This section shows capabilities used together to either unlock new functionality through amplification or represent higher level functionality through abstraction.</p>
 <ul>
   <li><a href="amplification.html">Amplification</a></li>
   <li><a href="abstraction.html">Abstraction</a></li>
@@ -222,6 +228,11 @@ import ocaps.macros._
   <li><a href="dynamic_seal.html">Dynamic Sealing</a></li>
   <li><a href="membrane.html">Membrane</a></li>
 </ul>
+<h2><a href="#responsibility-tracking" name="responsibility-tracking" class="anchor"><span class="anchor-link"></span></a>Responsibility Tracking</h2>
+<p>This section shows how to track identity and responsibility through capabilities.</p>
+<ul>
+  <li><a href="horton.html">Responsibility Tracking</a></li>
+</ul>
 </div>
 <div>
 <a href="https://github.com/wsargent/ocaps/tree/master/src/paradox/examples/index.md" title="Edit this page" class="md-source-file md-edit">
@@ -230,7 +241,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.1*
+0.2.0
 </span>
 </div>
 </article>

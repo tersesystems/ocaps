@@ -119,6 +119,7 @@ ocaps
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
+    <li><a href="../examples/horton.html" class="page">Responsibility Tracking (Horton)</a></li>
   </ul></li>
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
@@ -133,7 +134,7 @@ ocaps
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.1*
+<i class="md-icon">label_outline</i> 0.2.0
 </div>
 </nav>
 
@@ -144,7 +145,8 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#expiration" name="expiration" class="anchor"><span class="anchor-link"></span></a>Expiration</h1>
-<p>Expiration combines <em>modulation</em> of a capability with <em>revocation</em>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p>
+<p>This is an example of expiration in ocaps. </p>
+<p>Expiration combines <a href="modulation.html">modulation</a> of a capability with <a href="revocation.html">revocation</a>. Using modulation, a capability can make use of internal or external state to decide whether it should revoke access through an internal revoker.</p>
 <p>You can read <a href="../guide/management.html">Managing Capabilities</a> in the guide for more information.</p>
 <pre class="prettyprint"><code class="language-scala">import ocaps.macros._
 import org.slf4j.Logger
@@ -203,7 +205,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.1*
+0.2.0
 </span>
 </div>
 </article>

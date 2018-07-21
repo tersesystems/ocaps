@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>ocaps 0.1.1-SNAPSHOT - ocaps.Brand</title>
-          <meta name="description" content="ocaps 0.1.1 - SNAPSHOT - ocaps.Brand" />
-          <meta name="keywords" content="ocaps 0.1.1 SNAPSHOT ocaps.Brand" />
+          <title>ocaps 0.2.0 - ocaps.Brand</title>
+          <meta name="description" content="ocaps 0.2.0 - ocaps.Brand" />
+          <meta name="keywords" content="ocaps 0.2.0 ocaps.Brand" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -28,7 +28,7 @@
         </head>
         <body>
       <div id="search">
-        <span id="doc-title">ocaps<span id="doc-version">0.1.1-SNAPSHOT</span></span>
+        <span id="doc-title">ocaps<span id="doc-version">0.2.0</span></span>
         <span class="close-results"><span class="left">&lt;</span> Back</span>
         <div id="textfilter">
           <span class="input">
@@ -94,6 +94,10 @@
                         <a class="class" href="CapabilityException.html" title="Thrown when an application is unauthorized."></a>
                         <a href="CapabilityException.html" title="Thrown when an application is unauthorized.">CapabilityException</a>
                       </li><li class="current-entities indented1">
+                        <a class="object" href="Hint$.html" title=""></a>
+                        <a class="trait" href="Hint.html" title="Hint is used to provide brand origin and check equality for brands."></a>
+                        <a href="Hint.html" title="Hint is used to provide brand origin and check equality for brands.">Hint</a>
+                      </li><li class="current-entities indented1">
                         <span class="separator"></span>
                         <a class="class" href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally."></a>
                         <a href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally.">LatchRevoker</a>
@@ -154,13 +158,15 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Brand</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">Brand</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Brand contains a sealer and unsealer.
-</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type to be sealed</p></dd></dl><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.1.1-SNAPSHOT/ocaps/src/main/scala/ocaps/Brand.scala" target="_blank">Brand.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Brand contains a sealer and unsealer.</p><p>Generally you want to keep the brand private, and only hand out a
+sealer or an unsealer if you must.  You can match sealers, unsealers
+and boxes together through the <code>Hint</code>.
+</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.2.0/ocaps/src/main/scala/ocaps/Brand.scala" target="_blank">Brand.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -169,7 +175,7 @@
                 <span class="toggle diagram-link">
                   Type Hierarchy
                 </span>
-                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 138.00 118.00" height="118pt" width="138pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 134,-114 134,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="ocaps.Brand (this class)" xlink:href="#inheritance-diagram"><path d="M97.1667,-49C97.1667,-49 32.8333,-49 32.8333,-49 28.6667,-49 24.5,-44.8333 24.5,-40.6667 24.5,-40.6667 24.5,-32.3333 24.5,-32.3333 24.5,-28.1667 28.6667,-24 32.8333,-24 32.8333,-24 97.1667,-24 97.1667,-24 101.333,-24 105.5,-28.1667 105.5,-32.3333 105.5,-32.3333 105.5,-40.6667 105.5,-40.6667 105.5,-44.8333 101.333,-49 97.1667,-49" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-43.5" x="35" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.1" x="56" text-anchor="start">Brand[T]</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><path d="M93.1667,-110C93.1667,-110 36.8333,-110 36.8333,-110 32.6667,-110 28.5,-105.833 28.5,-101.667 28.5,-101.667 28.5,-93.3333 28.5,-93.3333 28.5,-89.1667 32.6667,-85 36.8333,-85 36.8333,-85 93.1667,-85 93.1667,-85 97.3333,-85 101.5,-89.1667 101.5,-93.3333 101.5,-93.3333 101.5,-101.667 101.5,-101.667 101.5,-105.833 97.3333,-110 93.1667,-110" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-104.5" x="39" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-95.1" x="60" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="Brand[T] is a subtype of AnyRef"><path d="M65,-77.7603C65,-68.3675 65,-57.2882 65,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="62.5501,-77.8435 65,-84.8435 67.4501,-77.8435 62.5501,-77.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 126.00 118.00" height="118pt" width="126pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 122,-114 122,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="ocaps.Brand (this class)" xlink:href="#inheritance-diagram"><path d="M85.6667,-49C85.6667,-49 32.3333,-49 32.3333,-49 28.1667,-49 24,-44.8333 24,-40.6667 24,-40.6667 24,-32.3333 24,-32.3333 24,-28.1667 28.1667,-24 32.3333,-24 32.3333,-24 85.6667,-24 85.6667,-24 89.8333,-24 94,-28.1667 94,-32.3333 94,-32.3333 94,-40.6667 94,-40.6667 94,-44.8333 89.8333,-49 85.6667,-49" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-43.5" x="34" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.1" x="55" text-anchor="start">Brand</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><path d="M87.1667,-110C87.1667,-110 30.8333,-110 30.8333,-110 26.6667,-110 22.5,-105.833 22.5,-101.667 22.5,-101.667 22.5,-93.3333 22.5,-93.3333 22.5,-89.1667 26.6667,-85 30.8333,-85 30.8333,-85 87.1667,-85 87.1667,-85 91.3333,-85 95.5,-89.1667 95.5,-93.3333 95.5,-93.3333 95.5,-101.667 95.5,-101.667 95.5,-105.833 91.3333,-110 87.1667,-110" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-104.5" x="33" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-95.1" x="54" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="Brand is a subtype of AnyRef"><path d="M59,-77.7603C59,-68.3675 59,-57.2882 59,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="56.5501,-77.8435 59,-84.8435 61.4501,-77.8435 56.5501,-77.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
                 <div id="diagram-controls" class="hiddenContent">
                   <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
                   <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
@@ -280,12 +286,12 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method any2stringadd in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method any2stringadd in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>any2stringadd</dd></dl></div>
     </li><li name="scala.Predef.ArrowAssoc#-&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="-&gt;[B](y:B):(A,B)"></a><a id="-&gt;[B](B):(Brand[T],B)"></a>
+      <a id="-&gt;[B](y:B):(A,B)"></a><a id="-&gt;[B](B):(Brand,B)"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#-&gt;[B](y:B):(A,B)" title="Permalink">
         <i class="material-icons"></i>
@@ -296,12 +302,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>], <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ocaps.Brand">Brand</a>, <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method ArrowAssoc in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method ArrowAssoc in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
@@ -324,9 +330,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="ocaps.Brand#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(input:T):ocaps.Brand.Box[T]"></a><a id="apply(T):Box[T]"></a>
+      <a id="apply[T](value:T):ocaps.Brand.Box[T]"></a><a id="apply[T](T):Box[T]"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#apply(input:T):ocaps.Brand.Box[T]" title="Permalink">
+      <a href="../ocaps/Brand.html#apply[T](value:T):ocaps.Brand.Box[T]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -335,11 +341,11 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="input">input: <span class="extype" name="ocaps.Brand.T">T</span></span>)</span><span class="result">: <a href="Brand$$Box.html" class="extype" name="ocaps.Brand.Box">Box</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="ocaps.Brand.apply.T">T</span></span>)</span><span class="result">: <a href="Brand$$Box.html" class="extype" name="ocaps.Brand.Box">Box</a>[<span class="extype" name="ocaps.Brand.apply.T">T</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Applies a sealed box to the given input.</p><div class="fullcomment"><div class="comment cmt"><p>Applies a sealed box to the given input.</p><pre><span class="kw">val</span> brand = Brand.create[<span class="std">String</span>](<span class="lit">"test brand"</span>)
-<span class="kw">val</span> boxed: Brand.Box[<span class="std">String</span>] = brand(<span class="lit">"this is a test"</span>)</pre></div><dl class="paramcmts block"><dt class="param">input</dt><dd class="cmt"><p>the unboxed input</p></dd><dt>returns</dt><dd class="cmt"><p>a sealed box abstracting the input</p></dd></dl></div>
+      <p class="shortcomment cmt">Convenience method for applying the sealer method.</p><div class="fullcomment"><div class="comment cmt"><p>Convenience method for applying the sealer method.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of the input value.</p></dd><dt class="param">value</dt><dd class="cmt"><p>the input value.</p></dd><dt>returns</dt><dd class="cmt"><p>the boxed value.</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -381,7 +387,7 @@
               
         </dd></dl></div>
     </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a><a id="ensuring((Brand[T])⇒Boolean,⇒Any):Brand[T]"></a>
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a><a id="ensuring((Brand)⇒Boolean,⇒Any):Brand"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A" title="Permalink">
         <i class="material-icons"></i>
@@ -392,16 +398,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ocaps.Brand">Brand</a>) ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method Ensuring in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method Ensuring in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
     </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ensuring(cond:A=&gt;Boolean):A"></a><a id="ensuring((Brand[T])⇒Boolean):Brand[T]"></a>
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a><a id="ensuring((Brand)⇒Boolean):Brand"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#ensuring(cond:A=&gt;Boolean):A" title="Permalink">
         <i class="material-icons"></i>
@@ -412,16 +418,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ocaps.Brand">Brand</a>) ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method Ensuring in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method Ensuring in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
     </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a><a id="ensuring(Boolean,⇒Any):Brand[T]"></a>
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a><a id="ensuring(Boolean,⇒Any):Brand"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#ensuring(cond:Boolean,msg:=&gt;Any):A" title="Permalink">
         <i class="material-icons"></i>
@@ -432,16 +438,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method Ensuring in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method Ensuring in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
     </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ensuring(cond:Boolean):A"></a><a id="ensuring(Boolean):Brand[T]"></a>
+      <a id="ensuring(cond:Boolean):A"></a><a id="ensuring(Boolean):Brand"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#ensuring(cond:Boolean):A" title="Permalink">
         <i class="material-icons"></i>
@@ -452,12 +458,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ocaps.Brand">Brand</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method Ensuring in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method Ensuring in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -530,8 +536,8 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method StringFormat in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method StringFormat in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
@@ -576,9 +582,9 @@
               
         </dd></dl></div>
     </li><li name="ocaps.Brand#hint" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="hint:String"></a>
+      <a id="hint:ocaps.Hint"></a><a id="hint:Hint"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#hint:String" title="Permalink">
+      <a href="../ocaps/Brand.html#hint:ocaps.Hint" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -587,7 +593,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">hint</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">hint</span><span class="result">: <a href="Hint.html" class="extype" name="ocaps.Hint">Hint</a></span>
       </span>
       
       
@@ -662,9 +668,9 @@
               
         </dd></dl></div>
     </li><li name="ocaps.Brand#sealer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sealer:ocaps.Brand.Sealer[T]"></a><a id="sealer:Sealer[T]"></a>
+      <a id="sealer:ocaps.Brand.Sealer"></a><a id="sealer:Sealer"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#sealer:ocaps.Brand.Sealer[T]" title="Permalink">
+      <a href="../ocaps/Brand.html#sealer:ocaps.Brand.Sealer" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -673,7 +679,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">sealer</span><span class="result">: <a href="Brand$.html#Sealer[T]=T=&gt;ocaps.Brand.Box[T]" class="extmbr" name="ocaps.Brand.Sealer">Sealer</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="name">sealer</span><span class="result">: <a href="Brand$$Sealer.html" class="extype" name="ocaps.Brand.Sealer">Sealer</a></span>
       </span>
       
       
@@ -693,7 +699,7 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="ocaps.Brand#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#toString():String" title="Permalink">
@@ -705,14 +711,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ocaps.Brand">Brand</a> → AnyRef → Any</dd></dl></div>
     </li><li name="ocaps.Brand#tuple" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tuple:(ocaps.Brand.Sealer[T],ocaps.Brand.Unsealer[T])"></a><a id="tuple:(Sealer[T],Unsealer[T])"></a>
+      <a id="tuple:(ocaps.Brand.Sealer,ocaps.Brand.Unsealer)"></a><a id="tuple:(Sealer,Unsealer)"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#tuple:(ocaps.Brand.Sealer[T],ocaps.Brand.Unsealer[T])" title="Permalink">
+      <a href="../ocaps/Brand.html#tuple:(ocaps.Brand.Sealer,ocaps.Brand.Unsealer)" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -721,14 +727,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tuple</span><span class="result">: (<a href="Brand$.html#Sealer[T]=T=&gt;ocaps.Brand.Box[T]" class="extmbr" name="ocaps.Brand.Sealer">Sealer</a>[<span class="extype" name="ocaps.Brand.T">T</span>], <a href="Brand$.html#Unsealer[T]=ocaps.Brand.Box[T]=&gt;Option[T]" class="extmbr" name="ocaps.Brand.Unsealer">Unsealer</a>[<span class="extype" name="ocaps.Brand.T">T</span>])</span>
+        <span class="name">tuple</span><span class="result">: (<a href="Brand$$Sealer.html" class="extype" name="ocaps.Brand.Sealer">Sealer</a>, <a href="Brand$$Unsealer.html" class="extype" name="ocaps.Brand.Unsealer">Unsealer</a>)</span>
       </span>
       
-      
-    </li><li name="ocaps.Brand#unapply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unapply(box:ocaps.Brand.Box[T]):Option[T]"></a><a id="unapply(Box[T]):Option[T]"></a>
+      <p class="shortcomment cmt">Convenience tuple.</p>
+    </li><li name="ocaps.Brand#unapply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unapply[T](box:ocaps.Brand.Box[T]):Option[T]"></a><a id="unapply[T](Box[T]):Option[T]"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#unapply(box:ocaps.Brand.Box[T]):Option[T]" title="Permalink">
+      <a href="../ocaps/Brand.html#unapply[T](box:ocaps.Brand.Box[T]):Option[T]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -737,14 +743,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="box">box: <a href="Brand$$Box.html" class="extype" name="ocaps.Brand.Box">Box</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="name">unapply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="box">box: <a href="Brand$$Box.html" class="extype" name="ocaps.Brand.Box">Box</a>[<span class="extype" name="ocaps.Brand.unapply.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="ocaps.Brand.unapply.T">T</span>]</span>
       </span>
       
-      
+      <p class="shortcomment cmt">Convenience method for applying the unsealer method in pattern matching.</p><div class="fullcomment"><div class="comment cmt"><p>Convenience method for applying the unsealer method in pattern matching.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of the boxed value.</p></dd><dt class="param">box</dt><dd class="cmt"><p>the box containing the value.</p></dd><dt>returns</dt><dd class="cmt"><p>the option of the unboxed value.</p></dd></dl></div>
     </li><li name="ocaps.Brand#unsealer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unsealer:ocaps.Brand.Unsealer[T]"></a><a id="unsealer:Unsealer[T]"></a>
+      <a id="unsealer:ocaps.Brand.Unsealer"></a><a id="unsealer:Unsealer"></a>
       <span class="permalink">
-      <a href="../ocaps/Brand.html#unsealer:ocaps.Brand.Unsealer[T]" title="Permalink">
+      <a href="../ocaps/Brand.html#unsealer:ocaps.Brand.Unsealer" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -753,7 +760,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">unsealer</span><span class="result">: <a href="Brand$.html#Unsealer[T]=ocaps.Brand.Box[T]=&gt;Option[T]" class="extmbr" name="ocaps.Brand.Unsealer">Unsealer</a>[<span class="extype" name="ocaps.Brand.T">T</span>]</span>
+        <span class="name">unsealer</span><span class="result">: <a href="Brand$$Unsealer.html" class="extype" name="ocaps.Brand.Unsealer">Unsealer</a></span>
       </span>
       
       
@@ -826,7 +833,7 @@
               
         </dd></dl></div>
     </li><li name="scala.Predef.ArrowAssoc#→" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="→[B](y:B):(A,B)"></a><a id="→[B](B):(Brand[T],B)"></a>
+      <a id="→[B](y:B):(A,B)"></a><a id="→[B](B):(Brand,B)"></a>
       <span class="permalink">
       <a href="../ocaps/Brand.html#→[B](y:B):(A,B)" title="Permalink">
         <i class="material-icons"></i>
@@ -837,12 +844,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>], <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ocaps.Brand">Brand</a>, <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit</dt><dd>
-            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to
-            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]] performed by method ArrowAssoc in scala.Predef.
+            This member is added by an implicit conversion from <a href="" class="extype" name="ocaps.Brand">Brand</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>] performed by method ArrowAssoc in scala.Predef.
             
           </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
     </li>
@@ -862,19 +869,19 @@
             </div>
         <div class="conversion" name="scala.Predef.any2stringadd">
               <h3>Inherited by implicit conversion any2stringadd from
-                <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]]
+                <a href="" class="extype" name="ocaps.Brand">Brand</a> to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>]
               </h3>
             </div><div class="conversion" name="scala.Predef.StringFormat">
               <h3>Inherited by implicit conversion StringFormat from
-                <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]]
+                <a href="" class="extype" name="ocaps.Brand">Brand</a> to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>]
               </h3>
             </div><div class="conversion" name="scala.Predef.Ensuring">
               <h3>Inherited by implicit conversion Ensuring from
-                <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]]
+                <a href="" class="extype" name="ocaps.Brand">Brand</a> to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>]
               </h3>
             </div><div class="conversion" name="scala.Predef.ArrowAssoc">
               <h3>Inherited by implicit conversion ArrowAssoc from
-                <a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>] to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>[<span class="extype" name="ocaps.Brand.T">T</span>]]
+                <a href="" class="extype" name="ocaps.Brand">Brand</a> to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ocaps.Brand">Brand</a>]
               </h3>
             </div>
         </div>

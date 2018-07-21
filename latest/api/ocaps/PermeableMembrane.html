@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>ocaps 0.1.1-SNAPSHOT - ocaps.PermeableMembrane</title>
-          <meta name="description" content="ocaps 0.1.1 - SNAPSHOT - ocaps.PermeableMembrane" />
-          <meta name="keywords" content="ocaps 0.1.1 SNAPSHOT ocaps.PermeableMembrane" />
+          <title>ocaps 0.2.0 - ocaps.PermeableMembrane</title>
+          <meta name="description" content="ocaps 0.2.0 - ocaps.PermeableMembrane" />
+          <meta name="keywords" content="ocaps 0.2.0 ocaps.PermeableMembrane" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -28,7 +28,7 @@
         </head>
         <body>
       <div id="search">
-        <span id="doc-title">ocaps<span id="doc-version">0.1.1-SNAPSHOT</span></span>
+        <span id="doc-title">ocaps<span id="doc-version">0.2.0</span></span>
         <span class="close-results"><span class="left">&lt;</span> Back</span>
         <div id="textfilter">
           <span class="input">
@@ -93,6 +93,10 @@
                         <span class="separator"></span>
                         <a class="class" href="CapabilityException.html" title="Thrown when an application is unauthorized."></a>
                         <a href="CapabilityException.html" title="Thrown when an application is unauthorized.">CapabilityException</a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="Hint$.html" title=""></a>
+                        <a class="trait" href="Hint.html" title="Hint is used to provide brand origin and check equality for brands."></a>
+                        <a href="Hint.html" title="Hint is used to provide brand origin and check equality for brands.">Hint</a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
                         <a class="class" href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally."></a>
@@ -163,7 +167,7 @@
 on all participants of the operation.</p><pre><span class="kw">val</span> m = RevokerMembrane()
 <span class="kw">val</span> wrappedCap1: m.Wrapper[Capability1] = m.wrap(capability1)
 <span class="kw">val</span> wrappedCap2: m.Wrapper[Capability2] = m.wrap(capability2)
-m.revoke() <span class="cmt">// revokes wrappedCap1 and wrappedCap2.</span></pre></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.1.1-SNAPSHOT/ocaps/src/main/scala/ocaps/PermeableMembrane.scala" target="_blank">PermeableMembrane.scala</a></dd></dl><div class="toggleContainer block">
+m.revoke() <span class="cmt">// revokes wrappedCap1 and wrappedCap2.</span></pre></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.2.0/ocaps/src/main/scala/ocaps/PermeableMembrane.scala" target="_blank">PermeableMembrane.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>

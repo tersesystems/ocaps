@@ -119,6 +119,7 @@ ocaps
     <li><a href="../examples/gatekeeper.html" class="page">Gatekeeper</a></li>
     <li><a href="../examples/dynamic_seal.html" class="active page">Dynamic Sealing</a></li>
     <li><a href="../examples/membrane.html" class="page">Membrane</a></li>
+    <li><a href="../examples/horton.html" class="page">Responsibility Tracking (Horton)</a></li>
   </ul></li>
   <li><a href="../guide/index.html" class="page">A Guide To Capabilities</a>
   <ul>
@@ -133,7 +134,7 @@ ocaps
 </nav>
 
 <div class="md-nav__title--site md-version" title="Version">
-<i class="md-icon">label_outline</i> 0.1.1*
+<i class="md-icon">label_outline</i> 0.2.0
 </div>
 </nav>
 
@@ -144,6 +145,10 @@ ocaps
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#dynamic-sealing" name="dynamic-sealing" class="anchor"><span class="anchor-link"></span></a>Dynamic Sealing</h1>
+<p>This is an example of dynamic sealing in ocaps.</p>
+<p>A sealer/unsealer pair is exposed through a brand. A sealer can produce a <code>Box[Foo]</code>, and the box will prevent access to the boxed value. Unsealing the box with the unsealer will make it visible again.</p>
+<p>Because a box can only be unsealed by objects that have the unsealer, this allows for passing values in the blind. Combined in the right manner, dynamic sealing can be used to implement <a href="horton.html">responsibility tracking</a> in capabilities.</p>
+<p>Capability patterns often involve dynamic sealing in some form. Please see <a href="http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns">Capability Patterns</a> for more information.</p>
 <pre class="prettyprint"><code class="language-scala">import ocaps._
 
 // Brands allow for &quot;flexible private fields&quot; where
@@ -171,7 +176,7 @@ object DynamicSeal {
     name: String,
     sentencer: User =&gt; User = identity,
     boxed: Option[Brand.Box[Message]] = None,
-    private val brand: Option[Brand[Message]] = None
+    private val brand: Option[Brand] = None
   ) {
     def sentence(user: User): User = sentencer(user)
 
@@ -185,8 +190,8 @@ object DynamicSeal {
   }
 
   def main(args: Array[String]): Unit = {
-    val softBrand = Brand.create[Message](&quot;Brand for Judge Softtouch&quot;)
-    val doomBrand = Brand.create[Message](&quot;Brand for Judge Doom&quot;)
+    val softBrand = Brand.create(&quot;Brand for Judge Softtouch&quot;)
+    val doomBrand = Brand.create(&quot;Brand for Judge Doom&quot;)
 
     val judgeSofttouch = User(&quot;Judge Softtouch&quot;, sentencer = { user =&gt;
       user.copy(boxed = Some(softBrand(Save)))
@@ -225,7 +230,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.1.1*
+0.2.0
 </span>
 </div>
 </article>

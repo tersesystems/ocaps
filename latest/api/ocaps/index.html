@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>ocaps 0.1.1-SNAPSHOT - ocaps</title>
-          <meta name="description" content="ocaps 0.1.1 - SNAPSHOT - ocaps" />
-          <meta name="keywords" content="ocaps 0.1.1 SNAPSHOT ocaps" />
+          <title>ocaps 0.2.0 - ocaps</title>
+          <meta name="description" content="ocaps 0.2.0 - ocaps" />
+          <meta name="keywords" content="ocaps 0.2.0 ocaps" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -28,7 +28,7 @@
         </head>
         <body>
       <div id="search">
-        <span id="doc-title">ocaps<span id="doc-version">0.1.1-SNAPSHOT</span></span>
+        <span id="doc-title">ocaps<span id="doc-version">0.2.0</span></span>
         <span class="close-results"><span class="left">&lt;</span> Back</span>
         <div id="textfilter">
           <span class="input">
@@ -94,6 +94,10 @@
                         <a class="class" href="CapabilityException.html" title="Thrown when an application is unauthorized."></a>
                         <a href="CapabilityException.html" title="Thrown when an application is unauthorized.">CapabilityException</a>
                       </li><li class="current-entities indented1">
+                        <a class="object" href="Hint$.html" title=""></a>
+                        <a class="trait" href="Hint.html" title="Hint is used to provide brand origin and check equality for brands."></a>
+                        <a href="Hint.html" title="Hint is used to provide brand origin and check equality for brands.">Hint</a>
+                      </li><li class="current-entities indented1">
                         <span class="separator"></span>
                         <a class="class" href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally."></a>
                         <a href="LatchRevoker.html" title="An implementation of a wrapping revoker that uses a countdown latch internally.">LatchRevoker</a>
@@ -157,7 +161,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.1.1-SNAPSHOT/ocaps/src/main/scala/ocaps/Forwarder.scala" target="_blank">Forwarder.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/wsargent/ocaps/blob/0.2.0/ocaps/src/main/scala/ocaps/Forwarder.scala" target="_blank">Forwarder.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -220,9 +224,9 @@
         <div id="types" class="types members">
               <h3>Type Members</h3>
               <ol><li name="ocaps.Brand" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Brand[T]extendsAnyRef"></a><a id="Brand[T]:Brand[T]"></a>
+      <a id="BrandextendsAnyRef"></a><a id="Brand:Brand"></a>
       <span class="permalink">
-      <a href="../ocaps/index.html#Brand[T]extendsAnyRef" title="Permalink">
+      <a href="../ocaps/index.html#BrandextendsAnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -231,11 +235,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Brand contains a sealer and unsealer." href="Brand.html"><span class="name">Brand</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Brand contains a sealer and unsealer." href="Brand.html"><span class="name">Brand</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">Brand contains a sealer and unsealer.</p><div class="fullcomment"><div class="comment cmt"><p>Brand contains a sealer and unsealer.
-</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type to be sealed</p></dd></dl></div>
+      <p class="shortcomment cmt">Brand contains a sealer and unsealer.</p><div class="fullcomment"><div class="comment cmt"><p>Brand contains a sealer and unsealer.</p><p>Generally you want to keep the brand private, and only hand out a
+sealer or an unsealer if you must.  You can match sealers, unsealers
+and boxes together through the <code>Hint</code>.
+</p></div></div>
     </li><li name="ocaps.CapabilityException" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="CapabilityExceptionextendsExceptionwithNoStackTrace"></a><a id="CapabilityException:CapabilityException"></a>
       <span class="permalink">
@@ -253,6 +259,22 @@
       
       <p class="shortcomment cmt">Thrown when an application is unauthorized.</p><div class="fullcomment"><div class="comment cmt"><p>Thrown when an application is unauthorized.</p><p>Note that exception should NEVER pass around references to capabilities or objects.
 </p></div></div>
+    </li><li name="ocaps.Hint" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HintextendsAnyRef"></a><a id="Hint:Hint"></a>
+      <span class="permalink">
+      <a href="../ocaps/index.html#HintextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Hint is used to provide brand origin and check equality for brands." href="Hint.html"><span class="name">Hint</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Hint is used to provide brand origin and check equality for brands.</p>
     </li><li name="ocaps.LatchRevoker" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LatchRevokerextendsRevokerwithThunker"></a><a id="LatchRevoker:LatchRevoker"></a>
       <span class="permalink">
@@ -408,6 +430,22 @@ m.revoke() <span class="cmt">// revokes wrappedCap1 and wrappedCap2.</span></pre
       </span>
       <span class="symbol">
         <a title="" href="Brand$.html"><span class="name">Brand</span></a>
+      </span>
+      
+      
+    </li><li name="ocaps.Hint" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Hint"></a><a id="Hint:Hint"></a>
+      <span class="permalink">
+      <a href="../ocaps/index.html#Hint" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Hint$.html"><span class="name">Hint</span></a>
       </span>
       
       
