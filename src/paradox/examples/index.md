@@ -36,11 +36,14 @@ import ocaps._
 import ocaps.macros._
 ```
 
-## Construction
+## Construction Patterns
 
 This section shows creation of capabilities and direct use.
 
-* @ref:[Construction](construction/index.md)
+* @ref:[Construction through Access](construction/access.md)
+* @ref:[Construction through Composition](construction/composition.md)
+* @ref:[Construction using Effects](construction/effects.md)
+* @ref:[Construction using Subtypes](construction/subtypes.md)
 
 ## Structural Patterns
 

@@ -4,6 +4,9 @@
 
 * Change `Revocable.pair` to `Revocable.tuple`.
 * Add mermaid diagrams to documentation.
+* Add Horton example to ocaps example section.
+* Change Brand so that types are on the sealer/unsealer operations.
+* Lots more documentation.
 
 ## 0.1.0
 

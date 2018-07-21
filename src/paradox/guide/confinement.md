@@ -52,7 +52,7 @@ Sealers can be used for many things.  It's helpful to think of them in the conte
 * *Assurance* -- boxed information can be passed out and round tripped to the original source, ensuring that the information has not been modified in transit.
 * *Private Channel* -- two actors can pass information to each other using sealed boxes, ensuring that sensitive information is not exposed even if the message is intercepted or `LoggingReceive` is enabled.
 
-An example of signing and assurance is in representing responsibility for operations, as shown in [HORTON](http://www.erights.org/elib/capability/horton/).
+An example of signing and assurance is in representing responsibility for operations, as shown in @ref:[responsibility tracking](../examples/horton.md).
 
 One possible application of dynamic sealing is that all `Access` objects can be sealed and safely bound in a dependency injection framework, and a revocable unsealer capability can be passed around to enable access from a central gatekeeper.  I still need to implement this, but I think it's fairly straightforward.
 
@@ -77,6 +77,8 @@ Dynamic sealing has an independent lineage from capabilities programming.  The o
  Capability Patterns](https://people.mpi-sws.org/~dreyer/papers/ocpl/paper.pdf) has a section on dynamic sealing.
  
 The discussion on the use of dynamic sealing in communication channels is from [Modules, Abstract Types, and Distributed Versioning](https://www.cl.cam.ac.uk/~pes20/versions-popl.pdf).
+
+Please see [Capability Patterns](http://wiki.erights.org/wiki/Walnut/Secure_Distributed_Computing/Capability_Patterns) for more patterns involving dynamic sealing, such as "Proof of Purchase" and "Claim Check".
 
 ## Confining Operations with Membranes
 

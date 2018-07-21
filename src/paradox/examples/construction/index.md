@@ -11,7 +11,4 @@
 
 Construction shows different ways of exposing capabilities on a resource.
 
-* @ref:[Access](access.md)
-* @ref:[Composition](composition.md)
-* @ref:[Effects](effects.md)
-* @ref:[Subtypes](subtypes.md)
+@@toc { depth=1 }

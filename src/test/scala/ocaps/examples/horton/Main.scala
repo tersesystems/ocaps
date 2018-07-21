@@ -93,27 +93,6 @@ object Main {
     val p2: C = alice.decodeFrom(toAliceFromCarol, carol.who)
     val a = new A(p1, p2)
 
-    /*
-      Alice said:
-      > I ask Bob to:
-      > > foo/1
-      Carol said:
-      > Alice asks me to:
-      > > meet Bob
-      Bob said:
-      > Alice asks me to:
-      > > foo/1
-      Bob said:
-      > I ask Carol to:
-      > > hi/1
-      Carol said:
-      > Bob asks me to:
-      > > meet Carol
-      Carol said:
-      > Bob asks me to:
-      > > hi/1
-      hi
-     */
     a.start()
   }
 
