@@ -118,7 +118,7 @@ lazy val root = (project in file("."))
     //  [error] gpg: signing failed: No public key
     //
     // Using https://github.com/sbt/sbt-pgp/blob/master/pgp-plugin/src/main/scala/com/typesafe/sbt/pgp/PgpSigner.scala#L18
-    // 
+    //
     // So I have to comment this out.
     //useGpg := true,
     //useGpgAgent := true,

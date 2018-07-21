@@ -10,7 +10,7 @@ object OcapsPlugin extends AutoPlugin {
   // http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     organization := "ocaps",
-    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+    crossScalaVersions := Seq("2.12.6", "2.11.12"),
     scalaVersion := crossScalaVersions.value.head,
 
     //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
