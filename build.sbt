@@ -4,7 +4,7 @@
 val tutPath = settingKey[String]("Path to tut files")
 
 val stableVersion = settingKey[String]("The version of ocaps that we want the user to download.")
-stableVersion := "0.1.0"
+stableVersion := "0.2.0"
 
 val catsVersion = "1.1.0"
 val catsEffectVersion = "1.0.0-RC2"

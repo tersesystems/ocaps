@@ -83,9 +83,11 @@ class Principal(label: String, printer: String => Unit) {
   }
 
   private def wrap[T](stub: Stub[T], whoBlame: Who): Gift[T] = {
-    val provide: Provide[T] = { fillBox: FillBox[T] =>
-      val fill: Fill[T] = beMe(fillBox)
-      fill(stub)
+    val provide: Provide[T] = new Provide[T] {
+      override def apply(fillBox: FillBox[T]): Unit = {
+        val fill: Fill[T] = beMe(fillBox)
+        fill(stub)
+      }
     }
     whoBlame(provide)
   }
@@ -93,7 +95,9 @@ class Principal(label: String, printer: String => Unit) {
   private def unwrap[T](gs3: Gift[T], whoCarol: Who): Stub[T] = {
     val provide: Provide[T] = beMe(gs3)
     val result = new AtomicReference[Stub[T]]()
-    val fill: Fill[T] = s3 => result.set(s3)
+    val fill: Fill[T] = new Fill[T] {
+      override def apply(s3: Stub[T]): Unit = result.set(s3)
+    }
     val fillBox: FillBox[T] = whoCarol(fill)
     provide(fillBox)
     result.get()
