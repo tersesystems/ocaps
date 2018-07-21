@@ -93,7 +93,17 @@ lazy val root = (project in file("."))
     licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),
 
     homepage := Some(url("https://github.com/wsargent/ocaps")),
+    // sbt-gpg does not have yubikey integration, so must go 
+    // https://developers.yubico.com/ykneo-openpgp/
+    // https://github.com/jderuiter/javacard-openpgpcard
+    // https://incenp.org/notes/2016/openpgp-card-implementations.html
+    //
+    // Or call GPG directly
+    // https://github.com/Yubico/gradle-gpg-signing-plugin/blob/master/src/main/java/com/yubico/gradle/plugins/signing/gpg/signatory/GpgSignatory.java
+    useGpg := true,
+    useGpgAgent := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+
     publishArtifact in Test := false,
     releaseCrossBuild := true
 
