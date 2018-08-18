@@ -24,7 +24,7 @@ lazy val root = (project in file("."))
     scalacOptions in (Compile, doc) ++= Seq(
       "-doc-title", name.value,
       "-doc-version", version.value,
-      "-doc-footer", "Slick is developed by Typesafe and EPFL Lausanne.",
+      "-doc-footer", "",
       "-sourcepath", (sourceDirectory in Compile).value.getPath, // needed for scaladoc to strip the location of the linked source path
       "-doc-source-url", s"https://github.com/wsargent/ocaps/blob/${version.value}/ocaps/src/main€{FILE_PATH}.scala",
       "-implicits",
@@ -93,38 +93,7 @@ lazy val root = (project in file("."))
     licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),
 
     homepage := Some(url("https://github.com/wsargent/ocaps")),
-    // sbt-gpg does not have yubikey integration, so must go.
-    //
-    // Yubikey 4 has OpenPGP support: https://developers.yubico.com/PGP/
-    //
-    // Here is the card support:
-    //
-    //   https://incenp.org/notes/2016/openpgp-card-implementations.html
-    //   https://github.com/open-keychain/open-keychain/wiki/Security-Tokens
-    //
-    // So pinging the card and asking nicely should do it using smartpgp-cli:
-    // https://github.com/ANSSI-FR/SmartPGP/tree/master/bin/smartpgp
-    //
-    // Or call GPG directly, since GPG is supposed to be talking to the
-    // OpenPGP smartcard on our behalf anyway:
-    //
-    // https://github.com/Yubico/gradle-gpg-signing-plugin/blob/master/src/main/java/com/yubico/gradle/plugins/signing/gpg/signatory/GpgSignatory.java
-    //
-    // BUT in any event, if I try to use sbt-gpg right now I will get
-    //
-    //  [error] gpg: keyblock resource '/home/wsargent/.sbt/gpg/secring.asc': No such file or directory
-    //  [error] gpg: all values passed to '--default-key' ignored
-    //  [error] gpg: no default secret key: No public key
-    //  [error] gpg: signing failed: No public key
-    //
-    // Using https://github.com/sbt/sbt-pgp/blob/master/pgp-plugin/src/main/scala/com/typesafe/sbt/pgp/PgpSigner.scala#L18
-    //
-    // So I have to comment this out.
-    //useGpg := true,
-    //useGpgAgent := true,
-    //releasePublishArtifactsAction := PgpKeys.publishSigned.value,
 
     publishArtifact in Test := false,
     releaseCrossBuild := true
-
   )
