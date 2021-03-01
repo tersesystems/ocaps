@@ -12,7 +12,7 @@ object OcapsPlugin extends AutoPlugin {
     organization := "ocaps",
 
     resolvers += Resolver.JCenterRepository,
-    crossScalaVersions := Seq("2.13.5", "2.12.6", "2.11.12"),
+    crossScalaVersions := Seq("2.12.6", "2.11.12"),
     scalaVersion := crossScalaVersions.value.head,
 
     //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
