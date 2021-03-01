@@ -5,7 +5,7 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.8")
 addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
 
 // slides
-addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.6.4")
+//addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.6.4")
 
 // documentation
 // I am futzing with diagrams, so if you want to build something then uncomment the
@@ -22,6 +22,6 @@ addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.4.0")
 
 addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.1")
 
-addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC3")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
 
 addSbtPlugin("io.crashbox" % "sbt-gpg" % "0.2.0")
