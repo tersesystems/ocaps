@@ -53,7 +53,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
 
-    git.remoteRepo := "git@github.com:wsargent/ocaps.git",
+    git.remoteRepo := "git@github.com:tersesystems/ocaps.git",
 
     // define setting key to write configuration to .scalafmt.conf
     SettingKey[Unit]("scalafmtGenerateConfig") :=
