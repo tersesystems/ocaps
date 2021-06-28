@@ -21,6 +21,8 @@ The `ocaps` library was presented as part of the [Security in Scala](https://na.
 
 ## Usage
 
+There is currently no compiled package available.  RIP Bintray.
+
 Add the following to `build.sbt`
 
 ```
