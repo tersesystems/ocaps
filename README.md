@@ -1,7 +1,5 @@
 # ocaps
 
-[![Bintray](https://api.bintray.com/packages/tersesystems/maven/ocaps-core/images/download.svg)](https://bintray.com/wsargent/maven/ocaps-core/_latestVersion)
-
 *ocaps* is a library for working with [object capabilities](https://en.wikipedia.org/wiki/Object-capability_model) in Scala.
 
 - *Revoker* / *Revocable* classes for revoking capabilities.
