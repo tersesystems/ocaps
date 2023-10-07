@@ -10,7 +10,7 @@ In Java, ambient authority would typically come in the form of a thread-local us
 
 In a capability model, authorization is used only and solely to dispense the capability.  After that point, the capability is passed around without an implicit `SecurityContext` and without ambient authority.  If the user logs out at any point, then the capability is revoked.
 
-## Authorizating Capabilities with Gatekeeper
+## Authorizing Capabilities with Gatekeeper
 
 Handing out a capability to an object gives the object authority over the resource.  The question of whether that object should have authority or not is an authorization decision.  The question of authorization ("what authority") is usually accompanied by the question of authentication ("who should have this authority?").
 
