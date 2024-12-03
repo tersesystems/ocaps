@@ -63,12 +63,12 @@ object macros {
     * object.
     *
     * @param target
-    *   the object to forward to. Must have methods matching the name and type of [[T]]'s abstract
+    *   the object to forward to. Must have methods matching the name and type of T's abstract
     *   methods.
     * @tparam T
     *   the type of the trait or abstract class to implement
     * @return
-    *   an instance of [[T]] with all abstract methods implemented by forwarding to `target`.
+    *   an instance of T with all abstract methods implemented by forwarding to `target`.
     */
   def forward[T](target: Any): T = macro impl.forward[T]
 
