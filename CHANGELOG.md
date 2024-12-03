@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.0
+
+Upgrade stuff to Scala 2.13 and make sure everything has not bitrotted.
+
 ## 0.2.0
 
 * Change `Revocable.pair` to `Revocable.tuple`.
