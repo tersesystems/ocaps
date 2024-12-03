@@ -173,9 +173,8 @@ object Principal {
 
     case class Context(principal: Principal, whoBlame: Who, reportln: String => Unit)
 
-    /**
-     * Implicitly converts from argument to a (Gift, Who) pair.
-     */
+    /** Implicitly converts from argument to a (Gift, Who) pair.
+      */
     implicit final def createDescription[A](
       argument: A
     )(implicit context: Context): (Gift[A], Who) = {
