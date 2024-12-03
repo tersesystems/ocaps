@@ -53,9 +53,8 @@ object Gatekeeper {
     adminActivity.deleteDocuments(documents)
   }
 
-  /**
-   * Admin activities have direct access to all capabilities, as this is not a user context.
-   */
+  /** Admin activities have direct access to all capabilities, as this is not a user context.
+    */
   class AdminActivity(access: Access) {
     def createDocuments(users: Seq[User]): Seq[Document] = {
       for (owner <- users) yield {
@@ -77,9 +76,8 @@ object Gatekeeper {
     }
   }
 
-  /**
-   * UserActivity operations are not guaranteed to have full access to capabilities.
-   */
+  /** UserActivity operations are not guaranteed to have full access to capabilities.
+    */
   class UserActivity(user: User, capabilities: Set[Capability]) {
 
     def attemptDocument(doc: Document): Unit = {
@@ -109,9 +107,8 @@ object Gatekeeper {
     override def toString: String = s"User($name)"
   }
 
-  /**
-   * Gatekeeper controls who has access to capabilities.
-   */
+  /** Gatekeeper controls who has access to capabilities.
+    */
   class DocumentGatekeeper(access: Access) {
 
     private val policy = new DocumentPolicy
@@ -175,16 +172,14 @@ object Gatekeeper {
 
   }
 
-  /**
-   * Implicit security context authorizes a particular user for a particular doc against a
-   * gatekeeper.
-   */
+  /** Implicit security context authorizes a particular user for a particular doc against a
+    * gatekeeper.
+    */
   class SecurityContext(val user: User)
 
-  /**
-   * A document resource. The path is private, and no operations are possible without an associated
-   * capability.
-   */
+  /** A document resource. The path is private, and no operations are possible without an associated
+    * capability.
+    */
   final class Document private (val owner: String, private[this] val path: Path) {
 
     private object capabilities {

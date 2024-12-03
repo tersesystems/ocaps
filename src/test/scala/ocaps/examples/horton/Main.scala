@@ -1,10 +1,9 @@
 package ocaps.examples.horton
 
-/**
- * Implementation of Horton in Scala.
- *
- * http://www.erights.org/elib/capability/horton/amplify.html
- */
+/** Implementation of Horton in Scala.
+  *
+  * http://www.erights.org/elib/capability/horton/amplify.html
+  */
 // #main
 object Main {
   import Principal.ProxyMaker

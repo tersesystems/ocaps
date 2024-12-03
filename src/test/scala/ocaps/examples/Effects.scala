@@ -18,9 +18,8 @@ package ocaps.examples
 
 import scala.util._
 
-/**
- * Demonstration of using tagless final to apply an effect
- */
+/** Demonstration of using tagless final to apply an effect
+  */
 // #effects
 object Effects {
   type Id[A] = A

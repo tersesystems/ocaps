@@ -20,37 +20,36 @@ object macros {
 
   import scala.reflect.macros._
 
-  /**
-   * Composition merges together two capabilities into one that has the power of both.
-   *
-   * Use this as follows:
-   *
-   * {{{
-   * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
-   * }}}
-   *
-   * and it has the effect of
-   *
-   * {{{
-   * object Foo {
-   *
-   *  trait Doer {
-   *    def doTheThing(): Unit
-   *  }
-   *
-   *  trait Changer {
-   *    def changeName(name: String): Foo
-   * }
-   *
-   *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
-   *     new Doer with Changer {
-   *       override def doTheThing(): Unit = doer.doTheThing()
-   *       override def changeName(name: String): Foo = changer.changeName(name)
-   *     }
-   *   }
-   * }
-   * }}}
-   */
+  /** Composition merges together two capabilities into one that has the power of both.
+    *
+    * Use this as follows:
+    *
+    * {{{
+    * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
+    * }}}
+    *
+    * and it has the effect of
+    *
+    * {{{
+    * object Foo {
+    *
+    *  trait Doer {
+    *    def doTheThing(): Unit
+    *  }
+    *
+    *  trait Changer {
+    *    def changeName(name: String): Foo
+    * }
+    *
+    *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
+    *     new Doer with Changer {
+    *       override def doTheThing(): Unit = doer.doTheThing()
+    *       override def changeName(name: String): Foo = changer.changeName(name)
+    *     }
+    *   }
+    * }
+    * }}}
+    */
   def compose[R](xs: Any*): R = macro impl.compose[R]
 
   def attenuate[R](capability: Any): R = macro impl.attenuate[R]
@@ -60,18 +59,17 @@ object macros {
 
   def revocable[R](capability: Any): Revocable[R] = macro impl.revocable[R]
 
-  /**
-   * Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another
-   * object.
-   *
-   * @param target
-   *   the object to forward to. Must have methods matching the name and type of [[T]]'s abstract
-   *   methods.
-   * @tparam T
-   *   the type of the trait or abstract class to implement
-   * @return
-   *   an instance of [[T]] with all abstract methods implemented by forwarding to `target`.
-   */
+  /** Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another
+    * object.
+    *
+    * @param target
+    *   the object to forward to. Must have methods matching the name and type of [[T]]'s abstract
+    *   methods.
+    * @tparam T
+    *   the type of the trait or abstract class to implement
+    * @return
+    *   an instance of [[T]] with all abstract methods implemented by forwarding to `target`.
+    */
   def forward[T](target: Any): T = macro impl.forward[T]
 
   private object impl {
