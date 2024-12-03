@@ -71,13 +71,6 @@ val foo = createFoo
 val name = foo.name
 ```
 
-@@@mermaid
-```
-graph LR
-You -->|foo| Foo(Foo object)
-```
-@@@
-
 If you call a method, or access a field, or modify a field, then you are *affecting the resource*. Therefore, your `foo` capability is sufficient justification to affect the resource that is the `Foo` instance.
 
 ## Differences between Capabilities and OO
