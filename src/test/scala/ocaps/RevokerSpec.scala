@@ -28,5 +28,4 @@ class RevokerSpec extends AnyWordSpec with Matchers {
     }
   }
 
-
 }

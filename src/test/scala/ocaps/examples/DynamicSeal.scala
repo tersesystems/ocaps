@@ -60,32 +60,34 @@ object DynamicSeal {
     val softBrand = Brand.create("Brand for Judge Softtouch")
     val doomBrand = Brand.create("Brand for Judge Doom")
 
-    val judgeSofttouch = User("Judge Softtouch", sentencer = { user =>
-      user.copy(boxed = Some(softBrand(Save)))
-    }, brand = Some(softBrand))
+    val judgeSofttouch = User(
+      "Judge Softtouch",
+      sentencer = { user =>
+        user.copy(boxed = Some(softBrand(Save)))
+      },
+      brand = Some(softBrand)
+    )
 
-    val judgeDoom = User("Judge Doom", sentencer = { user =>
-      user.copy(boxed = Some(doomBrand(Kill)))
-    }, brand = Some(doomBrand))
+    val judgeDoom = User(
+      "Judge Doom",
+      sentencer = { user =>
+        user.copy(boxed = Some(doomBrand(Kill)))
+      },
+      brand = Some(doomBrand)
+    )
 
     val steve = judgeDoom.sentence(User("steve"))
     val will = judgeSofttouch.sentence(User("will"))
     val judgedDoom = judgeSofttouch.sentence(judgeDoom)
 
     val steveDecision = judgeDoom.process(steve)
-    println(
-      s"User ${steve.name} has message ${steve.boxed} and decision $steveDecision"
-    )
+    println(s"User ${steve.name} has message ${steve.boxed} and decision $steveDecision")
     val willDecision = judgeSofttouch.process(will)
-    println(
-      s"User ${will.name} has message ${will.boxed} and decision $willDecision"
-    )
+    println(s"User ${will.name} has message ${will.boxed} and decision $willDecision")
 
     // What's going on here...
     val judgeDecision = judgedDoom.process(judgedDoom)
-    println(
-      s"User ${judgedDoom.name} has message ${judgedDoom.boxed} and decision $judgeDecision"
-    )
+    println(s"User ${judgedDoom.name} has message ${judgedDoom.boxed} and decision $judgeDecision")
   }
 
 }

@@ -22,12 +22,18 @@ class Who(sealer: Sealer) {
 
 class Be(unsealer: Unsealer) {
   def apply[T](gift: Gift[T]): Provide[T] = {
-    require(gift.hint == unsealer.hint, s"Gift hint ${gift.hint} does not match unsealer hint ${unsealer.hint}")
+    require(
+      gift.hint == unsealer.hint,
+      s"Gift hint ${gift.hint} does not match unsealer hint ${unsealer.hint}"
+    )
     unsealer(gift).get
   }
 
   def apply[T](fillbox: FillBox[T]): Fill[T] = {
-    require(fillbox.hint == unsealer.hint, s"Fillbox hint ${fillbox.hint} does not match unsealer hint ${unsealer.hint}")
+    require(
+      fillbox.hint == unsealer.hint,
+      s"Fillbox hint ${fillbox.hint} does not match unsealer hint ${unsealer.hint}"
+    )
     unsealer(fillbox).get
   }
 
@@ -39,8 +45,11 @@ class Be(unsealer: Unsealer) {
 trait Stub[T] {
   def intro(whoBob: Who): Gift[T]
 
-  def deliver[ArgType](verb: String, desc: (Gift[ArgType], Who))
-                      (implicit tTag: ru.TypeTag[T], cTag: ClassTag[T], proxyMaker: Principal.ProxyMaker[ArgType]): Any
+  def deliver[ArgType](verb: String, desc: (Gift[ArgType], Who))(implicit
+    tTag: ru.TypeTag[T],
+    cTag: ClassTag[T],
+    proxyMaker: Principal.ProxyMaker[ArgType]
+  ): Any
 }
 
 trait ProxyAmps {
@@ -64,7 +73,9 @@ class Principal(label: String, printer: String => Unit) {
     wrap(stub, whoBlame)
   }
 
-  def decodeFrom[T](gift: Gift[T], whoBlame: Who)(implicit proxyMaker: Principal.ProxyMaker[T]): T = {
+  def decodeFrom[T](gift: Gift[T], whoBlame: Who)(implicit
+    proxyMaker: Principal.ProxyMaker[T]
+  ): T = {
     val stub = unwrap(gift, whoBlame)
     implicit val context: proxyMaker.Context = proxyMaker.Context(this, whoBlame, reportln)
     val proxyB = proxyMaker.makeProxy(stub)
@@ -111,12 +122,16 @@ class Principal(label: String, printer: String => Unit) {
       wrap(stub, whoBob)
     }
 
-    def deliver[ArgType](verb: String, desc: (Gift[ArgType], Who))
-                        (implicit tTag: ru.TypeTag[T], cTag: ClassTag[T], proxyMaker: Principal.ProxyMaker[ArgType]): Any = {
+    def deliver[ArgType](verb: String, desc: (Gift[ArgType], Who))(implicit
+      tTag: ru.TypeTag[T],
+      cTag: ClassTag[T],
+      proxyMaker: Principal.ProxyMaker[ArgType]
+    ): Any = {
       log(s"$verb/1")
 
       val (gift3, whoBlame) = desc
-      implicit val context: proxyMaker.Context = proxyMaker.Context(Principal.this, whoBlame, reportln)
+      implicit val context: proxyMaker.Context =
+        proxyMaker.Context(Principal.this, whoBlame, reportln)
       val stub3: Stub[ArgType] = unwrap(gift3, whoBlame)
       val proxy: Proxy[ArgType] = proxyMaker.makeProxy(stub3)
       proxyAmps.put(proxy, (stub3, whoBlame))
@@ -161,7 +176,9 @@ object Principal {
     /**
      * Implicitly converts from argument to a (Gift, Who) pair.
      */
-    implicit final def createDescription[A](argument: A)(implicit context: Context): (Gift[A], Who) = {
+    implicit final def createDescription[A](
+      argument: A
+    )(implicit context: Context): (Gift[A], Who) = {
       val (stubToIntro, whoFrom) = context.principal.proxyAmps(argument)
       val gift = stubToIntro.intro(context.whoBlame)
       (gift, whoFrom)

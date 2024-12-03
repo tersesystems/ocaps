@@ -17,4 +17,3 @@ package object horton {
 
   type Proxy[T] = T
 }
-

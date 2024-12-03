@@ -55,15 +55,6 @@ lazy val root = (project in file("."))
 
     git.remoteRepo := "git@github.com:tersesystems/ocaps.git",
 
-    // define setting key to write configuration to .scalafmt.conf
-    SettingKey[Unit]("scalafmtGenerateConfig") :=
-      IO.write( // writes to file once when build is loaded
-        file(".scalafmt.conf"),
-        """style = IntelliJ
-          |docstrings = JavaDoc
-        """.stripMargin.getBytes("UTF-8")
-      ),
-
     // https://github.com/sbt/sbt-header
     organizationName := "Terse Systems",
     startYear := Some(2018),

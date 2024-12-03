@@ -85,7 +85,7 @@ object Revocation {
     def start(): Unit = {
       // After three seconds, the admin decides to stop you doing the thing.
       val adminRevoke: Runnable = new Runnable {
-        override def run(): Unit =  revoker.revoke()
+        override def run(): Unit = revoker.revoke()
       }
       scheduler.schedule(adminRevoke, 3L, SECONDS)
     }
@@ -99,7 +99,7 @@ object Revocation {
     val doer = access.doer(foo)
 
     // macro generates code equivalent to the `revocable` code above
-    //val Revocable(revocableDoer, revoker) = Foo.Doer.revocable(doer)
+    // val Revocable(revocableDoer, revoker) = Foo.Doer.revocable(doer)
     val Revocable(revocableDoer, revoker) = macros.revocable[Doer](doer)
 
     new Guest(revocableDoer).start()

@@ -59,10 +59,7 @@ object Expiration {
   // #countable
 
   // #timer
-  def timerBasedExpiration(
-                            doer: Foo.Doer,
-                            duration: FiniteDuration
-                          ): Foo.Doer = {
+  def timerBasedExpiration(doer: Foo.Doer, duration: FiniteDuration): Foo.Doer = {
     val deadline = duration.fromNow
     val Revocable(revocableDoer, revoker) = revocable[Foo.Doer](doer)
     val before: String => Unit = _ => ()

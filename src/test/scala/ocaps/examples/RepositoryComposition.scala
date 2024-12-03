@@ -24,14 +24,15 @@ import scala.util._
 
 //#repository-composition
 /**
-  * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
-  *
-  * The capabilities use tagless final to show how you can use different effects with capabilities.
-  *
-  * For example, the Id effect is an identity, so a failure will cause an exception.
-  *
-  * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as a result.
-  */
+ * Demonstrates exposing capabilities as facets of a repository, so individual elements are exposed.
+ *
+ * The capabilities use tagless final to show how you can use different effects with capabilities.
+ *
+ * For example, the Id effect is an identity, so a failure will cause an exception.
+ *
+ * The Try effect is a disjoint union with Exception, so a failure will return Failure(Exception) as
+ * a result.
+ */
 object RepositoryComposition {
   val ID = UUID.fromString("c31d34e2-5892-4a2d-9fd5-3ce2e0efedf7")
 
@@ -68,11 +69,15 @@ object RepositoryComposition {
         Try(idUpdater.update(item))
     }
 
-    val tryNameChanger = new NameChanger[Try](tryFinder, tryUpdater, {
-      case Success(Some(result)) => result.map(Some(_))
-      case Success(None)         => Success(None)
-      case Failure(ex)           => Failure(ex)
-    })
+    val tryNameChanger = new NameChanger[Try](
+      tryFinder,
+      tryUpdater,
+      {
+        case Success(Some(result)) => result.map(Some(_))
+        case Success(None)         => Success(None)
+        case Failure(ex)           => Failure(ex)
+      }
+    )
     val tryResult = tryNameChanger.changeName(ID, "new name")
     println(s"try result = $tryResult")
   }
@@ -83,11 +88,10 @@ object RepositoryComposition {
     transform: G[Option[G[UpdateResult]]] => G[Option[UpdateResult]]
   ) {
     def changeName(id: UUID, newName: String): G[Option[UpdateResult]] = {
-      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map {
-        maybeItem: Option[Item] =>
-          maybeItem.map { item =>
-            updater.update(item.copy(name = newName))
-          }
+      val saved: G[Option[G[UpdateResult]]] = finder.find(id).map { maybeItem: Option[Item] =>
+        maybeItem.map { item =>
+          updater.update(item.copy(name = newName))
+        }
       }
       transform(saved)
     }

@@ -21,62 +21,61 @@ object macros {
   import scala.reflect.macros._
 
   /**
-    * Composition merges together two capabilities into one that has the power of both.
-    *
-    * Use this as follows:
-    *
-    * {{{
-    * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
-    * }}}
-    *
-    * and it has the effect of
-    *
-    * {{{
-    * object Foo {
-    *
-    *  trait Doer {
-    *    def doTheThing(): Unit
-    *  }
-    *
-    *  trait Changer {
-    *    def changeName(name: String): Foo
-    * }
-    *
-    *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
-    *     new Doer with Changer {
-    *       override def doTheThing(): Unit = doer.doTheThing()
-    *       override def changeName(name: String): Foo = changer.changeName(name)
-    *     }
-    *   }
-    * }
-    * }}}
-    */
+   * Composition merges together two capabilities into one that has the power of both.
+   *
+   * Use this as follows:
+   *
+   * {{{
+   * val doerChanger: Doer with Changer = compose[Doer with Changer](doer, changer)
+   * }}}
+   *
+   * and it has the effect of
+   *
+   * {{{
+   * object Foo {
+   *
+   *  trait Doer {
+   *    def doTheThing(): Unit
+   *  }
+   *
+   *  trait Changer {
+   *    def changeName(name: String): Foo
+   * }
+   *
+   *  def amplify(doer: => Foo.Doer, changer: => Foo.Changer) = {
+   *     new Doer with Changer {
+   *       override def doTheThing(): Unit = doer.doTheThing()
+   *       override def changeName(name: String): Foo = changer.changeName(name)
+   *     }
+   *   }
+   * }
+   * }}}
+   */
   def compose[R](xs: Any*): R = macro impl.compose[R]
 
   def attenuate[R](capability: Any): R = macro impl.attenuate[R]
 
-  def modulate[R](
-    capability: Any,
-    before: String => Unit,
-    after: (String, Any) => Unit
-  ): R = macro impl.modulate[R]
+  def modulate[R](capability: Any, before: String => Unit, after: (String, Any) => Unit): R =
+    macro impl.modulate[R]
 
   def revocable[R](capability: Any): Revocable[R] = macro impl.revocable[R]
 
-
   /**
-   * Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another object.
+   * Instantiate a trait (or zero-parameter abstract class) by forwarding to the methods of another
+   * object.
    *
-   * @param target the object to forward to. Must have methods matching the name and type of [[T]]'s abstract methods.
-   * @tparam T the type of the trait or abstract class to implement
-   * @return an instance of [[T]] with all abstract methods implemented by forwarding to `target`.
+   * @param target
+   *   the object to forward to. Must have methods matching the name and type of [[T]]'s abstract
+   *   methods.
+   * @tparam T
+   *   the type of the trait or abstract class to implement
+   * @return
+   *   an instance of [[T]] with all abstract methods implemented by forwarding to `target`.
    */
   def forward[T](target: Any): T = macro impl.forward[T]
 
   private object impl {
-    def compose[R: c.WeakTypeTag](
-                                   c: blackbox.Context
-                                 )(xs: c.Expr[Any]*): c.universe.Tree = {
+    def compose[R: c.WeakTypeTag](c: blackbox.Context)(xs: c.Expr[Any]*): c.universe.Tree = {
       import c.universe._
 
       def members(tpe: c.universe.Type, input: c.Expr[Any]) = {
@@ -114,8 +113,8 @@ object macros {
     }
 
     def attenuate[R: c.WeakTypeTag](
-                                     c: blackbox.Context
-                                   )(capability: c.Expr[Any]): c.universe.Tree = {
+      c: blackbox.Context
+    )(capability: c.Expr[Any]): c.universe.Tree = {
       import c.universe._
 
       def members(tpe: c.universe.Type, input: c.Expr[Any]) = {
@@ -197,29 +196,23 @@ object macros {
       }
 
       val tpeR = implicitly[WeakTypeTag[R]].tpe
-      val implementedMembers
-      : Seq[c.universe.Tree] = members(tpeR, capability) ++ Seq(
-        beforeDef,
-        afterDef
-      )
+      val implementedMembers: Seq[c.universe.Tree] =
+        members(tpeR, capability) ++ Seq(beforeDef, afterDef)
 
       val impl = q"new $tpeR { ..$implementedMembers }"
       q"$impl: $tpeR"
     }
 
     def revocable[R: c.WeakTypeTag](
-                                     c: blackbox.Context
-                                   )(capability: c.Expr[Any]): c.universe.Tree = {
+      c: blackbox.Context
+    )(capability: c.Expr[Any]): c.universe.Tree = {
       import c.universe._
 
       val tpe = implicitly[c.WeakTypeTag[R]].tpe
 
       // Try to assert a pure trait...
       tpe.decls.foreach { decl =>
-        assert(
-          decl.isAbstract,
-          s"Type must be abstract, but $decl has implementation!"
-        )
+        assert(decl.isAbstract, s"Type must be abstract, but $decl has implementation!")
       }
 
       val implementedMembers = tpe.members.collect {
@@ -231,9 +224,9 @@ object macros {
           // }
           val termTypeParams =
             m.typeParams.map(t => q"type ${t.name.toTypeName}")
-          //val mapped = termTypeParams.map(_.toString).map(name => {
+          // val mapped = termTypeParams.map(_.toString).map(name => {
           //  TypeDef(Modifiers(Flag.DEFERRED),TypeName(name), List(),TypeBoundsTree(EmptyTree, EmptyTree))
-          //})
+          // })
 
           val term = m.asTerm
           val termName = term.name.toTermName
@@ -265,7 +258,9 @@ object macros {
     }
 
     // https://github.com/gmethvin/fastforward/blob/master/macros/src/main/scala/io/methvin/fastforward/package.scala
-    def forward[T](c: blackbox.Context)(target: c.Expr[Any])(implicit tag: c.universe.WeakTypeTag[T]): c.universe.Tree = {
+    def forward[T](
+      c: blackbox.Context
+    )(target: c.Expr[Any])(implicit tag: c.universe.WeakTypeTag[T]): c.universe.Tree = {
       import c.universe._
       val tpe = tag.tpe
       val implementedMembers: Seq[Tree] = tpe.members.collect {

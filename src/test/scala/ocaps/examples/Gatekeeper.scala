@@ -54,8 +54,7 @@ object Gatekeeper {
   }
 
   /**
-   * Admin activities have direct access to all capabilities, as this is not a
-   * user context.
+   * Admin activities have direct access to all capabilities, as this is not a user context.
    */
   class AdminActivity(access: Access) {
     def createDocuments(users: Seq[User]): Seq[Document] = {
@@ -177,18 +176,16 @@ object Gatekeeper {
   }
 
   /**
-   * Implicit security context authorizes a particular user for a particular doc against a gatekeeper.
+   * Implicit security context authorizes a particular user for a particular doc against a
+   * gatekeeper.
    */
   class SecurityContext(val user: User)
 
   /**
-   * A document resource.  The path is private, and no operations are possible without
-   * an associated capability.
+   * A document resource. The path is private, and no operations are possible without an associated
+   * capability.
    */
-  final class Document private(
-                                val owner: String,
-                                private[this] val path: Path
-                              ) {
+  final class Document private (val owner: String, private[this] val path: Path) {
 
     private object capabilities {
       val reader: Document.Reader = new Document.Reader {
@@ -214,13 +211,10 @@ object Gatekeeper {
 
       val writer: Document.Writer = new Document.Writer {
         override def bufferedWriter[T](
-                                        options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
-                                      )(block: BufferedWriter => T): T = {
-          val bufWriter = Files.newBufferedWriter(
-            Document.this.path,
-            StandardCharsets.UTF_8,
-            options: _*
-          )
+          options: Seq[OpenOption] = Seq(StandardOpenOption.SYNC)
+        )(block: BufferedWriter => T): T = {
+          val bufWriter =
+            Files.newBufferedWriter(Document.this.path, StandardCharsets.UTF_8, options: _*)
           try {
             block(bufWriter)
           } finally {
@@ -228,9 +222,7 @@ object Gatekeeper {
           }
         }
 
-        override def outputStream[T](
-                                      options: Seq[OpenOption]
-                                    )(block: OutputStream => T): T = {
+        override def outputStream[T](options: Seq[OpenOption])(block: OutputStream => T): T = {
           val os = Files.newOutputStream(Document.this.path, options: _*)
           try {
             block(os)
@@ -289,14 +281,14 @@ object Gatekeeper {
   }
 
   private def maybeWriter(capabilities: Set[Capability]): Option[Writer] = {
-    capabilities.collectFirst {
-      case writer: Writer => writer
+    capabilities.collectFirst { case writer: Writer =>
+      writer
     }
   }
 
   private def maybeReader(capabilities: Set[Capability]): Option[Reader] = {
-    capabilities.collectFirst {
-      case reader: Reader => reader
+    capabilities.collectFirst { case reader: Reader =>
+      reader
     }
   }
 
