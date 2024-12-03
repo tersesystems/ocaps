@@ -148,7 +148,7 @@ val writer: Writer = ocaps.macros.attenuate[Writer](capabilities)
 val caller = new Caller(reader, writer)
 ```
 
-You can see a complete @ref:[attenuation example](../examples/attenuation.md) for more details.  Also see the [gatekeeper example](../examples/gatekeeper.md).
+You can see a complete @ref:[attenuation example](../examples/attenuation.md) for more details.  Also see the @ref:[gatekeeper example](../examples/gatekeeper.md).
 
 Composition is not the only way of arranging capabilities, of course.  Joe Duffy has a great [post](http://joeduffyblog.com/2015/11/10/objects-as-secure-capabilities/) where he discusses the practical aspects of capabilities:
 
