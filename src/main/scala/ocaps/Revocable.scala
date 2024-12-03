@@ -17,10 +17,11 @@
 package ocaps
 
 /**
-  * Contains a value and revoker.
-  *
-  * @tparam A the type of value
-  */
+ * Contains a value and revoker.
+ *
+ * @tparam A
+ *   the type of value
+ */
 sealed abstract class Revocable[+A] {
 
   @inline final def getOrElse[B >: A](default: => B): B = {
@@ -42,22 +43,22 @@ sealed abstract class Revocable[+A] {
 object Revocable {
 
   /**
-    * Creates a new revocable from an input capability.
-    *
-    * {{{
-    * trait Doer {
-    *   def doTheThing(): Unit
-    * }
-    *
-    * def revocable(doer: Doer): Revocable[Doer] = {
-    *   Revocable(doer) { thunk =>
-    *     new Doer {
-    *       override def doTheThing(): Unit = forwarder().doTheThing()
-    *     }
-    *   }
-    * }
-    * }}}
-    */
+   * Creates a new revocable from an input capability.
+   *
+   * {{{
+   * trait Doer {
+   *   def doTheThing(): Unit
+   * }
+   *
+   * def revocable(doer: Doer): Revocable[Doer] = {
+   *   Revocable(doer) { thunk =>
+   *     new Doer {
+   *       override def doTheThing(): Unit = forwarder().doTheThing()
+   *     }
+   *   }
+   * }
+   * }}}
+   */
   def apply[C](capability: C)(cblock: Thunk[C] => C): Revocable[C] = {
     val (thunk, r) = Revoker.tuple(capability)
     Revocable(cblock(thunk), r)

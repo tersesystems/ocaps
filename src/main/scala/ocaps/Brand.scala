@@ -24,11 +24,11 @@ import scala.annotation.tailrec
 /**
  * Brand contains a sealer and unsealer.
  *
- * Generally you want to keep the brand private, and only hand out a
- * sealer or an unsealer if you must.  You can match sealers, unsealers
- * and boxes together through the `Hint`.
+ * Generally you want to keep the brand private, and only hand out a sealer or an unsealer if you
+ * must. You can match sealers, unsealers and boxes together through the `Hint`.
  *
- * @param hint hint shown in boxes.
+ * @param hint
+ *   hint shown in boxes.
  */
 final class Brand private (val hint: Hint) {
   import Brand._
@@ -70,18 +70,24 @@ final class Brand private (val hint: Hint) {
   /**
    * Convenience method for applying the sealer method.
    *
-   * @param value the input value.
-   * @tparam T the type of the input value.
-   * @return the boxed value.
+   * @param value
+   *   the input value.
+   * @tparam T
+   *   the type of the input value.
+   * @return
+   *   the boxed value.
    */
   def apply[T](value: T): Box[T] = sealer.apply(value)
 
   /**
    * Convenience method for applying the unsealer method in pattern matching.
    *
-   * @param box the box containing the value.
-   * @tparam T the type of the boxed value.
-   * @return the option of the unboxed value.
+   * @param box
+   *   the box containing the value.
+   * @tparam T
+   *   the type of the boxed value.
+   * @return
+   *   the option of the unboxed value.
    */
   def unapply[T](box: Box[T]): Option[T] = unsealer.apply(box)
 
@@ -115,6 +121,7 @@ object Hint {
 object Brand {
 
   trait Sealer {
+
     /**
      * Seals the input into a Box.
      *
@@ -123,8 +130,10 @@ object Brand {
      *   val boxed: Brand.Box[String] = sealer("this is a test")
      * }}}
      *
-     * @param value the unboxed value
-     * @return a sealed box abstracting the input
+     * @param value
+     *   the unboxed value
+     * @return
+     *   a sealed box abstracting the input
      */
     def apply[T](value: T): Box[T]
 
@@ -134,17 +143,20 @@ object Brand {
   trait Unsealer {
 
     /**
-     * Unseals the box, returning `Some(value)` if the box has the same brand
-     * as this unsealer, `None` otherwise.
+     * Unseals the box, returning `Some(value)` if the box has the same brand as this unsealer,
+     * `None` otherwise.
      *
      * {{{
      * val box: Brand.Box[String] = ...
      * val unboxed: Option[String] = unsealer(box)
      * }}}
      *
-     * @param box the boxed item.
-     * @tparam T the type of the value in the box.
-     * @return `Some(value)` if the box has the same brand as this unsealer, `None` otherwise.
+     * @param box
+     *   the boxed item.
+     * @tparam T
+     *   the type of the value in the box.
+     * @return
+     *   `Some(value)` if the box has the same brand as this unsealer, `None` otherwise.
      */
     def apply[T](box: Box[T]): Option[T]
 
@@ -181,7 +193,9 @@ object Brand {
    * }}}
    */
   trait ImplicitUnsealing {
-    implicit def implicitUnseal[T](box: Box[T])(implicit unsealer: Unsealer): Option[T] = unsealer(box)
+    implicit def implicitUnseal[T](box: Box[T])(implicit unsealer: Unsealer): Option[T] = unsealer(
+      box
+    )
   }
 
   object ImplicitUnsealing extends ImplicitUnsealing
@@ -194,16 +208,20 @@ object Brand {
   /**
    * Creates a new Brand.
    *
-   * @param stringHint a string used as a hint.  Note that the string is used for comparison, so should be unique.
-   * @return the brand.
+   * @param stringHint
+   *   a string used as a hint. Note that the string is used for comparison, so should be unique.
+   * @return
+   *   the brand.
    */
   def create(stringHint: String): Brand = new Brand(Hint(stringHint))
 
   /**
    * Creates a new Brand.
    *
-   * @param hint a hint used for comparison on sealer/unsealer.
-   * @return the brand.
+   * @param hint
+   *   a hint used for comparison on sealer/unsealer.
+   * @return
+   *   the brand.
    */
   def create(hint: Hint): Brand = new Brand(hint)
 

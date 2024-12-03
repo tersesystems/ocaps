@@ -104,7 +104,7 @@ object Membrane {
     // Use an IO monad because the wrapper could throw revokerException when we call get
 
     // Uncommment this to see the operation fail...
-    //m.revoke()
+    // m.revoke()
 
     val format: access.Wrapper[String] = for {
       timeZone <- dryTimeZone.timeZone

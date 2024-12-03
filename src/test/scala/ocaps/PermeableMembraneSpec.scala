@@ -9,7 +9,7 @@ import cats.Id
 import org.scalatest.wordspec._
 import org.scalatest.matchers.should._
 
-class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
+class PermeableMembraneSpec extends AnyWordSpec with Matchers {
 
   class Location(locale: Locale, timeZone: TimeZone) {
     private object capabilities {
@@ -71,17 +71,21 @@ class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
       val access = new Location.MembraneAccess(m)
 
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
+      val dryTimeZone: Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       val formatWrapper: access.Wrapper[String] = for {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
-        ZonedDateTime.now(timeZone.toZoneId)
-          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-            .withLocale(locale))
+        ZonedDateTime
+          .now(timeZone.toZoneId)
+          .format(
+            DateTimeFormatter
+              .ofLocalizedDateTime(FormatStyle.FULL)
+              .withLocale(locale)
+          )
       }
-      formatWrapper.get should not be(null)
+      formatWrapper.get should not be (null)
     }
 
     "not work" in {
@@ -90,15 +94,19 @@ class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
       val access = new Location.MembraneAccess(m)
 
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
+      val dryTimeZone: Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       val formatWrapper: access.Wrapper[String] = for {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
-        ZonedDateTime.now(timeZone.toZoneId)
-          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-            .withLocale(locale))
+        ZonedDateTime
+          .now(timeZone.toZoneId)
+          .format(
+            DateTimeFormatter
+              .ofLocalizedDateTime(FormatStyle.FULL)
+              .withLocale(locale)
+          )
       }
 
       m.revoke()
@@ -113,8 +121,8 @@ class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
 
     "work" in {
       val m = PermeableMembrane(new Thunker {
-        override def thunk[C](capability: => C): Thunk[C] = {
-          () => {
+        override def thunk[C](capability: => C): Thunk[C] = { () =>
+          {
             val cap = capability
             println(s"putting on mah thunking $cap") // could log etc here.
             cap
@@ -125,15 +133,19 @@ class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
       val access = new Location.MembraneAccess(m)
 
       val dryLocale: Location.LocaleReader[access.Wrapper] = access.localeReader(location)
-      val dryTimeZone:  Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
+      val dryTimeZone: Location.TimeZoneReader[access.Wrapper] = access.timeZoneReader(location)
 
       val formatWrapper: access.Wrapper[String] = for {
         timeZone <- dryTimeZone.timeZone
         locale <- dryLocale.locale
       } yield {
-        ZonedDateTime.now(timeZone.toZoneId)
-          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
-            .withLocale(locale))
+        ZonedDateTime
+          .now(timeZone.toZoneId)
+          .format(
+            DateTimeFormatter
+              .ofLocalizedDateTime(FormatStyle.FULL)
+              .withLocale(locale)
+          )
       }
       formatWrapper.get should not be null
     }

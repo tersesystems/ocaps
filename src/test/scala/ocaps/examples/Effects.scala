@@ -19,8 +19,8 @@ package ocaps.examples
 import scala.util._
 
 /**
-  * Demonstration of using tagless final to apply an effect
-  */
+ * Demonstration of using tagless final to apply an effect
+ */
 // #effects
 object Effects {
   type Id[A] = A
@@ -57,12 +57,14 @@ object Effects {
     // Apply a "Try" effect to the capability
     implicit val tryEffect: NameChanger WithEffect Try = new WithEffect[NameChanger, Try] {
       override def apply(capability: NameChanger[Id]): NameChanger[Try] = new NameChanger[Try] {
-        override def changeName(name: String): Try[Unit] =  Try(capability.changeName(name))
+        override def changeName(name: String): Try[Unit] = Try(capability.changeName(name))
       }
     }
 
     class Access {
-      def nameChanger[F[_]](doc: Document)(implicit ev: NameChanger WithEffect F): NameChanger[F] = {
+      def nameChanger[F[_]](
+        doc: Document
+      )(implicit ev: NameChanger WithEffect F): NameChanger[F] = {
         val effect = implicitly[NameChanger WithEffect F]
         effect(doc.capabilities.nameChanger)
       }

@@ -76,7 +76,8 @@ class BrandSpec extends AnyWordSpec with Matchers {
 
       val actionBrand = Brand.create("complex function")
 
-      val sealedAction = actionBrand((v1: Request[String]) => new Response { val body: String = v1.body })
+      val sealedAction =
+        actionBrand((v1: Request[String]) => new Response { val body: String = v1.body })
       val unboxed = sealedAction match {
         case actionBrand(action) =>
           action
@@ -92,13 +93,13 @@ class BrandSpec extends AnyWordSpec with Matchers {
 
         def create(name: String): Foo = {
           val box = selfBrand.sealer(this)
-          //println(s"name = $name, box = $box")
+          // println(s"name = $name, box = $box")
           Foo(name, box)
         }
 
         def validate(foo: Foo): Boolean = {
           val maybeFactory = selfBrand.unsealer(foo.source)
-          //println(s"foo = $foo, maybeFactory = $maybeFactory, source = ${foo.source}")
+          // println(s"foo = $foo, maybeFactory = $maybeFactory, source = ${foo.source}")
           maybeFactory.contains(this)
         }
 
@@ -140,12 +141,13 @@ class BrandSpec extends AnyWordSpec with Matchers {
 
     "work with implicit unsealing" in {
 
-
       // Implicit scope doesn't resolve automatically in singleton object???
       import ImplicitUnBar._
 
       val boxed = ImplicitUnBar.createBoxed("foo") // can only be created boxed
-      boxed.map(_.text + " in bed") should be(Some("foo in bed")) // unsealer resolves to Option[Bar]
+      boxed.map(_.text + " in bed") should be(
+        Some("foo in bed")
+      ) // unsealer resolves to Option[Bar]
     }
 
   }
@@ -161,7 +163,7 @@ class BrandSpec extends AnyWordSpec with Matchers {
     implicit val sealer: Brand.Sealer = brand.sealer
   }
 
-  case class ImplicitUnBar private(text: String)
+  case class ImplicitUnBar private (text: String)
 
   object ImplicitUnBar extends ocaps.Brand.ImplicitUnsealing {
     private val brand: Brand = Brand.create("Brand for singleton object ImplicitUn")

@@ -17,8 +17,8 @@
 package ocaps
 
 /**
- * A permeable membrane that can wrap operations with the same so that the same effect is felt
- * on all participants of the operation.
+ * A permeable membrane that can wrap operations with the same so that the same effect is felt on
+ * all participants of the operation.
  *
  * {{{
  * val m = RevokerMembrane()
@@ -27,7 +27,8 @@ package ocaps
  * m.revoke() // revokes wrappedCap1 and wrappedCap2.
  * }}}
  *
- * @param thunker deferred execution of the capability
+ * @param thunker
+ *   deferred execution of the capability
  */
 class PermeableMembrane(thunker: Thunker) {
 
@@ -55,10 +56,10 @@ object PermeableMembrane {
 }
 
 /**
-  * A permeable membrane that is also a revoker.
-  *
-  * @param revoker
-  */
+ * A permeable membrane that is also a revoker.
+ *
+ * @param revoker
+ */
 class RevokerMembrane(revoker: Revoker with Thunker)
     extends PermeableMembrane(revoker)
     with Revoker {

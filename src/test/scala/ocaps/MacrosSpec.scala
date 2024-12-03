@@ -1,6 +1,5 @@
 package ocaps
 
-
 import org.scalatest.wordspec._
 import org.scalatest.matchers.should._
 

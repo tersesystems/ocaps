@@ -110,4 +110,3 @@ object AfterAmplification {
   // #usage
 }
 // #after-amplification
-

@@ -1,6 +1,5 @@
 package ocaps.examples.horton
 
-
 /**
  * Implementation of Horton in Scala.
  *
