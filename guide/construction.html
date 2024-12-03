@@ -158,10 +158,7 @@ val cake = new Cake() {
   def eat() = ()
 }
 cake.eat()
-</code></pre><div class="mermaid">
-graph LR
-  You -->|cake|ci((Cake object))
-</div>
+</code></pre>
 <p>You may know that a resource (an instance of <code>Cake</code>) exists, but you still need an object reference <code>cake</code> in order to affect the <code>Cake</code> instance by calling the <code>eat()</code> method on it. This is a fairly trivial example, because if you can instantiate a cake yourself, you will have no problem referencing it.</p>
 <p>Things start getting more interesting when you add more objects, and you don&rsquo;t control or instantiate resources directly. For example, you may not be able to make cakes yourself, so you go to a bakery.</p>
 <pre class="prettyprint"><code class="language-scala">trait Bakery {
@@ -179,11 +176,7 @@ val bakery = new Bakery() {
 }
 val you = new Person(bakery)
 you.buyAndEatCake()
-</code></pre><div class="mermaid">
-graph LR
-  You --> bi((Bakery))
-  bi --> ci((Cake))
-</div>
+</code></pre>
 <p>Here, you&rsquo;re still interested in affecting a resource <code>Cake</code> by, well, eating it, but you don&rsquo;t have direct access to the cake. Instead, <code>you</code>, an instance of a <code>Person</code>, have a reference to a <code>Bakery</code>, and that <code>Bakery</code> may give you a cake. </p>
 <p>Note that because <code>bakery</code> is an object reference, it is also a capability. You can&rsquo;t buy things from a bakery unless you know how to get to one.</p>
 <p>The bakery may give you a cake. But it may throw an exception, because they don&rsquo;t have cakes or you don&rsquo;t have enough money, or because they&rsquo;re closed. In addition, you don&rsquo;t control the behavior of the <code>eat</code> method. You have a reference, but that reference is a contract and it&rsquo;s the object that chooses how to execute it &ndash; when you call <code>cake.eat()</code>, that may also throw an exception or do something behind the scenes. </p>
@@ -210,11 +203,7 @@ val sneakyYou = new Person(enforcingBakery)
 val oneTimeCake = sneakyYou.bakery.buy()
 sneakyYou.eatCake(oneTimeCake)
 sneakyYou.eatCake(oneTimeCake)
-</code></pre><div class="mermaid">
-graph LR
-  sneakyYou --> ci((Cake Proxy))
-  ci --> rc((Real Cake))
-</div>
+</code></pre>
 <p>You may get an object reference &ndash; a capability &ndash; to a <code>Cake</code>. But here, the actual cake is only accessible through a delegate (also called a &ldquo;forwarder&rdquo;) which proxies the call. You have no direct access to the resource (<code>realCake</code>), and you can affect the resource (call <code>realCake.eat()</code>) only if the proxy allows it. The proxy may refuse to proxy the call. This is called <em>revocation</em>, and it is a key part of capability-based systems.</p>
 <p>So if the only way you can get a cake is through a bakery, then you have to play by the bakery&rsquo;s rules.</p>
 <h2><a href="#capabilities-as-traits" name="capabilities-as-traits" class="anchor"><span class="anchor-link"></span></a>Capabilities as Traits</h2>
