@@ -5,9 +5,11 @@ import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.util.{Locale, TimeZone}
 
 import cats.Id
-import org.scalatest._
 
-class PermeableMembraneSpec extends WordSpec with Matchers  {
+import org.scalatest.wordspec._
+import org.scalatest.matchers.should._
+
+class PermeableMembraneSpec extends AnyWordSpec with Matchers  {
 
   class Location(locale: Locale, timeZone: TimeZone) {
     private object capabilities {

@@ -95,7 +95,7 @@ object Revoker {
     new ListRevoker(revokers)
   }
 
-  class ListRevoker(revokers: Traversable[Revoker]) extends Revoker {
+  class ListRevoker(revokers: Iterable[Revoker]) extends Revoker {
     override def revoke(): Unit = revokers.foreach(_.revoke())
     override def revoked: Boolean = revokers.forall(_.revoked)
   }

@@ -10,7 +10,7 @@ object OcapsPlugin extends AutoPlugin {
   // http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     organization := "ocaps",
-    crossScalaVersions := Seq("2.12.12", "2.11.12"),
+    crossScalaVersions := Seq("2.13.15"),
     scalaVersion := crossScalaVersions.value.head,
 
     //scalacOptions in(Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
@@ -25,27 +25,14 @@ object OcapsPlugin extends AutoPlugin {
       "-language:higherKinds",
       "-language:implicitConversions",
       "-unchecked",
-      "-Xfuture"
     ),
 
-    libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value,
-    libraryDependencies ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        // if scala 2.11+ is used, quasiquotes are merged into scala-reflect
-        case Some((2, scalaMajor)) if scalaMajor >= 11 => Seq()
-        // in Scala 2.10, quasiquotes are provided by macro paradise
-        case Some((2, 10)) =>
-          Seq(
-            compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
-            "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary
-          )
-      }
-    }
+    libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value,    
   )
 
   override def trigger = allRequirements
 
-  val homepageUrl = "https://github.com/wsargent/ocaps"
+  val homepageUrl = "https://github.com/tersesystems/ocaps"
 
   def extractApiVersion(version: String) = {
     val VersionExtractor = """(\d+)\.(\d+)\..*""".r
