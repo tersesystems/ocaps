@@ -1,8 +1,10 @@
 package ocaps
 
-import org.scalatest._
 
-class MacrosSpec extends WordSpec with Matchers {
+import org.scalatest.wordspec._
+import org.scalatest.matchers.should._
+
+class MacrosSpec extends AnyWordSpec with Matchers {
 
   final class Foo(private var name: String) {
 

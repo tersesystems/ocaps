@@ -100,7 +100,7 @@ object macros {
               }
               q"override def $termName(...$paramDefs) = $input.$termName(...$paramNames)"
             }
-        }(collection.breakOut)
+        }.toSeq
 
         implementedMembers
       }
@@ -139,7 +139,7 @@ object macros {
               }
               q"override def $termName(...$paramDefs) = $input.$termName(...$paramNames)"
             }
-        }(collection.breakOut)
+        }.toSeq
 
         implementedMembers
       }
@@ -191,7 +191,7 @@ object macros {
               val afterCall = q"$afterIdent($methodNameLiteral, $resultIdent)"
               q"override def $termName(...$paramDefs) = { $beforeCall; val $resultIdent = $input.$termName(...$paramNames); $afterCall; $resultIdent }"
             }
-        }(collection.breakOut)
+        }.toSeq
 
         implementedMembers
       }
@@ -230,7 +230,7 @@ object macros {
           //   def bufferedReader[T](charset: Charset)(block: BufferedReader => T): Try[T]
           // }
           val termTypeParams =
-          m.typeParams.map(t => q"type ${t.name.toTypeName}")
+            m.typeParams.map(t => q"type ${t.name.toTypeName}")
           //val mapped = termTypeParams.map(_.toString).map(name => {
           //  TypeDef(Modifiers(Flag.DEFERRED),TypeName(name), List(),TypeBoundsTree(EmptyTree, EmptyTree))
           //})
@@ -253,7 +253,7 @@ object macros {
             }
             q"override def $termName[..$termTypeParams](...$paramDefs) = thunk().$termName(...$paramNames)"
           }
-      }(collection.breakOut)
+      }.toSeq
       val revokerCapability = q"new $tpe { ..$implementedMembers }"
       // god awful hack, but it seems to resolve the type problems in termTypeParams
       val parsed = c.parse(showCode(revokerCapability))
@@ -288,7 +288,7 @@ object macros {
             }
             q"override def $termName(...$paramDefs) = $target.$termName(...$paramNames)"
           }
-      }(collection.breakOut)
+      }.toSeq
       val impl = if (implementedMembers.isEmpty) {
         q"new $tpe { }"
       } else {

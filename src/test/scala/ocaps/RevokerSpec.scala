@@ -1,8 +1,9 @@
 package ocaps
 
-import org.scalatest._
+import org.scalatest.wordspec._
+import org.scalatest.matchers.should._
 
-class RevokerSpec extends WordSpec with Matchers {
+class RevokerSpec extends AnyWordSpec with Matchers {
 
   "Revoker.compose" should {
     "work" in {

@@ -16,9 +16,10 @@
 
 package ocaps
 
-import org.scalatest._
+import org.scalatest.wordspec._
+import org.scalatest.matchers.should._
 
-class BrandSpec extends WordSpec with Matchers {
+class BrandSpec extends AnyWordSpec with Matchers {
 
   "Brand" should {
 

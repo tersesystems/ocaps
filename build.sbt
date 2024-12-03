@@ -1,9 +1,9 @@
 
 val stableVersion = settingKey[String]("The version of ocaps that we want the user to download.")
-stableVersion := "0.2.0"
+stableVersion := "1.0.0"
 
-val catsVersion = "1.1.0"
-val catsEffectVersion = "1.0.0-RC2"
+val catsVersion = "2.12.0"
+val catsEffectVersion = "3.5.7"
 
 lazy val root = (project in file("."))
   .enablePlugins(ParadoxPlugin) // https://developer.lightbend.com/docs/paradox/current/index.html
@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
   .enablePlugins(GhpagesPlugin) // https://github.com/sbt/sbt-ghpages
   .settings(
     name := "ocaps",
-
+    
     // scaladoc settings
     scalacOptions in (Compile, doc) ++= Seq(
       "-doc-title", name.value,
@@ -50,7 +50,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" % Test,
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % Test,
     libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion % "tut, test",
 
     git.remoteRepo := "git@github.com:tersesystems/ocaps.git",

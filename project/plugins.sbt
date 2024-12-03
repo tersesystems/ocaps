@@ -5,14 +5,14 @@ addSbtPlugin("com.github.sbt" % "sbt-release" % "1.0.15")
 // documentation
 // I am futzing with diagrams, so if you want to build something then uncomment the
 // following
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.9.2")
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.10.7")
 // and then comment out the line below:
 //dependsOn(ProjectRef(file("/home/wsargent/work/paradox"), "plugin"))
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.4.1")
+addSbtPlugin("com.github.sbt" % "sbt-site-paradox" % "1.7.0")
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.3")
+addSbtPlugin("com.github.sbt" % "sbt-ghpages" % "0.8.0")
 
-addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.3")
+addSbtPlugin("com.github.sbt" % "sbt-unidoc" % "0.5.0")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
