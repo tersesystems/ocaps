@@ -14,13 +14,6 @@ val cake = new Cake() {
 cake.eat()
 ```
 
-@@@mermaid
-```
-graph LR
-  You -->|cake|ci((Cake object))
-```
-@@@
-
 You may know that a resource (an instance of `Cake`) exists, but you still need an object reference `cake` in order to affect the `Cake` instance by calling the `eat()` method on it.  This is a fairly trivial example, because if you can instantiate a cake yourself, you will have no problem referencing it.
 
 Things start getting more interesting when you add more objects, and you don't control or instantiate resources directly.  For example, you may not be able to make cakes yourself, so you go to a bakery.
@@ -42,15 +35,6 @@ val bakery = new Bakery() {
 val you = new Person(bakery)
 you.buyAndEatCake()
 ```
-
-@@@mermaid
-```
-graph LR
-  You --> bi((Bakery))
-  bi --> ci((Cake))
-```
-@@@
-
 
 Here, you're still interested in affecting a resource `Cake` by, well, eating it, but you don't have direct access to the cake.  Instead, `you`, an instance of a `Person`, have a reference to a `Bakery`, and that `Bakery` may give you a cake. 
 
@@ -84,14 +68,6 @@ val oneTimeCake = sneakyYou.bakery.buy()
 sneakyYou.eatCake(oneTimeCake)
 sneakyYou.eatCake(oneTimeCake)
 ```
-
-@@@mermaid
-```
-graph LR
-  sneakyYou --> ci((Cake Proxy))
-  ci --> rc((Real Cake))
-```
-@@@
 
 You may get an object reference -- a capability -- to a `Cake`.  But here, the actual cake is only accessible through a delegate (also called a "forwarder") which proxies the call.  You have no direct access to the resource (`realCake`), and you can affect the resource (call `realCake.eat()`)  only if the proxy allows it.  The proxy may refuse to proxy the call.  This is called *revocation*, and it is a key part of capability-based systems.
 

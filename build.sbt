@@ -43,7 +43,6 @@ lazy val root = (project in file("."))
       "version" -> stableVersion.value,
       "snip.examples.base_dir" -> s"${(sourceDirectory in Test).value}/scala/ocaps/examples",
     ),
-    paradoxDirectives += MermaidDirective,
     paradoxTheme := Some(builtinParadoxTheme("generic")),
     paradoxRoots := List("index.html"),
 
